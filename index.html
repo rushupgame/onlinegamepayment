@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Rush'Up! Live - Salon vidéo</title>
+<style>
+    :root {
+        --bg: #0f172a;
+        --bg-alt: #1e1b4b;
+        --card-border: rgba(255,255,255,0.12);
+        --primary: #ff4757;
+        --primary-hover: #ff6b81;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --radius: 16px;
+        --radius-sm: 10px;
+    }
+
+    body.vibe-blackpepper { --bg: #0a0a0a; --bg-alt: #1a1512; --card-border: rgba(255,255,255,0.10); --primary: #e63946; --primary-hover: #ff5c6c; --text-main: #f5f5f5; --text-muted: #9a9a9a; }
+    body.vibe-coconut { --bg: #faf6f0; --bg-alt: #f0e6d8; --card-border: rgba(0,0,0,0.10); --primary: #c9a876; --primary-hover: #b8935f; --text-main: #3a2f28; --text-muted: #8a7a6b; }
+    body.vibe-strawberry { --bg: #2a0a0f; --bg-alt: #4a0f1a; --card-border: rgba(255,255,255,0.12); --primary: #ff1744; --primary-hover: #ff5470; --text-main: #fff0f2; --text-muted: #d99aa5; }
+    body.vibe-bubblegum { --bg: #2a0e24; --bg-alt: #4a1a42; --card-border: rgba(255,255,255,0.12); --primary: #ff4fd8; --primary-hover: #ff8ae8; --text-main: #fff0fb; --text-muted: #e0a8d8; }
+    body.vibe-blueberry { --bg: #050b1f; --bg-alt: #0d1b3d; --card-border: rgba(255,255,255,0.12); --primary: #3b6eff; --primary-hover: #6b93ff; --text-main: #eaf0ff; --text-muted: #9ab0d9; }
+    body.vibe-banana { --bg: #1f1a00; --bg-alt: #3d3300; --card-border: rgba(255,255,255,0.12); --primary: #ffd60a; --primary-hover: #ffe14d; --text-main: #fffbea; --text-muted: #d4c98a; }
+    body.vibe-lime { --bg: #0a1f0a; --bg-alt: #163d16; --card-border: rgba(255,255,255,0.12); --primary: #aef22c; --primary-hover: #c8ff5e; --text-main: #f3fff0; --text-muted: #a8d99a; }
+    body.vibe-mango { --bg: #2a1400; --bg-alt: #4d2600; --card-border: rgba(255,255,255,0.12); --primary: #ff8c1a; --primary-hover: #ffab4d; --text-main: #fff5e8; --text-muted: #d9b088; }
+    body.vibe-dragonfruit { --bg: #150826; --bg-alt: #2e0f4d; --card-border: rgba(255,255,255,0.12); --primary: #d925ff; --primary-hover: #e666ff; --text-main: #faf0ff; --text-muted: #c79fdb; }
+    body.vibe-cocoa { --bg: #1f130a; --bg-alt: #3a2416; --card-border: rgba(255,255,255,0.12); --primary: #c9834a; --primary-hover: #e0a468; --text-main: #fbf0e6; --text-muted: #c2a68f; }
+
+    * { box-sizing: border-box; }
+    html { touch-action: pan-y; -webkit-text-size-adjust: 100%; }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: linear-gradient(160deg, var(--bg), var(--bg-alt));
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+        overscroll-behavior-y: contain;
+        -webkit-user-select: none;
+        user-select: none;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    input, textarea { -webkit-user-select: text; user-select: text; }
+
+    h1 {
+        font-size: 1.6rem;
+        font-weight: 900;
+        background: linear-gradient(90deg, var(--primary), var(--warning));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 8px 0 4px;
+    }
+
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; text-align: center; }
+
+    .card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 24px;
+        width: 100%;
+        max-width: 420px;
+    }
+
+    .config-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .config-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+    .config-group input {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        color: var(--text-main);
+        font-size: 1rem;
+    }
+    .config-group input:focus { outline: none; border-color: var(--primary); }
+
+    .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: var(--radius-sm);
+        border: none;
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: all 0.15s ease;
+        position: relative;
+        overflow: hidden;
+        color: white;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 40%;
+        height: 200%;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+        transform: rotate(25deg);
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer { 0% { left: -60%; } 20% { left: 140%; } 100% { left: 140%; } }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary { background: var(--primary); box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3); }
+    .btn-success { background: var(--success); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .btn-warning { background: var(--warning); color: #0f172a; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+    .btn-secondary { background: rgba(255,255,255,0.08); color: var(--text-main); border: 1px solid var(--card-border); box-shadow: none; }
+    .btn-secondary::after { display: none; }
+
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .btn:disabled::after { display: none; }
+
+    .status-line { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 14px; min-height: 18px; }
+    .status-line.error { color: var(--primary-hover); }
+    .status-line.ok { color: var(--success); }
+
+    .screen { display: none; width: 100%; max-width: 900px; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+    .room-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+    .connection-banner { width: 100%; background: rgba(245,158,11,0.15); border: 1px solid var(--warning); color: var(--warning); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.85rem; font-weight: 700; text-align: center; margin: -8px 0 14px; }
+    .connection-banner.network-hint { background: rgba(59,130,246,0.15); border-color: #3b82f6; color: #93c5fd; }
+    .room-code-badge { background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 20px; padding: 8px 16px; font-weight: 800; letter-spacing: 2px; font-size: 1.1rem; }
+    .room-code-label { font-weight: 600; letter-spacing: normal; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 1px; }
+    .leave-btn { background: rgba(255,71,87,0.15); border: 1px solid var(--primary); color: var(--primary-hover); border-radius: var(--radius-sm); padding: 8px 16px; font-weight: 700; cursor: pointer; }
+
+    .action-btn-share { background: rgba(59,130,246,0.15); border: 1px solid #3b82f6; color: #93c5fd; }
+    .action-btn-restart { background: rgba(245,158,11,0.15); border: 1px solid var(--warning); color: var(--warning); }
+    .action-btn-leave { background: rgba(255,71,87,0.15); border: 1px solid var(--primary); color: var(--primary-hover); }
+
+    #video-grid { display: flex; flex-wrap: nowrap; justify-content: safe center; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; gap: 10px; width: 100%; transition: all 0.2s ease; }
+    #video-grid .video-tile { flex: 0 0 110px; }
+
+    .video-tile { position: relative; background: #000; border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 4 / 3; border: 2px solid var(--card-border); }
+    .video-tile.self { border-color: var(--success); }
+    .video-tile.speaking { border-color: var(--warning); }
+    .video-tile.team-1 { border-color: #f43f5e; }
+    .video-tile.team-2 { border-color: #3b82f6; }
+    .video-tile.team-3 { border-color: #eab308; }
+
+    .tile-sameroom-btn { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(15,23,42,0.75); color: var(--text-main); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .tile-sameroom-btn.muted { background: var(--warning); color: #0f172a; }
+
+    .tile-self-controls { position: absolute; bottom: 6px; right: 6px; display: flex; gap: 6px; }
+    .tile-self-controls button { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(15,23,42,0.75); color: var(--text-main); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .tile-self-controls button.off { background: var(--danger, #ef4444); color: #fff; }
+
+    .video-tile.reconnecting { border-color: var(--warning); animation: pulse-reconnect 1.2s infinite; }
+    .video-tile.reconnecting::after { content: '🔄 Reconnexion...'; position: absolute; top: 6px; right: 6px; background: rgba(15,23,42,0.85); color: var(--warning); font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; }
+
+    @keyframes pulse-reconnect { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .video-tile video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .video-tile.remote video { transform: none; }
+    .video-tile .name-tag { position: absolute; bottom: 6px; left: 6px; background: rgba(15,23,42,0.75); padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 700; }
+    .video-tile .cam-off-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; opacity: 0.5; display: none; }
+
+    .controls-bar { display: flex; gap: 12px; margin-top: 20px; }
+    .control-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--card-border); background: rgba(255,255,255,0.08); color: var(--text-main); font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .control-btn.off { background: var(--primary); border-color: var(--primary); }
+
+    .participant-count { font-size: 0.85rem; color: var(--text-muted); margin-top: 16px; }
+    #video-zone { position: relative; width: 100%; }
+    .reactions-bar { position: absolute; top: 8px; right: 8px; z-index: 20; display: flex; gap: 5px; background: rgba(15,23,42,0.75); border: 1px solid var(--card-border); border-radius: 24px; padding: 4px; backdrop-filter: blur(4px); }
+    .reactions-bar button { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.08); font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .reactions-bar button:active { transform: scale(0.9); }
+
+    #reactions-fly-layer { position: fixed; inset: 0; pointer-events: none; z-index: 39; overflow: hidden; }
+    .reaction-particle { position: absolute; bottom: 70px; font-size: 2rem; animation: reaction-float 2.2s ease-out forwards; }
+
+    @keyframes reaction-float { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 15% { transform: translateY(-30px) scale(1.1); opacity: 1; } 100% { transform: translateY(-70vh) scale(1); opacity: 0; } }
+
+    .room-footer { width: 100%; font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 24px; padding-top: 14px; padding-bottom: 56px; border-top: 1px solid var(--card-border); }
+    .room-footer-controls { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .room-footer-controls .room-code-badge { padding: 4px 10px; font-size: 0.75rem; letter-spacing: 1px; }
+    .room-footer-controls .room-code-label { font-size: 0.6rem; }
+    .room-footer-controls .leave-btn { padding: 5px 12px; font-size: 0.78rem; }
+
+    .setup-note { background: rgba(255,165,2,0.1); border: 1px solid var(--warning); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.8rem; color: var(--warning); margin-top: 16px; line-height: 1.5; display: none; }
+
+    .rules-recap { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--card-border); text-align: left; }
+    .rules-recap-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 6px; }
+    .rules-recap p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px; }
+    .rules-recap-steps { display: flex; flex-direction: column; gap: 8px; }
+    .rules-recap-step { display: flex; align-items: flex-start; gap: 10px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
+    .rules-recap-step strong { color: var(--text-main); }
+    .rules-recap-step-num { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+
+    #game-section { width: 100%; max-width: 500px; margin-top: 24px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; }
+    #game-section h2 { font-size: 1.1rem; margin: 0 0 14px; text-align: center; }
+
+    .waiting-text { text-align: center; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+    .team-count-stepper { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+    .stepper-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--card-border); background: rgba(255,255,255,0.08); color: var(--text-main); font-size: 1.2rem; font-weight: 800; cursor: pointer; }
+    .stepper-value { font-size: 1.4rem; font-weight: 900; min-width: 30px; text-align: center; }
+
+    .timer-select { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+    .timer-option { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); color: var(--text-muted); font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .timer-option.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .range-slider { width: 100%; accent-color: var(--primary); height: 32px; cursor: pointer; touch-action: manipulation; }
+    .range-minmax { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-top: -6px; margin-bottom: 14px; }
+
+    .team-preview { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; font-size: 0.85rem; }
+    .team-preview-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: var(--radius-sm); cursor: pointer; user-select: none; }
+    .team-preview-row:active { opacity: 0.7; }
+    .team-group { border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 8px; margin-bottom: 8px; }
+    .team-group-title { font-size: 0.75rem; font-weight: 800; color: var(--warning); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; padding: 0 4px; }
+    .team-group .team-preview-row { margin-bottom: 4px; }
+    .team-group .team-preview-row:last-child { margin-bottom: 0; }
+    .team-group-empty { font-size: 0.78rem; color: var(--text-muted); padding: 6px 4px; font-style: italic; }
+    .team-pick-group { display: flex; gap: 4px; }
+    .team-pick-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); color: var(--text-muted); font-size: 0.78rem; font-weight: 700; cursor: pointer; padding: 0; }
+    .team-pick-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .turn-banner { text-align: center; margin-bottom: 14px; }
+    .turn-banner .active-player-name { font-size: 1.2rem; font-weight: 900; color: var(--warning); }
+    .turn-banner .active-team-name { font-size: 0.85rem; color: var(--text-muted); }
+    .timer-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 14px; }
+    .game-timer { text-align: center; font-size: 2.4rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .game-timer.warning { color: var(--primary); }
+    .game-timer.paused { color: var(--warning); }
+
+    .pause-toggle-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: var(--text-main); width: 38px; height: 38px; min-width: 38px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .pause-toggle-btn:active { transform: scale(0.92); }
+
+    .word-card { background: #ffffff; color: #0f172a; border-radius: var(--radius); padding: 30px 16px; text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 16px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+    .word-card.locked { background: rgba(255,255,255,0.05); color: var(--text-muted); font-size: 1rem; font-weight: 600; }
+
+    .game-action-btns { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; margin-bottom: 18px; }
+    .game-action-btns .btn { min-height: 62px; padding: 14px 12px; font-size: 1.15rem; }
+
+    .scoreboard { display: flex; flex-direction: column; gap: 6px; }
+    .scoreboard-row { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: var(--radius-sm); font-size: 0.9rem; }
+    .scoreboard-row.mine { border: 1px solid var(--success); }
+    .scoreboard-row .pts { font-weight: 900; color: var(--warning); }
+
+    .theme-select { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text-main); font-size: 0.95rem; }
+    .theme-select option { background: var(--bg); color: var(--text-main); }
+    .select-blue, .select-blue option { background: var(--bg); color: var(--text-main); border-color: var(--card-border); }
+
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .checkbox-row input { width: 18px; height: 18px; accent-color: var(--primary); }
+    .checkbox-row label { font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+    .checkbox-hint { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 16px 28px; }
+
+    .theme-list { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; padding-right: 4px; margin-bottom: 10px; }
+    .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); background: rgba(255,255,255,0.03); transition: border-color 0.15s, background 0.15s; }
+    .theme-row.selected { border-color: var(--success); background: rgba(16,185,129,0.08); }
+    .theme-row-text { min-width: 0; }
+    .theme-row-title { font-size: 0.95rem; font-weight: 800; line-height: 1.25; }
+    .theme-row-desc { font-size: 0.74rem; color: var(--text-muted); line-height: 1.35; margin-top: 2px; }
+    .theme-toggle-btn { flex: 0 0 auto; min-width: 64px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); color: var(--text-muted); font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
+    .theme-toggle-btn.on { background: var(--success); border-color: var(--success); color: #05261c; }
+    .theme-multi-msg { font-size: 0.8rem; color: var(--warning); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 14px; display: none; }
+
+    .round-pill { display: block; text-align: center; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin: 0 auto 12px; width: fit-content; }
+    .turn-confirm-card { text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--warning); border-radius: var(--radius); padding: 24px 16px; margin-bottom: 14px; }
+    .turn-confirm-icon { font-size: 2.2rem; margin-bottom: 6px; }
+    .turn-confirm-title { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .turn-confirm-name { font-size: 1.5rem; font-weight: 900; color: var(--warning); margin: 4px 0; }
+    .turn-confirm-team { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+    .turn-confirm-teammates { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; }
+    .undo-link { display: block; width: 100%; background: none; border: none; color: var(--text-muted); font-size: 0.78rem; text-decoration: underline; cursor: pointer; margin: 6px 0 14px; padding: 0; }
+
+    #trophies-container { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .trophy-card { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 10px 14px; }
+    .trophy-icon { font-size: 1.6rem; }
+    .trophy-details { display: flex; flex-direction: column; font-size: 0.82rem; }
+    .trophy-title { font-weight: 800; color: var(--warning); }
+    .trophy-winner { font-weight: 700; }
+    .trophy-desc { color: var(--text-muted); font-size: 0.75rem; }
+
+    .word-recap-toggle { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between; margin-top: 8px; }
+    .word-recap-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; font-size: 0.82rem; }
+    .word-recap-body.open { max-height: 300px; overflow-y: auto; margin-top: 8px; }
+    .recap-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid var(--card-border); }
+    .recap-row .recap-passes { color: var(--warning); }
+
+    #spotlight-area { display: none; width: 100%; margin-bottom: 8px; }
+    #spotlight-area.active { display: block; }
+    #spotlight-area .video-tile { aspect-ratio: 16 / 10; border-color: var(--warning); box-shadow: 0 0 24px rgba(245,158,11,0.3); max-height: 38vh; }
+    #video-grid.has-spotlight { flex-wrap: nowrap; }
+    #video-grid.has-spotlight .video-tile { flex: 0 0 var(--tile-min, 90px); aspect-ratio: 1 / 1; max-height: 110px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+    .modal-card p { color: var(--text-main); font-size: 0.95rem; line-height: 1.45; margin: 0 0 20px; }
+    .modal-btn-row { display: flex; gap: 10px; }
+    .modal-btn-row .btn { margin-top: 0; }
+
+    .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left; }
+    .pricing-card:hover, .pricing-card.selected { border-color: var(--primary); background: rgba(255,71,87,0.1); }
+    .pricing-header { display: flex; justify-content: space-between; font-weight: 800; }
+    .pricing-price { color: var(--warning); font-size: 1.1rem; }
+    .pricing-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+    .user-badge { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 12px; }
+
+    .vibe-modal-card { max-width: 420px; max-height: 82vh; overflow-y: auto; }
+    .vibe-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 4px 0 18px; }
+    .vibe-swatch { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px; border-radius: var(--radius-sm); border: 2px solid transparent; cursor: pointer; background: rgba(255,255,255,0.03); transition: border-color 0.15s, transform 0.1s; }
+    .vibe-swatch:active { transform: scale(0.96); }
+    .vibe-swatch.active { border-color: var(--text-main); }
+    .vibe-swatch-preview { width: 100%; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+    .vibe-swatch-name { font-size: 0.72rem; font-weight: 700; color: var(--text-main); text-align: center; line-height: 1.25; }
+    .vibe-toggle-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); color: var(--text-main); }
+
+    .game-toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-10px); background: rgba(15, 23, 42, 0.95); border: 1px solid var(--warning); color: var(--text-main); padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; z-index: 50; }
+    .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .game-toast.joker { border-color: #ffa502; color: #ffa502; box-shadow: 0 0 20px rgba(255, 165, 2, 0.5); }
+    .game-toast.combo { border-color: var(--primary); color: var(--primary-hover); box-shadow: 0 0 20px rgba(255, 71, 87, 0.5); }
+    .game-toast.bonus-self { border-color: var(--success); color: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+    .game-toast.bonus-other { border-color: var(--primary); color: var(--primary-hover); box-shadow: 0 0 20px rgba(255, 71, 87, 0.5); }
+
+    @media (min-width: 900px) {
+        #room-screen { max-width: none; width: 100%; }
+        .room-main { display: flex; flex-direction: row; align-items: flex-start; gap: 28px; width: 100%; }
+        .room-main-video-col { flex: 0 0 calc(50% - 14px); max-width: calc(50% - 14px); position: sticky; top: 20px; }
+        #game-section { flex: 0 0 calc(50% - 14px); max-width: calc(50% - 14px); min-width: 0; }
+        #video-grid .video-tile { flex-basis: 140px; }
+        #spotlight-area .video-tile { max-height: 48vh; }
+        .config-columns { display: flex; flex-direction: column; }
+    }
+</style>
+</head>
+<body>
+
+<div id="app-header" style="width:100%; text-align:center;">
+    <h1 style="text-align:center;">🎥 Rush'Up! Live</h1>
+    <div class="subtitle">Assurez-vous d'avoir une bonne connexion et prévoyez environ 10 à 15 minutes devant vous !</div>
+    <div id="user-status-bar" class="user-badge"></div>
+</div>
+
+<!-- ÉCRAN 1 : Entrée dans un salon -->
+<div id="entry-screen" class="screen active">
+    <div class="card" id="entry-choice-card">
+        <h2 style="text-align:center; margin: 0 0 18px; font-size: 1.1rem;">Comment veux-tu jouer ?</h2>
+        <button class="btn btn-primary" onclick="handleCreateClick()">🆕 Créer un salon</button>
+        <button class="btn btn-secondary" onclick="showJoinForm()">🚪 Rejoindre un salon</button>
+        <div class="setup-note" id="config-warning">
+            ⚠️ Configuration Supabase manquante : ouvre ce fichier et renseigne SUPABASE_URL et SUPABASE_ANON_KEY tout en haut du script.
+        </div>
+        <div class="rules-recap">
+            <div class="rules-recap-title">📖 Le principe en bref</div>
+            <p>Par équipes (ou en 1v1 / 1v1v1 à 2-3 joueurs), un joueur fait deviner des mots à son binôme le plus vite possible pendant un chrono. Chaque mot trouvé rapporte des points à l'équipe ou au joueur.</p>
+            <div class="rules-recap-steps">
+                <div class="rules-recap-step"><span class="rules-recap-step-num">1</span><div><strong>Thématique(s)</strong><br>L'hôte choisit une ou plusieurs thématiques de mots (généraliste, ciné, sport, geek...).</div></div>
+                <div class="rules-recap-step"><span class="rules-recap-step-num">2</span><div><strong>Joueurs & équipes</strong><br>L'hôte indique le nombre de joueurs, puis répartit en équipes (ou lance un 1v1 / 1v1v1 en dessous de 4 joueurs).</div></div>
+                <div class="rules-recap-step"><span class="rules-recap-step-num">3</span><div><strong>Manche 1 — Description libre</strong><br>Décrivez le mot avec les mots que vous voulez, sans le prononcer.</div></div>
+                <div class="rules-recap-step"><span class="rules-recap-step-num">4</span><div><strong>Manche 2 — Un seul mot</strong><br>Un seul mot d'indice autorisé par carte.</div></div>
+                <div class="rules-recap-step"><span class="rules-recap-step-num">5</span><div><strong>Manche 3 — Mime</strong><br>Interdit de parler : uniquement mime et bruitages.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="create-form-card" style="display:none;">
+        <h2 style="text-align:center; margin: 0 0 18px; font-size: 1.1rem;">🆕 Créer un salon</h2>
+        <div class="config-group">
+            <label for="create-name-input">Ton prénom</label>
+            <input type="text" id="create-name-input" placeholder="Ex: Jack" maxlength="20">
+        </div>
+        <button class="btn btn-primary" onclick="createRoom()">Créer le salon (tu seras l'hôte)</button>
+        <button class="btn btn-secondary" onclick="backToEntryChoice()">◀️ Retour</button>
+        <div class="status-line" id="create-status"></div>
+    </div>
+
+    <div class="card" id="join-form-card" style="display:none;">
+        <h2 style="text-align:center; margin: 0 0 18px; font-size: 1.1rem;">🚪 Rejoindre un salon</h2>
+        <div class="config-group">
+            <label for="join-name-input">Ton prénom</label>
+            <input type="text" id="join-name-input" placeholder="Ex: Jack" maxlength="20">
+        </div>
+        <div class="config-group">
+            <label for="join-code-input">Code du salon</label>
+            <input type="text" id="join-code-input" placeholder="Ex: LAPIN42" maxlength="12" style="text-transform: uppercase;">
+        </div>
+        <button class="btn btn-primary" onclick="joinExistingRoom()">Rejoindre</button>
+        <button class="btn btn-secondary" onclick="backToEntryChoice()">◀️ Retour</button>
+        <div class="status-line" id="join-status"></div>
+    </div>
+
+    <footer class="room-footer" style="margin-top:18px;">
+        <div class="room-footer-controls">
+            <button class="leave-btn vibe-toggle-btn" onclick="openVibeModal()">🎨 Vibes</button>
+        </div>
+    </footer>
+</div>
+
+<!-- MODALE AUTHENTIFICATION HÔTE -->
+<div id="auth-modal" class="modal-overlay">
+    <div class="modal-card">
+        <h2 style="text-align:center; margin-top:0;">🔐 Espace Hôte</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); text-align:center;">Pour créer un salon (1<sup>re</sup> partie offerte !), connecte-toi ou crée un compte.</p>
+        
+        <div class="config-group" style="text-align:left;">
+            <label>Email</label>
+            <input type="email" id="auth-email-input" placeholder="ton@email.com">
+        </div>
+        <div class="config-group" style="text-align:left;">
+            <label>Mot de passe</label>
+            <input type="password" id="auth-password-input" placeholder="••••••••">
+        </div>
+
+        <button class="btn btn-primary" onclick="handleAuthSubmit('login')">Se connecter</button>
+        <button class="btn btn-secondary" onclick="handleAuthSubmit('signup')">Créer un compte</button>
+        <button class="btn btn-secondary" style="margin-top:12px; opacity:0.7;" onclick="closeAuthModal()">Annuler</button>
+        <div class="status-line" id="auth-status"></div>
+    </div>
+</div>
+
+<!-- MODALE PAIEMENT / PRIX / CODE PROMO -->
+<div id="payment-modal" class="modal-overlay">
+    <div class="modal-card">
+        <h2 style="text-align:center; margin-top:0;">💳 Débloque l'accès Hôte</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); text-align:center;">Ta partie gratuite est utilisée. Choisis une offre pour continuer à créer des salons !</p>
+
+        <div class="pricing-card selected" id="card-pass_24h" onclick="selectOffer('pass_24h')">
+            <div class="pricing-header"><span>Pass 24h Unlimited</span><span class="pricing-price">1,99 €</span></div>
+            <div class="pricing-desc">Crée autant de salons que tu veux pendant 24h.</div>
+        </div>
+
+        <div class="pricing-card" id="card-monthly" onclick="selectOffer('monthly')">
+            <div class="pricing-header"><span>Abonnement Mensuel</span><span class="pricing-price">3,99 € / mois</span></div>
+            <div class="pricing-desc">Accès illimité tous les mois. Sans engagement.</div>
+        </div>
+
+        <div class="pricing-card" id="card-lifetime" onclick="selectOffer('lifetime')">
+            <div class="pricing-header"><span>Pass Lifetime</span><span class="pricing-price">14,99 €</span></div>
+            <div class="pricing-desc">Accès illimité à vie. Paiement unique.</div>
+        </div>
+
+        <div id="paypal-button-container" style="margin-top:16px; min-height:150px;"></div>
+
+        <div style="margin-top:20px; border-top:1px solid var(--card-border); padding-top:16px; text-align:left;">
+            <div class="config-group">
+                <label>Tu as un Code Promo / Code Pote ?</label>
+                <input type="text" id="promo-code-input" placeholder="Ex: VIP-RUSHUP" style="text-transform:uppercase;">
+            </div>
+            <button class="btn btn-success" onclick="applyPromoCode()">Activer le code</button>
+            <div class="status-line" id="promo-status"></div>
+        </div>
+
+        <button class="btn btn-secondary" style="margin-top:16px;" onclick="closePaymentModal()">Fermer</button>
+    </div>
+</div>
+
+<!-- ÉCRAN 2 : Salon vidéo -->
+<div id="room-screen" class="screen">
+    <div class="room-header" id="room-header">
+        <div class="room-code-badge"><span class="room-code-label">Code de session</span> <span id="room-code-display">—</span></div>
+    </div>
+
+    <div id="connection-banner" class="connection-banner" style="display:none;">
+        🔄 Connexion perdue, tentative de reconnexion...
+    </div>
+
+    <div id="network-hint-banner" class="connection-banner network-hint" style="display:none;">
+        📶 Connexion lente détectée — coupe ta caméra (📹) pour fluidifier la partie
+    </div>
+
+    <div class="room-main" id="room-main">
+    <div class="room-main-video-col">
+    <div id="video-zone">
+        <div id="spotlight-area"></div>
+        <div id="video-grid"></div>
+        <div class="reactions-bar">
+            <button type="button" onclick="sendReaction('❤️')">❤️</button>
+            <button type="button" onclick="sendReaction('🔥')">🔥</button>
+            <button type="button" onclick="sendReaction('😂')">😂</button>
+            <button type="button" onclick="sendReaction('💩')">💩</button>
+        </div>
+    </div>
+
+    <div class="participant-count" id="participant-count">1 participant</div>
+    <div id="host-config-desktop-slot"></div>
+    </div>
+
+    <!-- ZONE DE JEU -->
+    <div id="game-section">
+        <div id="game-waiting-view">
+            <h2>🎮 Partie</h2>
+            <div id="non-host-waiting" class="waiting-text" style="display:none;">
+                En attente que l'hôte configure la partie (nombre de joueurs, équipes ou mode 1v1, thème...) et la lance...
+            </div>
+            <div id="host-config-right-placeholder" class="waiting-text" style="display:none;">
+                👈 Configure la partie sur la gauche, puis lance-la quand tout le monde est prêt.
+            </div>
+            <div id="host-config-view" style="display:none;">
+                <div class="config-columns">
+                <div class="config-col">
+                <div class="config-group">
+                    <label>Thématiques (plusieurs choix possibles)</label>
+                    <div class="theme-list" id="theme-list-container"></div>
+                    <div class="theme-multi-msg" id="theme-multi-msg">🎲 Plusieurs thématiques sélectionnées : les mots seront pris aléatoirement parmi les thématiques sélectionnées.</div>
+                </div>
+
+                <div class="config-group">
+                    <label>Nombre de mots : <span id="wordcount-value">30</span></label>
+                    <input type="range" id="wordcount-range" min="10" max="100" step="5" value="30"
+                           class="range-slider" oninput="selectWordCount(parseInt(this.value))">
+                    <div class="range-minmax"><span>10</span><span>100</span></div>
+                </div>
+
+                <div class="config-group">
+                    <label>Durée du chrono</label>
+                    <div class="timer-select" id="timer-select">
+                        <div class="timer-option" data-val="30" onclick="selectTimer(30)">30s</div>
+                        <div class="timer-option active" data-val="45" onclick="selectTimer(45)">45s</div>
+                        <div class="timer-option" data-val="60" onclick="selectTimer(60)">60s</div>
+                        <div class="timer-option" data-val="90" onclick="selectTimer(90)">90s</div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="config-col">
+                <div class="config-group">
+                    <label>Nombre de joueurs</label>
+                    <div class="team-count-stepper">
+                        <button type="button" class="stepper-btn" onclick="adjustPlayerCount(-1)">−</button>
+                        <span class="stepper-value" id="player-count-value">4</span>
+                        <span style="color:var(--text-muted); font-size:0.85rem;">joueurs</span>
+                        <button type="button" class="stepper-btn" onclick="adjustPlayerCount(1)">+</button>
+                    </div>
+                    <div class="status-line" id="player-count-status" style="margin-top:0;"></div>
+                </div>
+
+                <div id="team-count-section">
+                <div class="team-count-stepper">
+                    <button type="button" class="stepper-btn" onclick="adjustTeamCount(-1)">−</button>
+                    <span class="stepper-value" id="team-count-value">2</span>
+                    <span style="color:var(--text-muted); font-size:0.85rem;">équipes</span>
+                    <button type="button" class="stepper-btn" onclick="adjustTeamCount(1)">+</button>
+                </div>
+
+                <div class="config-group">
+                    <label>Répartition des joueurs (touche un nom pour changer son équipe)</label>
+                    <button type="button" class="btn btn-secondary" style="margin-bottom:10px;" onclick="randomizeTeams()">🎲 Répartition aléatoire</button>
+                    <div class="team-preview" id="team-preview"></div>
+                </div>
+                </div>
+
+                <div id="solo-mode-section" style="display:none;">
+                    <div class="config-group">
+                        <label id="solo-mode-title">Mode 1 contre 1</label>
+                        <div class="checkbox-hint" id="solo-mode-hint" style="margin-left:0;">Chacun joue pour soi. Les rôles Descripteur / Devineur s'alternent à chaque tour, avec des cartes bonus cachées à chaque manche.</div>
+                        <div class="team-preview" id="solo-player-preview"></div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="config-col">
+                <div class="config-group">
+                    <label>Passer les cartes</label>
+                    <select id="passrule-select" class="theme-select select-blue">
+                        <option value="byRound" selected>Par défaut (interdit en manche 1, autorisé ensuite)</option>
+                        <option value="always">Toujours autoriser</option>
+                        <option value="never">Toujours interdire</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="penalty-toggle" onchange="togglePenaltyDropdown()">
+                    <label for="penalty-toggle">Pénalité de temps au passage</label>
+                </div>
+                <div id="penalty-dropdown-container" style="display:none; margin: -6px 0 14px 28px;">
+                    <select id="penalty-seconds-select" class="theme-select select-blue">
+                        <option value="1">1 seconde</option><option value="2">2 secondes</option><option value="3">3 secondes</option>
+                        <option value="4">4 secondes</option><option value="5" selected>5 secondes</option><option value="6">6 secondes</option>
+                        <option value="7">7 secondes</option><option value="8">8 secondes</option><option value="9">9 secondes</option>
+                        <option value="10">10 secondes</option>
+                    </select>
+                </div>
+
+                <div id="joker-option-block">
+                <div class="checkbox-row">
+                    <input type="checkbox" id="joker-toggle">
+                    <label for="joker-toggle">Mot joker</label>
+                </div>
+                <div class="checkbox-hint">Un mot du paquet est tiré au sort en secret et rapporte le double de points s'il est trouvé. Personne ne sait lequel avant qu'il soit deviné !</div>
+                </div>
+                <div id="solo-bonus-note" class="checkbox-hint" style="display:none; margin-left:0;">En mode 1v1 / 1v1v1, ce sont les cartes bonus cachées (voir ci-contre) qui remplacent le mot joker.</div>
+                </div>
+                </div>
+
+                <button class="btn btn-primary" id="start-game-btn" onclick="hostStartGame()" disabled>🚀 Démarrer la partie</button>
+                <div class="status-line" id="host-config-status">Il faut au moins 2 joueurs connectés.</div>
+            </div>
+        </div>
+
+        <div id="round-intro-view" style="display:none;">
+            <h2 id="round-intro-title">Manche 1</h2>
+            <p class="waiting-text" id="round-intro-hint"></p>
+            <div id="round-intro-solo-rules" class="checkbox-hint" style="display:none; text-align:left; margin:14px 0;"></div>
+            <div id="round-intro-host-btn-wrap" style="display:none;">
+                <button class="btn btn-primary" onclick="hostBeginRound()">🚀 Démarrer la manche</button>
+            </div>
+            <div id="round-intro-wait-text" class="waiting-text" style="display:none;">En attente que l'hôte lance la manche...</div>
+        </div>
+
+        <div id="game-active-view" style="display:none;">
+            <div class="round-pill" id="round-pill">Manche 1</div>
+
+            <div id="turn-confirm-view">
+                <div class="turn-confirm-card">
+                    <div class="turn-confirm-icon">🎙️</div>
+                    <div class="turn-confirm-title">C'est au tour de</div>
+                    <div class="turn-confirm-name" id="turn-confirm-name">—</div>
+                    <div class="turn-confirm-team" id="turn-confirm-team">—</div>
+                    <div class="turn-confirm-teammates" id="turn-confirm-teammates"></div>
+                    <button class="btn btn-primary" id="turn-confirm-ready-btn" onclick="sendPlayerAction('ready')" style="display:none;">🚀 C'est parti !</button>
+                    <div class="waiting-text" id="turn-confirm-wait-text" style="display:none;">En attente que ce joueur confirme...</div>
+                </div>
+            </div>
+
+            <div id="turn-active-view" style="display:none;">
+                <div class="turn-banner">
+                    <div class="active-player-name" id="active-player-name">—</div>
+                    <div class="active-team-name" id="active-team-name">—</div>
+                </div>
+                <div class="timer-row">
+                    <div class="game-timer" id="game-timer-display">--</div>
+                    <button class="pause-toggle-btn" id="pause-btn" onclick="togglePause()" style="display:none;" aria-label="Pause">⏸️</button>
+                </div>
+                <div class="word-card locked" id="word-card">En attente...</div>
+                <div class="game-action-btns" id="game-action-btns" style="display:none;">
+                    <button class="btn btn-primary" id="pass-btn" onclick="sendPlayerAction('pass')">↩️ Passer</button>
+                    <button class="btn btn-success" id="found-btn" onclick="sendPlayerAction('found')">✅ Trouvé !</button>
+                </div>
+                <button class="undo-link" id="undo-btn" onclick="sendPlayerAction('undo')" style="display:none;">↺ Annuler le dernier mot trouvé</button>
+            </div>
+
+            <div class="scoreboard" id="scoreboard"></div>
+        </div>
+
+        <div id="round-end-view" style="display:none;">
+            <h2>🏁 Fin de la manche</h2>
+            <div class="scoreboard" id="round-end-scoreboard"></div>
+            <div id="round-end-solo-recap" style="display:none;"></div>
+            <div id="round-end-host-btn-wrap" style="display:none;">
+                <button class="btn btn-primary" onclick="hostGoToNextRoundIntro()">➡️ Manche suivante</button>
+            </div>
+            <div id="round-end-wait-text" class="waiting-text" style="display:none;">En attente de l'hôte...</div>
+        </div>
+
+        <div id="final-view" style="display:none;">
+            <h2 id="final-title">🎉 Partie terminée !</h2>
+            <div class="scoreboard" id="final-scoreboard"></div>
+            <div id="trophies-container"></div>
+            <button type="button" class="word-recap-toggle" onclick="toggleWordRecap()">
+                <span>📜 Voir tous les mots de la partie</span>
+                <span id="word-recap-arrow">▾</span>
+            </button>
+            <div class="word-recap-body" id="word-recap-body"></div>
+            <div id="final-host-btn-wrap" style="display:none;">
+                <button class="btn btn-primary" onclick="hostRestartToConfig()">🔁 Nouvelle partie</button>
+            </div>
+            <div id="final-wait-text" class="waiting-text" style="display:none;">En attente de l'hôte...</div>
+        </div>
+    </div>
+    </div>
+
+    <footer class="room-footer">
+        <div class="room-footer-controls" id="room-footer-controls">
+            <button class="leave-btn vibe-toggle-btn" id="vibe-btn" onclick="openVibeModal()">🎨 Vibes</button>
+            <button class="leave-btn action-btn-share" id="share-code-btn" onclick="shareRoomCode()" title="Partager le code">📤 Partager</button>
+            <button class="leave-btn action-btn-restart" id="host-new-theme-btn" onclick="confirmRestartToConfig()" style="display:none;">🔁 Recommencer une nouvelle partie</button>
+            <button class="leave-btn action-btn-leave" onclick="leaveRoom()">🚪 Quitter le salon</button>
+        </div>
+        <div class="sameroom-hint-text">💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.</div>
+    </footer>
+
+    <div id="reactions-fly-layer"></div>
+</div>
+
+<div id="restart-confirm-modal" class="modal-overlay">
+    <div class="modal-card">
+        <p>Relancer une nouvelle partie sur un autre thème ? La partie en cours sera arrêtée pour tout le monde.</p>
+        <div class="modal-btn-row">
+            <button type="button" class="btn btn-secondary" onclick="closeRestartConfirmModal()">Annuler</button>
+            <button type="button" class="btn btn-primary" onclick="doRestartToConfig()">Relancer</button>
+        </div>
+    </div>
+</div>
+
+<div id="leave-confirm-modal" class="modal-overlay">
+    <div class="modal-card">
+        <p id="leave-confirm-text">Es-tu sûr de vouloir quitter le salon ?</p>
+        <div class="modal-btn-row">
+            <button type="button" class="btn btn-secondary" onclick="closeLeaveConfirmModal()">Annuler</button>
+            <button type="button" class="btn btn-primary" onclick="doLeaveRoom()">Quitter</button>
+        </div>
+    </div>
+</div>
+
+<div id="vibe-modal" class="modal-overlay">
+    <div class="modal-card vibe-modal-card">
+        <p style="margin-bottom:10px;">🎨 Choisis ta Vibe</p>
+        <div class="vibe-grid" id="vibe-grid"></div>
+        <div class="modal-btn-row">
+            <button type="button" class="btn btn-secondary" onclick="closeVibeModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=Ab_-vEhX2Woi4kUQ4UWQlt-LgLnk_43miGPDSwMvV-9lYf7ANcMlXN5pR-XxahPeSggMBrdL_3Xvokak&currency=EUR&vault=true&intent=subscription"></script>
+<script>
+    const SUPABASE_URL = 'https://dxdpnvjcwmztrhhutzqc.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_QHqZrcPH1pFBU80tLkk9bA_eUUFMWdn';
+    const PAYPAL_MONTHLY_PLAN_ID = 'P-0R229672VL7042320NKDQ7LQ';
+
+    const ICE_SERVERS = [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+    ];
+
+    const VIBES = [
+        { key: 'basic', emoji: '🎮', name: "Rush'Up", desc: 'Le thème de base' },
+        { key: 'blackpepper', emoji: '🖤', name: 'Black Pepper', desc: 'Noir profond, légèrement piquant' },
+        { key: 'coconut', emoji: '🥥', name: 'Coconut Shake', desc: 'Blanc laiteux et douillet' },
+        { key: 'strawberry', emoji: '🍓', name: 'Strawberry Spicy', desc: 'Rouge vif pimenté' },
+        { key: 'bubblegum', emoji: '🍬', name: 'Bubblegum Fizz', desc: 'Rose bonbon éclatant' },
+        { key: 'blueberry', emoji: '🫐', name: 'Blueberry Chill', desc: 'Bleu nuit intense et frais' },
+        { key: 'banana', emoji: '🍌', name: 'Banana Buzz', desc: 'Jaune solaire très vitaminé' },
+        { key: 'lime', emoji: '🍏', name: 'Lime Zest', desc: 'Vert citron hyper acide' },
+        { key: 'mango', emoji: '🥭', name: 'Mango Tango', desc: 'Orange chaud et fruité' },
+        { key: 'dragonfruit', emoji: '🐉', name: 'Dragonfruit Zap', desc: 'Pourpre/fuchsia électrique' },
+        { key: 'cocoa', emoji: '🍫', name: 'Cocoa Crunch', desc: 'Brun riche et gourmand' }
+    ];
+    const VIBE_STORAGE_KEY = 'rushup_vibe';
+
+    function applyVibe(key, persist) {
+        document.body.className = document.body.className.replace(/\bvibe-\S+/g, '').trim();
+        if (key && key !== 'basic') document.body.classList.add(`vibe-${key}`);
+        if (persist) {
+            try { localStorage.setItem(VIBE_STORAGE_KEY, key); } catch (e) {}
+        }
+        renderVibeGrid();
+    }
+
+    function renderVibeGrid() {
+        const grid = document.getElementById('vibe-grid');
+        if (!grid) return;
+        let current = 'basic';
+        try { current = localStorage.getItem(VIBE_STORAGE_KEY) || 'basic'; } catch (e) {}
+        grid.innerHTML = VIBES.map(v => `
+            <div class="vibe-swatch${v.key === current ? ' active' : ''}" onclick="applyVibe('${v.key}', true)" title="${escapeHtml(v.desc)}">
+                <div class="vibe-swatch-preview" style="background: linear-gradient(135deg, ${vibePreviewGradient(v.key)});">${v.emoji}</div>
+                <div class="vibe-swatch-name">${escapeHtml(v.name)}</div>
+            </div>
+        `).join('');
+    }
+
+    function vibePreviewGradient(key) {
+        const gradients = {
+            basic: '#0f172a, #ff4757', blackpepper: '#0a0a0a, #e63946', coconut: '#faf6f0, #c9a876',
+            strawberry: '#2a0a0f, #ff1744', bubblegum: '#2a0e24, #ff4fd8', blueberry: '#050b1f, #3b6eff',
+            banana: '#1f1a00, #ffd60a', lime: '#0a1f0a, #aef22c', mango: '#2a1400, #ff8c1a',
+            dragonfruit: '#150826, #d925ff', cocoa: '#1f130a, #c9834a'
+        };
+        return gradients[key] || gradients.basic;
+    }
+
+    function openVibeModal() { renderVibeGrid(); document.getElementById('vibe-modal').classList.add('active'); }
+    function closeVibeModal() { document.getElementById('vibe-modal').classList.remove('active'); }
+
+    (function initVibeOnLoad() {
+        let saved = 'basic';
+        try { saved = localStorage.getItem(VIBE_STORAGE_KEY) || 'basic'; } catch (e) {}
+        if (saved && saved !== 'basic') document.body.classList.add(`vibe-${saved}`);
+    })();
+
+    let supabaseClient = null;
+    let currentUser = null;
+    let channel = null;
+    let localStream = null;
+    let myId = crypto.randomUUID();
+    let myName = '';
+    let roomCode = '';
+    let micOn = true;
+    let camOn = true;
+
+    const peerConnections = {};
+    const remoteNames = {};
+
+    window.addEventListener('load', async () => {
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                updateUserStatusBar();
+            }
+
+            supabaseClient.auth.onAuthStateChange((_event, session) => {
+                currentUser = session ? session.user : null;
+                updateUserStatusBar();
+            });
+        }
+    });
+
+    function updateUserStatusBar() {
+        const bar = document.getElementById('user-status-bar');
+        if (currentUser) {
+            bar.innerHTML = `Connecté : <strong>${escapeHtml(currentUser.email)}</strong> | <a href="#" onclick="handleLogout()" style="color:var(--primary);">Déconnexion</a>`;
+        } else {
+            bar.innerHTML = `Non connecté (mode invité)`;
+        }
+    }
+
+    async function handleLogout() {
+        await supabaseClient.auth.signOut();
+        currentUser = null;
+        updateUserStatusBar();
+    }
+
+    async function handleCreateClick() {
+        if (!currentUser) {
+            openAuthModal();
+            return;
+        }
+
+        const hasAccess = await checkHostAccess();
+        if (hasAccess) {
+            showCreateForm();
+        } else {
+            openPaymentModal();
+        }
+    }
+
+    async function checkHostAccess() {
+        if (!currentUser) return false;
+
+        const { data: sub, error } = await supabaseClient
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .single();
+
+        if (error || !sub) return false;
+
+        if (sub.plan_type === 'free_trial' && sub.status === 'active') return true;
+        if (sub.plan_type === 'lifetime' && sub.status === 'active') return true;
+        if (sub.expires_at && new Date(sub.expires_at) > new Date()) return true;
+
+        return false;
+    }
+
+    function openAuthModal() { document.getElementById('auth-modal').classList.add('active'); }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.remove('active'); }
+
+    async function handleAuthSubmit(type) {
+        const email = document.getElementById('auth-email-input').value.trim();
+        const password = document.getElementById('auth-password-input').value.trim();
+
+        if (!email || !password) { setStatus('auth-status', 'Remplis tous les champs.', 'error'); return; }
+
+        setStatus('auth-status', 'Patientez...', null);
+
+        let res = (type === 'signup') 
+            ? await supabaseClient.auth.signUp({ email, password })
+            : await supabaseClient.auth.signInWithPassword({ email, password });
+
+        if (res.error) {
+            setStatus('auth-status', res.error.message, 'error');
+        } else {
+            currentUser = res.data.user;
+            closeAuthModal();
+            setStatus('auth-status', '', null);
+            handleCreateClick();
+        }
+    }
+
+    function openPaymentModal() {
+        document.getElementById('payment-modal').classList.add('active');
+        selectOffer('pass_24h');
+    }
+    function closePaymentModal() { document.getElementById('payment-modal').classList.remove('active'); }
+
+    function selectOffer(type) {
+        document.querySelectorAll('.pricing-card').forEach(el => el.classList.remove('selected'));
+        const card = document.getElementById(`card-${type}`);
+        if (card) card.classList.add('selected');
+
+        let price = type === 'pass_24h' ? '1.99' : (type === 'monthly' ? '3.99' : '14.99');
+        renderPayPalButtons(type, price);
+    }
+
+    function renderPayPalButtons(planType, price) {
+        const container = document.getElementById('paypal-button-container');
+        container.innerHTML = '';
+
+        if (planType === 'monthly') {
+            paypal.Buttons({
+                createSubscription: (data, actions) => {
+                    return actions.subscription.create({ plan_id: PAYPAL_MONTHLY_PLAN_ID });
+                },
+                onApprove: async (data, actions) => {
+                    const { data: session } = await supabaseClient.auth.getSession();
+                    await fetch(`${SUPABASE_URL}/functions/v1/verify-access`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.session.access_token}`
+                        },
+                        body: JSON.stringify({ action: 'verify_paypal', paypalOrderId: data.subscriptionID, planType: 'monthly' })
+                    });
+
+                    closePaymentModal();
+                    showCreateForm();
+                },
+                onError: (err) => { console.error("Erreur Abonnement PayPal :", err); }
+            }).render('#paypal-button-container');
+        } else {
+            paypal.Buttons({
+                createOrder: (data, actions) => {
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: `Rush'Up! Live - ${planType}`,
+                            amount: { value: price, currency_code: 'EUR' }
+                        }]
+                    });
+                },
+                onApprove: async (data, actions) => {
+                    const details = await actions.order.capture();
+                    
+                    const { data: session } = await supabaseClient.auth.getSession();
+                    await fetch(`${SUPABASE_URL}/functions/v1/verify-access`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session.session.access_token}`
+                        },
+                        body: JSON.stringify({ action: 'verify_paypal', paypalOrderId: details.id, planType })
+                    });
+
+                    closePaymentModal();
+                    showCreateForm();
+                },
+                onError: (err) => { console.error("Erreur Paiement PayPal :", err); }
+            }).render('#paypal-button-container');
+        }
+    }
+
+    async function applyPromoCode() {
+        const code = document.getElementById('promo-code-input').value.trim();
+        if (!code) return;
+
+        const { data: session } = await supabaseClient.auth.getSession();
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/verify-access`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.session.access_token}`
+            },
+            body: JSON.stringify({ action: 'apply_promo', promoCode: code })
+        });
+
+        const data = await res.json();
+        if (data.error) {
+            setStatus('promo-status', data.error, 'error');
+        } else {
+            setStatus('promo-status', 'Code activé avec succès !', 'ok');
+            setTimeout(() => { closePaymentModal(); showCreateForm(); }, 1000);
+        }
+    }
+
+    function showCreateForm() {
+        document.getElementById('entry-choice-card').style.display = 'none';
+        document.getElementById('join-form-card').style.display = 'none';
+        document.getElementById('create-form-card').style.display = 'block';
+    }
+
+    function showJoinForm() {
+        document.getElementById('entry-choice-card').style.display = 'none';
+        document.getElementById('create-form-card').style.display = 'none';
+        document.getElementById('join-form-card').style.display = 'block';
+    }
+
+    function backToEntryChoice() {
+        document.getElementById('create-form-card').style.display = 'none';
+        document.getElementById('join-form-card').style.display = 'none';
+        document.getElementById('entry-choice-card').style.display = 'block';
+    }
+
+    function generateRoomCode() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let code = '';
+        for (let i = 0; i < 5; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        return code;
+    }
+
+    function setStatus(elId, msg, type) {
+        const el = document.getElementById(elId);
+        el.innerText = msg || '';
+        el.className = 'status-line' + (type ? ` ${type}` : '');
+    }
+
+    async function createRoom() {
+        const nameInput = document.getElementById('create-name-input').value.trim();
+        if (!nameInput) { setStatus('create-status', 'Entre ton prénom.', 'error'); return; }
+        myName = nameInput;
+        roomCode = generateRoomCode();
+        
+        consumeTrialIfUsed();
+        await connectToRoom('create-status');
+    }
+
+    async function consumeTrialIfUsed() {
+        if (!currentUser) return;
+        const { data: sub } = await supabaseClient
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .single();
+
+        if (sub && sub.plan_type === 'free_trial') {
+            await supabaseClient
+                .from('subscriptions')
+                .update({ status: 'expired' })
+                .eq('user_id', currentUser.id);
+        }
+    }
+
+    async function joinExistingRoom() {
+        const nameInput = document.getElementById('join-name-input').value.trim();
+        const roomInput = document.getElementById('join-code-input').value.trim().toUpperCase();
+        if (!nameInput) { setStatus('join-status', 'Entre ton prénom.', 'error'); return; }
+        if (!roomInput) { setStatus('join-status', 'Entre le code du salon.', 'error'); return; }
+        myName = nameInput;
+        roomCode = roomInput;
+        await connectToRoom('join-status');
+    }
+
+    async function connectToRoom(statusElId) {
+        setStatus(statusElId, 'Activation de la caméra...', null);
+
+        const videoConstraints = {
+            width: { ideal: 480, max: 640 },
+            height: { ideal: 360, max: 480 },
+            frameRate: { ideal: 20, max: 24 },
+            facingMode: 'user'
+        };
+
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: videoConstraints,
+                audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+            });
+        } catch (err) {
+            setStatus(statusElId, "Impossible d'accéder à la caméra/micro. Vérifie les autorisations du navigateur.", 'error');
+            return;
+        }
+
+        setStatus(statusElId, 'Connexion au salon...', null);
+        document.getElementById('room-code-display').innerText = roomCode;
+        addVideoTile(myId, myName, localStream, true);
+
+        startBeaconEmission();
+        startBeaconDetection();
+
+        channel = supabaseClient.channel(`room-${roomCode}`, {
+            config: { presence: { key: myId }, broadcast: { self: false } }
+        });
+
+        channel.on('presence', { event: 'sync' }, handlePresenceSync);
+        channel.on('presence', { event: 'join' }, ({ newPresences }) => handlePresenceJoin(newPresences));
+        channel.on('presence', { event: 'leave' }, ({ leftPresences }) => handlePresenceLeave(leftPresences));
+        channel.on('broadcast', { event: 'webrtc-signal' }, ({ payload }) => handleSignal(payload));
+        channel.on('broadcast', { event: 'game-msg' }, ({ payload }) => handleGameMessage(payload));
+
+        let hasConnectedOnce = false;
+
+        channel.subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                await channel.track({ id: myId, name: myName, joinedAt: Date.now() });
+                if (!hasConnectedOnce) {
+                    hasConnectedOnce = true;
+                    showScreen('room-screen');
+                    setStatus(statusElId, '', null);
+                    checkNetworkQuality();
+                } else {
+                    setConnectionBanner(false);
+                }
+            } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+                if (!hasConnectedOnce) {
+                    setStatus(statusElId, 'Connexion au salon impossible. Vérifie ta configuration Supabase.', 'error');
+                } else {
+                    setConnectionBanner(true);
+                }
+            }
+        });
+    }
+
+    function setConnectionBanner(show) {
+        const banner = document.getElementById('connection-banner');
+        if (banner) banner.style.display = show ? 'block' : 'none';
+    }
+
+    let networkHintShown = false;
+    function checkNetworkQuality() {
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (!conn) return;
+        const isSlow = conn.saveData || ['slow-2g', '2g'].includes(conn.effectiveType);
+        const banner = document.getElementById('network-hint-banner');
+        if (!banner) return;
+        if (isSlow && camOn && !networkHintShown) {
+            networkHintShown = true;
+            banner.style.display = 'block';
+            setTimeout(() => { banner.style.display = 'none'; }, 8000);
+        } else if (!isSlow) {
+            banner.style.display = 'none';
+        }
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('app-header').style.display = (id === 'entry-screen') ? 'block' : 'none';
+
+        if (id === 'room-screen') requestWakeLock();
+        else releaseWakeLock();
+    }
+
+    function updateHeaderFooterPlacement(gameStarted) {
+        const participantCount = document.getElementById('participant-count');
+        if (participantCount) participantCount.style.display = gameStarted ? 'none' : 'block';
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+        if (document.getElementById('room-screen').classList.contains('active')) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    let wakeLock = null;
+    let noSleepVideo = null;
+    const NOSLEEP_VIDEO_SRC = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAARnbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAA';
+
+    function startNoSleepFallback() {
+        if (!noSleepVideo) {
+            noSleepVideo = document.createElement('video');
+            noSleepVideo.setAttribute('muted', '');
+            noSleepVideo.setAttribute('playsinline', '');
+            noSleepVideo.setAttribute('webkit-playsinline', '');
+            noSleepVideo.muted = true;
+            noSleepVideo.loop = true;
+            noSleepVideo.style.cssText = 'position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;';
+            noSleepVideo.src = NOSLEEP_VIDEO_SRC;
+            document.body.appendChild(noSleepVideo);
+        }
+        noSleepVideo.play().catch(() => {});
+    }
+
+    function stopNoSleepFallback() { if (noSleepVideo) noSleepVideo.pause(); }
+
+    async function requestWakeLock() {
+        if (!('wakeLock' in navigator)) { startNoSleepFallback(); return; }
+        if (wakeLock) return;
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => { wakeLock = null; });
+        } catch (err) { wakeLock = null; }
+    }
+
+    function releaseWakeLock() {
+        if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+        stopNoSleepFallback();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        if (!document.getElementById('room-screen').classList.contains('active')) return;
+
+        requestWakeLock();
+        if (localStream) {
+            localStream.getAudioTracks().forEach(t => { t.enabled = micOn; });
+            localStream.getVideoTracks().forEach(t => { t.enabled = camOn; });
+        }
+        Object.keys(peerConnections).forEach(peerId => {
+            const pc = peerConnections[peerId];
+            if (pc && pc.connectionState !== 'connected') attemptIceRestart(peerId);
+        });
+    });
+
+    let presentPlayers = {};
+    let presentPlayersJoinedAt = {};
+
+    function handlePresenceSync() {
+        const state = channel.presenceState();
+        presentPlayers = {};
+        presentPlayersJoinedAt = {};
+        Object.keys(state).forEach(key => {
+            state[key].forEach(p => {
+                presentPlayers[p.id] = p.name;
+                presentPlayersJoinedAt[p.id] = p.joinedAt || Date.now();
+                if (p.id !== myId && !peerConnections[p.id]) {
+                    remoteNames[p.id] = p.name;
+                    connectToPeer(p.id);
+                }
+            });
+        });
+        updateParticipantCount();
+        refreshHostStatus();
+        if (gameState.phase === 'lobby') setSpotlightPlayer(getHostId());
+    }
+
+    function handlePresenceJoin(newPresences) {
+        newPresences.forEach(p => {
+            presentPlayers[p.id] = p.name;
+            presentPlayersJoinedAt[p.id] = p.joinedAt || Date.now();
+            if (p.id !== myId && !peerConnections[p.id]) {
+                remoteNames[p.id] = p.name;
+                connectToPeer(p.id);
+            }
+        });
+        updateParticipantCount();
+        refreshHostStatus();
+        if (gameState.phase === 'lobby') setSpotlightPlayer(getHostId());
+    }
+
+    function handlePresenceLeave(leftPresences) {
+        leftPresences.forEach(p => {
+            delete presentPlayers[p.id];
+            delete presentPlayersJoinedAt[p.id];
+            closePeerConnection(p.id);
+            removeVideoTile(p.id);
+        });
+        updateParticipantCount();
+        refreshHostStatus();
+
+        if (gameState.phase !== 'lobby') applyGameState(gameState);
+        if (isHost() && gameState.phase === 'playing') {
+            leftPresences.forEach(p => {
+                if (p.id === gameState.activePlayerId) hostAdvanceTurn();
+            });
+        }
+    }
+
+    function updateParticipantCount() {
+        const n = document.querySelectorAll('.video-tile').length;
+        const el = document.getElementById('participant-count');
+        el.innerText = n <= 1 ? '1 participant (toi seul pour le moment)' : `${n} participants`;
+    }
+
+    function connectToPeer(peerId) {
+        const pc = getOrCreatePeerConnection(peerId);
+        if (myId < peerId) initiateOffer(peerId, pc);
+    }
+
+    const reconnectTimers = {};
+    const reconnectAttempts = {};
+
+    function getOrCreatePeerConnection(peerId) {
+        if (peerConnections[peerId]) return peerConnections[peerId];
+
+        const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+        peerConnections[peerId] = pc;
+        reconnectAttempts[peerId] = 0;
+
+        if (localStream) {
+            localStream.getTracks().forEach(track => {
+                if (track.kind === 'audio') {
+                    const audioClone = track.clone();
+                    audioClone.enabled = micOn && !sameRoomPeers.has(peerId);
+                    const sender = pc.addTrack(audioClone, localStream);
+                    audioSenders[peerId] = sender;
+                } else {
+                    const sender = pc.addTrack(track, localStream);
+                    if (track.kind === 'video') videoSenders[peerId] = sender;
+                }
+            });
+        }
+        adjustVideoBitrates();
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate) sendSignal(peerId, 'ice', event.candidate);
+        };
+
+        pc.ontrack = (event) => {
+            addVideoTile(peerId, remoteNames[peerId] || 'Joueur', event.streams[0], false);
+        };
+
+        pc.onconnectionstatechange = () => {
+            const state = pc.connectionState;
+            if (state === 'connected') {
+                clearTimeout(reconnectTimers[peerId]);
+                delete reconnectTimers[peerId];
+                reconnectAttempts[peerId] = 0;
+                setTileReconnecting(peerId, false);
+            } else if (state === 'disconnected') {
+                setTileReconnecting(peerId, true);
+                clearTimeout(reconnectTimers[peerId]);
+                reconnectTimers[peerId] = setTimeout(() => attemptIceRestart(peerId), 4000);
+            } else if (state === 'failed') {
+                setTileReconnecting(peerId, true);
+                attemptIceRestart(peerId);
+            }
+        };
+
+        return pc;
+    }
+
+    function setTileReconnecting(peerId, isReconnecting) {
+        const tile = document.getElementById(`tile-${peerId}`);
+        if (tile) tile.classList.toggle('reconnecting', isReconnecting);
+    }
+
+    async function attemptIceRestart(peerId) {
+        const pc = peerConnections[peerId];
+        if (!pc) return;
+
+        reconnectAttempts[peerId] = (reconnectAttempts[peerId] || 0) + 1;
+        const nextDelay = Math.min(3000 + reconnectAttempts[peerId] * 2000, 15000);
+        clearTimeout(reconnectTimers[peerId]);
+        reconnectTimers[peerId] = setTimeout(() => {
+            if (peerConnections[peerId] && peerConnections[peerId].connectionState !== 'connected') {
+                attemptIceRestart(peerId);
+            }
+        }, nextDelay);
+
+        if (myId < peerId) {
+            try {
+                const offer = await pc.createOffer({ iceRestart: true });
+                await pc.setLocalDescription(offer);
+                sendSignal(peerId, 'offer', offer);
+            } catch (err) {}
+        }
+    }
+
+    async function initiateOffer(peerId, pc) {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        sendSignal(peerId, 'offer', offer);
+    }
+
+    function sendSignal(to, type, data) {
+        channel.send({ type: 'broadcast', event: 'webrtc-signal', payload: { to, from: myId, type, data } });
+    }
+
+    const pendingIceCandidates = {};
+    async function flushPendingIceCandidates(peerId, pc) {
+        const queued = pendingIceCandidates[peerId];
+        if (!queued || queued.length === 0) return;
+        delete pendingIceCandidates[peerId];
+        for (const candidateData of queued) {
+            try { await pc.addIceCandidate(new RTCIceCandidate(candidateData)); } catch (err) {}
+        }
+    }
+
+    async function handleSignal(payload) {
+        if (payload.to !== myId) return;
+        const peerId = payload.from;
+        const pc = getOrCreatePeerConnection(peerId);
+
+        if (payload.type === 'offer') {
+            await pc.setRemoteDescription(new RTCSessionDescription(payload.data));
+            await flushPendingIceCandidates(peerId, pc);
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            sendSignal(peerId, 'answer', answer);
+        } else if (payload.type === 'answer') {
+            await pc.setRemoteDescription(new RTCSessionDescription(payload.data));
+            await flushPendingIceCandidates(peerId, pc);
+        } else if (payload.type === 'ice') {
+            if (pc.remoteDescription && pc.remoteDescription.type) {
+                try { await pc.addIceCandidate(new RTCIceCandidate(payload.data)); } catch (err) {}
+            } else {
+                if (!pendingIceCandidates[peerId]) pendingIceCandidates[peerId] = [];
+                pendingIceCandidates[peerId].push(payload.data);
+            }
+        }
+    }
+
+    function closePeerConnection(peerId) {
+        if (peerConnections[peerId]) { peerConnections[peerId].close(); delete peerConnections[peerId]; }
+        if (audioSenders[peerId] && audioSenders[peerId].track) audioSenders[peerId].track.stop();
+        delete audioSenders[peerId];
+        delete videoSenders[peerId];
+        delete remoteNames[peerId];
+        delete pendingIceCandidates[peerId];
+        clearTimeout(reconnectTimers[peerId]);
+        delete reconnectTimers[peerId];
+        delete reconnectAttempts[peerId];
+        adjustVideoBitrates();
+    }
+
+    const videoSenders = {};
+    const audioSenders = {};
+
+    function adjustVideoBitrates() {
+        const peerCount = Object.keys(peerConnections).length;
+        let maxBitrate = peerCount <= 2 ? 350000 : (peerCount <= 4 ? 220000 : 140000);
+
+        Object.values(videoSenders).forEach(sender => {
+            if (!sender || !sender.setParameters) return;
+            const params = sender.getParameters();
+            if (!params.encodings || params.encodings.length === 0) params.encodings = [{}];
+            params.encodings[0].maxBitrate = maxBitrate;
+            sender.setParameters(params).catch(() => {});
+        });
+    }
+
+    function addVideoTile(id, name, stream, isSelf) {
+        let tile = document.getElementById(`tile-${id}`);
+        if (!tile) {
+            tile = document.createElement('div');
+            tile.id = `tile-${id}`;
+            tile.className = 'video-tile' + (isSelf ? ' self' : ' remote');
+            tile.dataset.playerName = name;
+
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.playsInline = true;
+            if (isSelf) {
+                video.muted = true;
+            } else {
+                video.muted = true;
+                sameRoomPeers.add(id);
+            }
+
+            const nameTag = document.createElement('div');
+            nameTag.className = 'name-tag';
+            nameTag.innerText = isSelf ? `${name} (toi)` : name;
+
+            tile.appendChild(video);
+            tile.appendChild(nameTag);
+
+            if (!isSelf) {
+                const sameRoomBtn = document.createElement('button');
+                sameRoomBtn.className = 'tile-sameroom-btn';
+                sameRoomBtn.type = 'button';
+                sameRoomBtn.innerText = '🔊';
+                sameRoomBtn.onclick = (e) => { e.stopPropagation(); toggleSameRoomPeer(id); };
+                tile.appendChild(sameRoomBtn);
+            } else {
+                const selfControls = document.createElement('div');
+                selfControls.className = 'tile-self-controls';
+
+                const micBtn = document.createElement('button');
+                micBtn.type = 'button';
+                micBtn.id = 'toggle-mic-btn';
+                micBtn.innerText = '🎤';
+                micBtn.onclick = (e) => { e.stopPropagation(); toggleMic(); };
+
+                const camBtn = document.createElement('button');
+                camBtn.type = 'button';
+                camBtn.id = 'toggle-cam-btn';
+                camBtn.innerText = '📹';
+                camBtn.onclick = (e) => { e.stopPropagation(); toggleCam(); };
+
+                selfControls.appendChild(micBtn);
+                selfControls.appendChild(camBtn);
+                tile.appendChild(selfControls);
+            }
+
+            const targetContainer = (id === currentSpotlightId) ? document.getElementById('spotlight-area') : document.getElementById('video-grid');
+            targetContainer.appendChild(tile);
+            if (id === currentSpotlightId) {
+                document.getElementById('spotlight-area').classList.add('active');
+                document.getElementById('video-grid').classList.add('has-spotlight');
+            }
+        } else {
+            tile.dataset.playerName = name;
+        }
+        tile.querySelector('video').srcObject = stream;
+        updateParticipantCount();
+        updateOthersTileSize();
+        updateVideoTileLabels();
+    }
+
+    function removeVideoTile(id) {
+        const tile = document.getElementById(`tile-${id}`);
+        if (tile) tile.remove();
+        if (currentSpotlightId === id) {
+            currentSpotlightId = null;
+            document.getElementById('spotlight-area').classList.remove('active');
+            document.getElementById('video-grid').classList.remove('has-spotlight');
+        }
+        updateOthersTileSize();
+    }
+
+    function getPlayerTeamNumber(id) {
+        if (gameState && gameState.teamRosters) {
+            const found = Object.keys(gameState.teamRosters).find(t => gameState.teamRosters[t].includes(id));
+            if (found) return found;
+        }
+        if (configTeamAssignments && configTeamAssignments[id]) return String(configTeamAssignments[id]);
+        return null;
+    }
+
+    function updateVideoTileLabels() {
+        document.querySelectorAll('.video-tile').forEach(tile => {
+            const id = tile.id.replace('tile-', '');
+            const nameTag = tile.querySelector('.name-tag');
+            if (!nameTag) return;
+            const isSelf = tile.classList.contains('self');
+            const baseName = tile.dataset.playerName || '?';
+            const team = getPlayerTeamNumber(id);
+            const label = isSelf ? `${baseName} (toi)` : baseName;
+            nameTag.innerText = team ? `${label} · Éq.${team}` : label;
+            tile.classList.toggle('team-1', team === '1');
+            tile.classList.toggle('team-2', team === '2');
+            tile.classList.toggle('team-3', team === '3');
+        });
+    }
+
+    function updateOthersTileSize() {
+        const grid = document.getElementById('video-grid');
+        const count = grid.querySelectorAll('.video-tile').length;
+        let minSize = count >= 7 ? 55 : (count >= 5 ? 70 : (count >= 3 ? 90 : 120));
+        grid.style.setProperty('--tile-min', `${minSize}px`);
+    }
+
+    let currentSpotlightId = null;
+
+    function setSpotlightPlayer(peerId) {
+        const spotlightArea = document.getElementById('spotlight-area');
+        const grid = document.getElementById('video-grid');
+
+        if (currentSpotlightId === peerId) return;
+
+        if (currentSpotlightId) {
+            const prevTile = document.getElementById(`tile-${currentSpotlightId}`);
+            if (prevTile) grid.appendChild(prevTile);
+        }
+
+        currentSpotlightId = peerId;
+
+        if (!peerId) {
+            spotlightArea.classList.remove('active');
+            grid.classList.remove('has-spotlight');
+            updateOthersTileSize();
+            return;
+        }
+
+        const tile = document.getElementById(`tile-${peerId}`);
+        if (tile) {
+            spotlightArea.innerHTML = '';
+            spotlightArea.appendChild(tile);
+            spotlightArea.classList.add('active');
+            grid.classList.add('has-spotlight');
+        }
+        updateOthersTileSize();
+    }
+
+    function toggleMic() {
+        if (!localStream) return;
+        micOn = !micOn;
+        localStream.getAudioTracks().forEach(t => t.enabled = micOn);
+        Object.keys(audioSenders).forEach(peerId => {
+            const sender = audioSenders[peerId];
+            if (sender && sender.track) sender.track.enabled = micOn && !sameRoomPeers.has(peerId);
+        });
+        const btn = document.getElementById('toggle-mic-btn');
+        btn.classList.toggle('off', !micOn);
+        btn.innerText = micOn ? '🎤' : '🔇';
+    }
+
+    function toggleCam() {
+        if (!localStream) return;
+        camOn = !camOn;
+        localStream.getVideoTracks().forEach(t => t.enabled = camOn);
+        const btn = document.getElementById('toggle-cam-btn');
+        btn.classList.toggle('off', !camOn);
+        btn.innerText = camOn ? '📹' : '🚫';
+    }
+
+    let sameRoomPeers = new Set();
+    const manualSameRoomOverrideUntil = {};
+
+    function setSameRoomPeer(id, shouldMute) {
+        if (sameRoomPeers.has(id) === shouldMute) return;
+
+        if (shouldMute) sameRoomPeers.add(id); else sameRoomPeers.delete(id);
+        const isMuted = shouldMute;
+
+        const tile = document.getElementById(`tile-${id}`);
+        if (tile) {
+            const video = tile.querySelector('video');
+            if (video) video.muted = isMuted;
+            const btn = tile.querySelector('.tile-sameroom-btn');
+            if (btn) {
+                btn.classList.toggle('muted', isMuted);
+                btn.innerText = isMuted ? '🔇' : '🔊';
+            }
+        }
+
+        const audioSender = audioSenders[id];
+        if (audioSender && audioSender.track) {
+            audioSender.track.enabled = !isMuted && micOn;
+        }
+    }
+
+    function toggleSameRoomPeer(id) {
+        manualSameRoomOverrideUntil[id] = Date.now() + 15000;
+        setSameRoomPeer(id, !sameRoomPeers.has(id));
+    }
+
+    const BEACON_MIN_FREQ = 18500;
+    const BEACON_FREQ_STEP = 45;
+    const BEACON_SLOTS = 20;
+    const BEACON_FFT_SIZE = 16384;
+    const BEACON_DETECT_THRESHOLD_DB = -65;
+    const BEACON_CONFIRM_TICKS = 2;
+    const BEACON_RELEASE_TICKS = 5;
+    const BEACON_TICK_MS = 250;
+
+    function beaconFrequencyFor(peerId) {
+        let hash = 0;
+        for (let i = 0; i < peerId.length; i++) hash = (hash * 31 + peerId.charCodeAt(i)) >>> 0;
+        return BEACON_MIN_FREQ + (hash % BEACON_SLOTS) * BEACON_FREQ_STEP;
+    }
+
+    let beaconEmitCtx = null;
+    let beaconOscillator = null;
+
+    function startBeaconEmission() {
+        if (beaconEmitCtx) return;
+        try {
+            beaconEmitCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = beaconEmitCtx.createOscillator();
+            const gain = beaconEmitCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = beaconFrequencyFor(myId);
+            gain.gain.value = 0.09;
+            osc.connect(gain);
+            gain.connect(beaconEmitCtx.destination);
+            osc.start();
+            beaconOscillator = osc;
+        } catch (err) {}
+    }
+
+    function stopBeaconEmission() {
+        if (beaconOscillator) { try { beaconOscillator.stop(); } catch (err) {} beaconOscillator = null; }
+        if (beaconEmitCtx) { try { beaconEmitCtx.close(); } catch (err) {} beaconEmitCtx = null; }
+    }
+
+    let beaconAnalyser = null;
+    let beaconAnalyserCtx = null;
+    let beaconRawStream = null;
+    let beaconDetectInterval = null;
+    const beaconHitTicks = {};
+    const beaconMissTicks = {};
+
+    async function startBeaconDetection() {
+        if (beaconAnalyser) return;
+        try {
+            beaconRawStream = await navigator.mediaDevices.getUserMedia({
+                audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+            });
+            beaconAnalyserCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source = beaconAnalyserCtx.createMediaStreamSource(beaconRawStream);
+            beaconAnalyser = beaconAnalyserCtx.createAnalyser();
+            beaconAnalyser.fftSize = BEACON_FFT_SIZE;
+            beaconAnalyser.smoothingTimeConstant = 0.2;
+            source.connect(beaconAnalyser);
+
+            beaconDetectInterval = setInterval(runBeaconDetectionTick, BEACON_TICK_MS);
+        } catch (err) {}
+    }
+
+    function stopBeaconDetection() {
+        if (beaconDetectInterval) { clearInterval(beaconDetectInterval); beaconDetectInterval = null; }
+        if (beaconRawStream) { beaconRawStream.getTracks().forEach(t => t.stop()); beaconRawStream = null; }
+        if (beaconAnalyserCtx) { try { beaconAnalyserCtx.close(); } catch (err) {} beaconAnalyserCtx = null; }
+        beaconAnalyser = null;
+        Object.keys(beaconHitTicks).forEach(k => delete beaconHitTicks[k]);
+        Object.keys(beaconMissTicks).forEach(k => delete beaconMissTicks[k]);
+    }
+
+    function runBeaconDetectionTick() {
+        if (!beaconAnalyser) return;
+        const freqData = new Float32Array(beaconAnalyser.frequencyBinCount);
+        beaconAnalyser.getFloatFrequencyData(freqData);
+        const binWidth = beaconAnalyserCtx.sampleRate / beaconAnalyser.fftSize;
+
+        Object.keys(peerConnections).forEach(peerId => {
+            if (Date.now() < (manualSameRoomOverrideUntil[peerId] || 0)) return;
+
+            const freq = beaconFrequencyFor(peerId);
+            const centerBin = Math.round(freq / binWidth);
+            let maxDb = -Infinity;
+            for (let b = centerBin - 2; b <= centerBin + 2; b++) {
+                if (freqData[b] !== undefined) maxDb = Math.max(maxDb, freqData[b]);
+            }
+            const detected = maxDb > BEACON_DETECT_THRESHOLD_DB;
+
+            if (detected) {
+                beaconHitTicks[peerId] = (beaconHitTicks[peerId] || 0) + 1;
+                beaconMissTicks[peerId] = 0;
+                if (beaconHitTicks[peerId] >= BEACON_CONFIRM_TICKS) setSameRoomPeer(peerId, true);
+            } else {
+                beaconMissTicks[peerId] = (beaconMissTicks[peerId] || 0) + 1;
+                beaconHitTicks[peerId] = 0;
+                if (beaconMissTicks[peerId] >= BEACON_RELEASE_TICKS) setSameRoomPeer(peerId, false);
+            }
+        });
+    }
+
+    function leaveRoom() {
+        const inGame = gameState && gameState.phase !== 'lobby';
+        document.getElementById('leave-confirm-text').innerText = inGame
+            ? "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours."
+            : "Es-tu sûr de vouloir quitter le salon ?";
+        document.getElementById('leave-confirm-modal').classList.add('active');
+    }
+
+    function closeLeaveConfirmModal() {
+        document.getElementById('leave-confirm-modal').classList.remove('active');
+    }
+
+    function doLeaveRoom() {
+        closeLeaveConfirmModal();
+
+        if (channel) {
+            channel.untrack();
+            supabaseClient.removeChannel(channel);
+            channel = null;
+        }
+        Object.keys(peerConnections).forEach(closePeerConnection);
+
+        if (localStream) {
+            localStream.getTracks().forEach(t => t.stop());
+            localStream = null;
+        }
+
+        stopBeaconEmission();
+        stopBeaconDetection();
+
+        resetGameState();
+        document.getElementById('video-grid').innerHTML = '';
+        document.getElementById('spotlight-area').innerHTML = '';
+        setConnectionBanner(false);
+        document.getElementById('network-hint-banner').style.display = 'none';
+        networkHintShown = false;
+        micOn = true;
+        camOn = true;
+        sameRoomPeers.clear();
+        Object.keys(manualSameRoomOverrideUntil).forEach(k => delete manualSameRoomOverrideUntil[k]);
+        showScreen('entry-screen');
+        backToEntryChoice();
+        setStatus('create-status', '', null);
+        setStatus('join-status', '', null);
+    }
+
+    const WORD_DATABASE = {
+        gen_easy: ["Bouteille", "Soleil", "Voiture", "Maison", "Fleur", "Chien", "Chat", "Livre", "Arbre", "Chaise", "Table", "Téléphone", "Pomme", "Pain", "Vélo", "Crayon", "Gâteau", "Télévision", "Lit", "Porte", "Fenêtre", "Poisson", "Oiseau", "Plage", "Neige", "Pluie", "Chapeau", "Chaussure", "Lait", "Chocolat", "Pizza", "Glace", "Horloge", "Miroir", "Brosse à dents", "Savon", "Manteau", "Balançoire", "Balle", "Sable", "Mer", "Lune", "Étoile", "Nuage", "Avion", "Bateau", "Train", "Sifflet", "Lampe", "Sac à dos", "Casquette", "Lunettes", "Guitare", "Piano", "Baignoire", "Tasse", "Cuillère", "Fourchette", "Assiette", "Serviette", "Verre", "Pyjama", "Chaussette", "Ciseaux", "Papier", "Cadeau", "Sac", "Trottinette", "Arrosoir", "Canard", "Lapin", "Vache", "Cochon", "Cheval", "Mouton", "Poule", "Coq", "Pigeon", "Grenouille", "Tortue", "Singe", "Lion", "Éléphant", "Girafe", "Ours", "Panda", "Dauphin", "Baleine", "Requin", "Fraise", "Banane", "Orange", "Citron", "Tomate", "Carotte", "Fromage", "Beurre", "Sucre", "Parapluie", "Escalier"],
+        gen_medium: ["Labyrinthe", "Avalanche", "Éclipse", "Sismographe", "Boussole", "Grotte", "Sous-marin", "Microscope", "Télescope", "Cascade", "Phare", "Caméléon", "Astéroïde", "Symphonie", "Brouillard", "Tornade", "Sable mouvant", "Cathédrale", "Pyramide", "Sablier", "Caravane", "Télécommande", "Sèche-cheveux", "Tondeuse", "Ventilateur", "Aspirateur", "Grille-pain", "Cafetière", "Micro-ondes", "Réveil", "Thermomètre", "Baromètre", "Escrime", "Escalade", "Tir à l'arc", "Plongée", "Équitation", "Skateboard", "Ping-pong", "Badminton", "Marathon", "Kayak", "Snowboard", "Surf", "Hélicoptère", "Montgolfière", "Fusée", "Satellite", "Gare", "Aéroport", "Bibliothèque", "Musée", "Cinéma", "Théâtre", "Opéra", "Stade", "Patinoire", "Piscine", "Zoo", "Cirque", "Pâtisserie", "Boulangerie", "Boucherie", "Pharmacie", "Hôpital", "Commissariat", "Poste", "Mairie", "Château", "Forteresse", "Donjon", "Moulin", "Pont", "Tunnel", "Barrage", "Port", "Frontière", "Capitale", "Continent", "Île", "Presqu'île", "Volcan", "Cratère", "Geyser", "Glacier", "Iceberg", "Désert", "Oasis", "Jungle", "Savane", "Toundra", "Récif", "Lagon", "Archipel", "Canyon", "Vallée", "Falaise", "Colline", "Marais", "Delta"],
+        gen_hard: ["Procrastination", "Anachronisme", "Alchimie", "Pharaon", "Calligraphie", "Sarcophage", "Hypothèse", "Cryptographie", "Amphithéâtre", "Métamorphose", "Cartographie", "Archéologie", "Paléontologie", "Philosophie", "Anthropologie", "Météorologie", "Chronologie", "Généalogie", "Mythologie", "Astrologie", "Astronomie", "Anatomie", "Sismologie", "Volcanologie", "Théorie", "Axiome", "Paradoxe", "Minotaure", "Centaure", "Gorgone", "Sphinx", "Salamandre", "Phénix", "Gargouille", "Catacombes", "Mausolée", "Obélisque", "Parthénon", "Colisée", "Acropole", "Nécropole", "Rétrospective", "Perspicacité", "Bienveillance", "Magnanimité", "Altruisme", "Empirisme", "Pragmatisme", "Scepticisme", "Stoïcisme", "Épicurisme", "Syllogisme", "Rhétorique", "Éloquence", "Sophisme", "Allégorie", "Métaphore", "Hyperbole", "Oxymore", "Litote", "Périphrase", "Euphémisme", "Onomatopée", "Pléonasme", "Anagramme", "Palindrome", "Acrostiche", "Sonnet", "Alexandrin", "Calligramme", "Soliloque", "Monologue", "Tirade", "Quiproquo", "Intrigue", "Péripétie", "Dénouement", "Prologue", "Épilogue", "Catharsis", "Dramaturge", "Scénographe", "Chorégraphe", "Chef d'orchestre", "Virtuose", "Mécène", "Philanthrope", "Polyglotte", "Autodidacte", "Érudit", "Visionnaire", "Précurseur", "Utopie", "Dystopie", "Ambivalence", "Nostalgie", "Xénophobie", "Idéologie", "Symbolisme", "Réalisme"],
+        kids: ["Chat", "Chien", "Vache", "Cochon", "Lion", "Éléphant", "Singe", "Canard", "Oiseau", "Poisson", "Banane", "Pomme", "Gâteau", "Glace", "Pizza", "Pain", "Lait", "Chocolat", "Fraise", "Carotte", "Voiture", "Vélo", "Train", "Avion", "Bateau", "Fusée", "Camion de pompiers", "Tracteur", "Bus", "Moto", "Lit", "Chaise", "Table", "Télévision", "Brosse à dents", "Maison", "Soleil", "Pluie", "Neige", "Nuage", "Ballon", "Poupée", "Livre", "Crayon", "Ciseaux", "Chapeau", "Chaussure", "Manteau", "Toboggan", "Balançoire", "Girafe", "Ours", "Lapin", "Grenouille", "Tortue", "Papillon", "Abeille", "Dauphin", "Cheval", "Mouton", "Sucette", "Bonbon", "Jus d'orange", "Cuillère", "Fourchette", "Assiette", "Verre", "Serviette", "Pyjama", "Chaussette", "Fleur", "Arbre", "Lune", "Étoile", "Mer", "Sable", "Coquillage", "Château de sable", "Bonhomme de neige", "Cadeau", "Doudou", "Tétine", "Biberon", "Pinceau", "Peinture", "Tambour", "Trompette", "Guitare", "Horloge", "Miroir", "Savon", "Baignoire", "Peigne", "Sac à dos", "Trottinette", "Cartable", "Casquette", "Lunettes", "Balle", "Lego"],
+        family: ["Pompier", "Boulanger", "Médecin", "Astronaute", "Jardinier", "Policier", "Cuisinier", "Professeur", "Vétérinaire", "Coiffeur", "Supermarché", "Boulangerie", "Piscine", "Aéroport", "Cinéma", "Bibliothèque", "Zoo", "Plage", "Musée", "Gare", "Téléphone", "Grille-pain", "Aspirateur", "Machine à laver", "Parapluie", "Valise", "Réveil", "Casque d'écoute", "Télécommande", "Ventilateur", "Peur", "Colère", "Joie", "Sommeil", "Faim", "Course à pied", "Danse", "Jardinage", "Bricolage", "Pêche", "Château fort", "Tour Eiffel", "Fusée spatiale", "Sous-marin", "Grotte", "Montagne", "Désert", "Volcan", "Île déserte", "Forêt", "Sifflet", "Lampe de poche", "Loupe", "Boussole", "Gourde", "Sac de couchage", "Tente", "Feu de camp", "Pique-nique", "Gâteau d'anniversaire", "Dentiste", "Plombier", "Facteur", "Pilote", "Détective", "Architecte", "Comédien", "Photographe", "Électricien", "Mécanicien", "Gare routière", "Port de pêche", "Hôpital", "Stade de foot", "Parc d'attractions", "Patinoire", "Ferme", "Chantier", "Mairie", "Micro-ondes", "Sèche-cheveux", "Tondeuse à gazon", "Fer à repasser", "Cafetière", "Lave-vaisselle", "Imprimante", "Clavier", "Balance", "Thermomètre", "Escrime", "Escalade", "Tir à l'arc", "Plongée", "Équitation", "Skateboard", "Roller", "Ping-pong", "Badminton", "Yoga", "Pyjama-party"],
+        harrypotter: ["Harry Potter", "Ron Weasley", "Hermione Granger", "Albus Dumbledore", "Voldemort", "Severus Rogue", "Hagrid", "Sirius Black", "Drago Malefoy", "Dobby", "Neville Londubat", "Bellatrix Lestrange", "Minerva McGonagall", "Remus Lupin", "Fred et George Weasley", "Ginny Weasley", "Lucius Malfoy", "Dolores Ombrage", "Luna Lovegood", "Cedric Diggory", "Poudlard", "Voie 9 3/4", "Pré-au-Lard", "Chambre des Secrets", "Forêt Interdite", "Chemin de Traverse", "Azkaban", "Baguette magique", "Choixpeau magique", "Balai volant", "Vif d'or", "Cape d'invisibilité", "Pierre Philosophale", "Expecto Patronum", "Avada Kedavra", "Wingardium Leviosa", "Lumos", "Alohomora", "Expelliarmus", "Accio", "Hippogriffe", "Phénix", "Loup-garou", "Détraqueur", "Mangemort", "Gryffondor", "Serpentard", "Serdaigle", "Poufsouffle", "Quidditch", "Bière au beurre", "Chocogrenouille", "Dragées surprises de Bertie Crochue", "Gazette du Sorcier", "Robe de sorcier", "Chouette Edwige", "Balai Éclair de Feu", "Parchemin", "Sortilège", "Poudre de Cheminette", "Tournoi des Trois Sorciers", "Ordre du Phénix", "Reliques de la Mort", "Nimbus 2000", "Serpentard vs Gryffondor", "Vitrine des trophées", "Cours de Potions", "Salle Commune", "Grande Salle", "Tour d'Astronomie", "Fumseck", "Norbert le dragon", "Pattenrond", "Croûtard", "Buse (examen)", "Aspic (examen)", "Sorcier", "Sorcière", "Moldu", "Cracmol", "Elfe de maison", "Géant", "Centaure", "Licorne", "Dragon", "Troll", "Basilic", "Araignée géante", "Détecteur de mensonge magique", "Cape de sorcier", "Chapeau pointu", "Chaudron", "Baguette de sureau", "Retourneur de temps", "Miroir du Riséd", "Salle sur Demande", "Saule Cogneur", "Cabane hurlante", "J.K. Rowling", "Cinéma Harry Potter"],
+        marvel: ["Iron Man", "Spider-Man", "Captain America", "Thor", "Hulk", "Black Widow", "Hawkeye", "Doctor Strange", "Black Panther", "Ant-Man", "Groot", "Rocket Raccoon", "Star-Lord", "Deadpool", "Thanos", "Loki", "Green Goblin", "Venom", "Ultron", "Captain Marvel", "Wasp", "Falcon", "Winter Soldier", "Vision", "Wanda Maximoff (Scarlet Witch)", "Quicksilver", "Gamora", "Drax", "Nebula", "Nick Fury", "Pepper Potts", "Daredevil", "Punisher", "Bouclier de Captain America", "Mjolnir", "Gant de l'Infini", "Costume de Spider-Man", "Réacteur Arc", "Wakanda", "Asgard", "Avengers Tower", "Pierres de l'Infini", "Vibranium", "S.H.I.E.L.D.", "Guardians of the Galaxy", "Avengers", "X-Men", "Wolverine", "Professeur X", "Magneto", "Tornade", "Mystique", "Silver Surfer", "Galactus", "Docteur Doom", "Kingpin", "Electro", "Doc Ock", "Sandman", "Vautour", "Peter Parker", "Tony Stark", "Steve Rogers", "Bruce Banner", "Natasha Romanoff", "Clint Barton", "Stephen Strange", "T'Challa", "Scott Lang", "Carol Danvers", "MJ", "Happy Hogan", "May Parker", "Ned Leeds", "Miles Morales", "Kraven", "Rhino", "Mysterio", "Multivers Marvel", "Loki (série)", "WandaVision", "Hawkeye (série)", "Moon Knight", "Ms. Marvel", "Shang-Chi", "Eternals", "She-Hulk", "Nova", "Kang", "Red Skull", "Toile d'araignée", "Costume Iron Man", "Marteau de Thor", "Katana de Black Widow", "Griffes de Wolverine", "Bouclier vibranium", "Salle des Avengers", "Stan Lee", "Comics Marvel", "Univers Cinématographique Marvel"],
+        disney: ["Mickey Mouse", "Donald Duck", "Dingo", "Simba", "Mufasa", "Scar", "Aladdin", "Le Génie", "Jafar", "Cendrillon", "Blanche-Neige", "Ariel", "La Bête", "Belle", "Mulan", "Pocahontas", "Elsa", "Anna", "Olaf", "Vaiana", "Maui", "Stitch", "Raiponce", "Flynn Rider", "Woody", "Buzz l'Éclair", "Flash McQueen", "Nemo", "Dory", "Rémy Ratatouille", "Wall-E", "Mr Indestructible", "Hercule", "Tarzan", "Mowgli", "Baloo", "Robin des Bois", "Peter Pan", "Capitaine Crochet", "Fée Clochette", "Pinocchio", "Bambi", "Dumbo", "Maléfique", "Cruella d'Enfer", "Ursula", "Gaston", "Lampe magique", "Pantoufle de verre", "Tapis volant", "Château de la Belle au Bois Dormant", "Miroir magique", "Carrosse de Cendrillon", "Tiana", "Mère Gothel", "Sven", "Kristoff", "Baymax", "Jack Skellington", "Sébastien", "Lumière", "Big Ben", "Madame Samovar", "Judy Hopps", "Nick Wilde", "Zootopie", "Vaiana et Maui", "Merida (Rebelle)", "Anna et Elsa", "La Reine des Neiges", "Le Roi Lion", "La Petite Sirène", "Aladdin et Jasmine", "Toy Story", "Les Indestructibles", "Monstres et Cie", "Sulli", "Bob l'éponge", "Winnie l'Ourson", "Bourriquet", "Tigrou", "Porcinet", "Bambi et Panpan", "Dalmatiens", "Cruella", "Les Aristochats", "Le Livre de la Jungle", "La Belle et le Clochard", "Alice au Pays des Merveilles", "Lapin blanc", "Chapelier fou", "Chat du Cheshire", "Peter Pan et la Fée Clochette", "Le Bossu de Notre-Dame", "Hercule et Megara", "Château de Disneyland", "Parade Disney", "Feu d'artifice Disney", "Walt Disney", "Château magique"],
+        starwars: ["Luke Skywalker", "Dark Vador", "Princesse Leia", "Han Solo", "Chewbacca", "Yoda", "Obi-Wan Kenobi", "Lando Calrissian", "Empereur Palpatine", "Boba Fett", "Rey", "Finn", "Kylo Ren", "Grogu (Baby Yoda)", "Le Mandalorien", "Ahsoka Tano", "Poe Dameron", "Mace Windu", "Comte Dooku", "Darth Maul", "Qui-Gon Jinn", "Anakin Skywalker", "Padmé Amidala", "Jabba le Hutt", "Sabre laser", "Étoile de la Mort", "Faucon Millenium", "Chasseur TIE", "Blaster", "Vaisseau X-Wing", "Tatooine", "Endor", "Hoth", "Coruscant", "Naboo", "La Force", "Côté Obscur", "Côté Lumineux", "R2-D2", "C-3PO", "BB-8", "Soldat de l'Empire (Stormtrooper)", "Ewok", "Wookiee", "Chevalier Jedi", "Maître Jedi", "Ordre Jedi", "Sith", "Académie Jedi", "Guerre des Clones", "Trilogie Star Wars", "Galaxie lointaine", "Vaisseau spatial", "Planète désertique", "Robot droïde", "Casque de Dark Vador", "Combinaison de Boba Fett", "Armure Mandalorienne", "Vaisseau Faucon Millenium", "Épée laser bleue", "Épée laser rouge", "Épée laser verte", "La Guerre des Étoiles", "George Lucas", "Personnage extraterrestre", "Créature du désert", "Cantina de Mos Eisley", "Course de module", "Duel au sabre laser", "Prophétie de l'Élu", "Père de Luke", "Sœur jumelle de Luke", "Ami de Han Solo", "Petit robot BB-8", "Casque de stormtrooper", "Vaisseau impérial", "Rébellion", "Empire Galactique", "Nouvelle République", "Premier Ordre", "Résistance", "Maître Yoda et son bâton", "Combat au sabre laser", "Planète de glace", "Planète volcanique", "Vaisseau amiral", "Générique culte", "Thème musical de Star Wars", "Saga en neuf épisodes", "Personnage petit et vert", "Chasseur de primes", "Contrebandier de l'espace", "Casque de Boba Fett", "Empire contre-attaque", "Le Retour du Jedi", "La Menace Fantôme", "Un Nouvel Espoir", "Épée laser jaune", "Vaisseau cargo", "Créature Ewok"],
+        pokemon: ["Pikachu", "Dracaufeu", "Carapuce", "Bulbizarre", "Évoli", "Mewtwo", "Mew", "Rondoudou", "Ronflex", "Magicarpe", "Léviator", "Pokéball", "Dresseur Pokémon", "Sacha", "Ondine", "Pierre", "Professeur Chen", "Team Rocket", "Jessie et James", "Miaouss", "Centre Pokémon", "Pokédex", "Master Ball", "Méga-Évolution", "Arène Pokémon", "Badge d'arène", "Ligue Pokémon", "Type Feu", "Type Eau", "Type Électrik", "Type Plante", "Salamèche", "Carapuce évolué", "Bulbizarre évolué", "Combat Pokémon", "Dresseur adverse", "Pikachu de Sacha", "Étang aux Pokémon", "Forêt Pokémon", "Grotte Pokémon", "Lugia", "Rayquaza", "Kyogre", "Groudon", "Dialga", "Palkia", "Celebi", "Latios", "Latias", "Zekrom", "Reshiram", "Arceus", "Darkrai", "Cristal Pokémon", "Œuf Pokémon", "Poképuce", "Baie Oran", "Cri de Pikachu", "Queue de Pikachu", "Joues de Pikachu", "Combat de dresseurs", "Pokémon légendaire", "Pokémon shiny", "Jeu vidéo Pokémon", "Carte Pokémon", "Dessin animé Pokémon", "Film Pokémon", "Pokémon Go", "Sac de Sacha", "Casquette de Sacha", "Pikachu Détective", "Ash Ketchum", "Chef d'arène", "Élite des 4", "Champion Pokémon", "Pokémon de départ", "Évolution Pokémon", "Attaque Pokémon", "Éclair de Pikachu", "Combat de gymnase", "Salamèche évolué", "Tortank", "Florizarre", "Dracaufeu volant", "Pokémon fantôme", "Pokémon dragon", "Pokémon psy", "Pokémon combat", "Pokémon vol", "Zoo Pokémon", "Étoile Pokémon", "Pokémon roi", "Pokémon mignon", "Pokémon rare", "Carte holographique", "Boîte à cartes", "Duel Pokémon", "Univers Pokémon", "Nintendo Pokémon", "Générique Pokémon"],
+        manga: ["Goku", "Vegeta", "Naruto Uzumaki", "Sasuke Uchiha", "Luffy", "Zoro", "Saitama", "Levi Ackerman", "Eren Jaeger", "Tanjiro Kamado", "Nezuko", "Gojo Satoru", "Light Yagami", "Ryuk", "Edward Elric", "All Might", "Deku (Izuku)", "Gon Freecss", "Killua", "Ichigo Kurosaki", "Sailor Moon", "Natsu Dragnir", "Lucy Heartfilia", "Kakashi Hatake", "Itachi Uchiha", "Piccolo", "Gohan", "Freezer", "Cell", "Majin Buu", "Dragon Balls", "Kamehameha", "Chidori", "Rasengan", "Titan", "One Piece", "Dragon Ball Z", "Naruto", "Demon Slayer", "Jujutsu Kaisen", "My Hero Academia", "Hunter x Hunter", "Fullmetal Alchemist", "Bleach", "Tokyo Ghoul", "Chainsaw Man", "Anya Forger", "Spy x Family", "One Punch Man", "Death Note", "Saint Seiya", "Fairy Tail", "JoJo's Bizarre Adventure", "Gintama", "Bakugo", "Hajime no Ippo", "Slam Dunk", "Haikyuu!!", "Blue Lock", "Dr. Stone", "Berserk", "Vinland Saga", "Sanji", "Chopper", "Nami", "Studio Ghibli", "Totoro", "Princesse Mononoké", "Le Voyage de Chihiro", "Pokémon (manga)", "Astro Boy", "Captain Tsubasa", "Dragon Ball Super", "Attaque des Titans", "Manga japonais", "Anime japonais", "Cosplay", "Sensei", "Ninja", "Samouraï", "Katana", "Combat de ninjas", "Village caché", "Académie de héros", "Pouvoir spécial", "Transformation", "Manga shonen", "Salle de classe japonaise", "Uniforme scolaire japonais", "Chibi", "Cerisiers en fleurs", "Dojo", "Combat d'arts martiaux", "Épée légendaire", "Créature démoniaque", "Héros manga", "Vilain manga", "Bande dessinée japonaise", "Tome de manga", "Festival manga"],
+        series: ["Stranger Things", "Game of Thrones", "La Casa de Papel", "Friends", "Breaking Bad", "The Walking Dead", "Peaky Blinders", "Squid Game", "Mercredi (Wednesday)", "The Crown", "Black Mirror", "The Witcher", "The Office", "How I Met Your Mother", "The Big Bang Theory", "Grey's Anatomy", "Lucifer", "Prison Break", "Lost", "Desperate Housewives", "Sex and the City", "Gossip Girl", "Euphoria", "Élite", "Narcos", "Dark", "Better Call Saul", "Succession", "The Boys", "The Mandalorian", "Sherlock", "Lupin", "Dix pour Cent", "Kaamelott", "Jon Snow", "Daenerys Targaryen", "Walter White", "Thomas Shelby", "Eleven (Onze)", "Rachel Green", "Joey Tribbiani", "Chandler Bing", "Sheldon Cooper", "Michael Scott", "Rick Grimes", "Geralt de Rive", "Mercredi Addams", "The Last of Us", "Bridgerton", "Emily in Paris", "Vikings", "Dexter", "House of the Dragon", "Fleabag", "Westworld", "American Horror Story", "Riverdale", "13 Reasons Why", "You", "The Good Place", "Brooklyn Nine-Nine", "Parks and Recreation", "Mad Men", "Modern Family", "Supernatural", "Smallville", "Glee", "Buffy contre les vampires", "Charmed", "X-Files", "Twin Peaks", "The White Lotus", "Chernobyl", "Ozark", "Le Bureau des Légendes", "Plus Belle la Vie", "Un Village Français", "Fais pas ci, fais pas ça", "Nos Chers Voisins", "Scènes de Ménages", "Une Famille Formidable", "Section de Recherches", "Camping Paradis", "Candice Renoir", "Doctor Who", "Downton Abbey", "Peaky Blinders (personnages)", "Titans de Netflix", "Sitcom", "Série policière", "Série médicale", "Série fantastique", "Générique de série", "Cliffhanger", "Saison finale", "Épisode pilote", "Marathon de séries", "Spin-off", "Netflix", "Streaming"],
+        gaming: ["Mario", "Luigi", "Princesse Peach", "Bowser", "Yoshi", "Link", "Zelda", "Ganondorf", "Pikachu", "Kirby", "Donkey Kong", "Sonic", "Kratos", "Master Chief", "Lara Croft", "Nathan Drake", "Geralt de Rive", "Cloud Strife", "Crash Bandicoot", "Rayman", "Pac-Man", "Tetris", "Minecraft", "Steve (Minecraft)", "Creeper", "Fortnite", "GTA (Grand Theft Auto)", "League of Legends", "Counter-Strike", "Valorant", "Overwatch", "World of Warcraft", "Call of Duty", "FIFA / EA FC", "NBA 2K", "Rocket League", "Apex Legends", "PUBG", "Roblox", "Among Us", "Fall Guys", "Animal Crossing", "Super Smash Bros", "Mario Kart", "Carapace bleue", "Game Boy", "PlayStation", "Xbox", "Nintendo Switch", "Manette de jeu", "Casque gamer", "Streamer", "Twitch", "Esport", "Game Over", "Pixel", "Elden Ring", "Dark Souls", "Skyrim", "Cyberpunk 2077", "The Witcher 3", "Red Dead Redemption 2", "Assassin's Creed", "Far Cry", "Resident Evil", "Silent Hill", "God of War", "Uncharted", "Horizon Zero Dawn", "Hollow Knight", "Undertale", "Portal", "Half-Life", "Doom", "Zelda Breath of the Wild", "The Last of Us", "Just Dance", "Les Sims", "World of Warcraft (raid)", "Consoles rétro", "Manette Nintendo", "Joystick", "Écran de jeu", "Salle de jeux vidéo", "Tournoi esport", "Jeu de tir", "Jeu de plateforme", "Jeu de course", "Jeu de combat", "Jeu de rôle vidéo", "Personnage jouable", "Boss de fin", "Vie (jeu vidéo)", "Niveau (jeu vidéo)", "Manette sans fil", "Casque de réalité virtuelle", "Speedrun", "Let's Play", "Sauvegarde de partie", "Trophée de jeu vidéo"],
+        dc: ["Batman", "Bruce Wayne", "Superman", "Clark Kent", "Wonder Woman", "Flash", "Aquaman", "Cyborg", "Green Lantern", "Shazam", "Green Arrow", "Nightwing", "Batgirl", "Robin", "Supergirl", "Joker", "Harley Quinn", "Bane", "Catwoman", "Pingouin", "L'Homme Mystère", "Double-Face", "Poison Ivy", "Mr Freeze", "L'Épouvantail", "Ra's al Ghul", "Deathstroke", "Darkseid", "Lex Luthor", "Général Zod", "Brainiac", "Doomsday", "Gotham City", "Metropolis", "Asile d'Arkham", "Batcave", "Batmobile", "Bat-Signal", "Batarang", "Kryptonite", "Daily Planet", "Justice League", "Suicide Squad", "Teen Titans", "Watchmen", "Sandman", "Constantine", "Alfred (majordome)", "Commissaire Gordon", "Loïs Lane", "Le Chevalier Noir", "Le Joker au cinéma", "Batman au cinéma", "Wonder Woman au cinéma", "Aquaman au cinéma", "Superman au cinéma", "Harley Quinn au cinéma", "Costume de Batman", "Cape de Superman", "Lasso de vérité", "Ceinture d'utilité de Batman", "Île paradisiaque de Wonder Woman", "Planète Krypton", "Anneau de Green Lantern", "Vitesse de Flash", "Trident d'Aquaman", "Grotte secrète de Batman", "Manoir Wayne", "Costume noir de Batman", "Rire du Joker", "Ennemi juré", "Super-héros DC", "Super-vilain DC", "Univers DC", "Comics DC", "Ligue des Justiciers", "Ville de Gotham", "Ville de Metropolis", "Journaliste super-héros", "Milliardaire justicier", "Alien super-héros", "Amazone guerrière", "Homme le plus rapide du monde", "Chevalier de Gotham", "Costume de Wonder Woman", "Bouclier de Wonder Woman", "Symbole de Superman", "Symbole de Batman", "Voiture de Batman", "Cape de Batman", "Prison d'Arkham", "Rivalité Batman-Joker", "Origine de Batman", "Origine de Superman", "Origine de Wonder Woman", "Trilogie Batman", "Film Joker", "Comics vintage", "Super-héros masqué", "Justicier de la nuit"],
+        history: ["Napoléon Bonaparte", "Cléopâtre", "Jules César", "Alexandre le Grand", "Jeanne d'Arc", "Louis XIV", "Marie-Antoinette", "Charlemagne", "Vercingétorix", "Léonard de Vinci", "Albert Einstein", "Isaac Newton", "Galilée", "Christophe Colomb", "Marco Polo", "Abraham Lincoln", "George Washington", "Winston Churchill", "Charles de Gaulle", "Nelson Mandela", "Mahatma Gandhi", "Martin Luther King", "Rosa Parks", "Gengis Khan", "Ramsès II", "Toutânkhamon", "Révolution Française", "Prise de la Bastille", "Moyen Âge", "Renaissance", "Empire Romain", "Égypte Antique", "Seconde Guerre Mondiale", "Débarquement de Normandie", "Guerre Froide", "Chute du Mur de Berlin", "Conquête spatiale", "Pyramides d'Égypte", "Château de Versailles", "Gladiateur", "Chevalier", "Samouraï", "Pharaon", "Empereur romain", "Le Roi Soleil", "Guillotine", "Drapeau tricolore français", "Premier pas sur la Lune", "Abolition de l'esclavage", "Bataille de Waterloo", "Henri IV", "Louis XVI", "Victor Hugo", "Voltaire", "Molière", "Marie Curie", "Louis Pasteur", "Charles Darwin", "Aristote", "Socrate", "Archimède", "Spartacus", "Catherine de Russie", "Reine Victoria", "Thomas Edison", "Frères Wright", "Gutenberg", "Invention de l'imprimerie", "Guerre de Cent Ans", "Guerre de Sécession", "Révolution Industrielle", "Mai 68", "Appel du 18 juin", "Résistance Française", "Jean Moulin", "Simone Veil", "Chute de Constantinople", "Découverte de l'Amérique", "Pompéi", "Volcan du Vésuve", "Première Guerre Mondiale", "Traité de Versailles", "Croisades", "Vikings", "Empire Ottoman", "Route de la soie", "Grande muraille de Chine", "Momie égyptienne", "Antiquité grecque", "Antiquité romaine", "Roi d'Angleterre", "Reine d'Angleterre", "Château fort médiéval", "Explorateur", "Conquête de l'Ouest", "Indépendance américaine", "Chute de l'Empire romain", "Peste noire", "Age des Lumières", "Colonisation"],
+        geo: ["Paris", "Londres", "Tokyo", "New York", "Rome", "Washington D.C.", "Pékin", "Berlin", "Madrid", "Athènes", "Le Caire", "Buenos Aires", "Bangkok", "Marrakech", "Venise", "Sydney", "Tour Eiffel", "Statue de la Liberté", "Grande Muraille de Chine", "Pyramides de Gizeh", "Colisée de Rome", "Taj Mahal", "Machu Picchu", "Big Ben", "Mont Fuji", "Grand Canyon", "Chutes du Niagara", "Mont Everest", "Burj Khalifa", "Sagrada Familia", "Mont Saint-Michel", "Le Nil", "L'Amazone", "Océan Pacifique", "Océan Atlantique", "Mer Méditerranée", "Désert du Sahara", "Forêt amazonienne", "Pôle Nord", "Antarctique", "Les Alpes", "L'Himalaya", "Islande", "Groenland", "Madagascar", "Australie", "Nouvelle-Zélande", "Hawaï", "Mont Blanc", "Kilimandjaro", "Mer Rouge", "Canal de Panama", "Canal de Suez", "San Francisco", "Los Angeles", "Las Vegas", "Rio de Janeiro", "Moscou", "Istanbul", "Dubaï", "Séoul", "Singapour", "Hong Kong", "Mumbai", "Copenhague", "Stockholm", "Amsterdam", "Vienne", "Lisbonne", "Dublin", "Bruxelles", "Reykjavik", "Pôle Sud", "Équateur (ligne)", "Everest", "Île de Pâques", "Galapagos", "Vatican", "Barcelone", "Berlin (mur)", "Continent africain", "Continent asiatique", "Continent européen", "Continent américain", "Continent australien", "Fleuve", "Montagne", "Île", "Capitale du monde", "Frontière entre pays", "Volcan actif", "Chutes d'eau", "Désert de sable", "Banquise", "Jungle tropicale", "Savane africaine", "Récif corallien", "Lac le plus grand", "Ville la plus peuplée", "Pays le plus grand"],
+        science: ["Système Solaire", "Soleil", "Lune", "Mars", "Jupiter", "Saturne", "Trou noir", "Voie Lactée", "Galaxie", "Big Bang", "Gravité", "Oxygène", "Atome", "ADN", "Cellule", "Corps humain", "Cœur", "Cerveau", "Squelette", "Muscle", "Microscope", "Télescope", "Électricité", "Énergie solaire", "Volcan", "Tremblement de terre", "Tsunami", "Tornade", "Dinosaure", "Tyrannosaure", "Baleine bleue", "Requin blanc", "Chimpanzé", "Panda", "Photosynthèse", "Vitesse de la lumière", "Vaccin", "Robotique", "Intelligence artificielle", "Fusée spatiale", "Station spatiale internationale", "Terre", "Vénus", "Mercure", "Uranus", "Neptune", "Comète", "Astéroïde", "Éclipse solaire", "Atmosphère", "Couche d'ozone", "Changement climatique", "Énergie nucléaire", "Énergie éolienne", "Tableau périodique", "Carbone", "Eau (H2O)", "Gène", "Bactérie", "Virus", "Système immunitaire", "Poumons", "Estomac", "Foie", "Peau", "Neurone", "Fossile", "Mammouth", "Récif corallien", "Écosystème", "Laser", "Fibre optique", "Imprimante 3D", "Drone", "Algorithme", "Physique quantique", "Nanotechnologie", "Clonage", "Gravité terrestre", "Système nerveux", "Sang", "Globule rouge", "Squelette humain", "Cellule souche", "Génétique", "Évolution", "Sélection naturelle", "Charles Darwin (théorie)", "Big Bang théorique", "Trou noir supermassif", "Étoile filante", "Nébuleuse", "Météorite", "Satellite artificiel", "Fusée Ariane", "Astronaute", "Combinaison spatiale", "Apesanteur", "Robot explorateur", "Sonde spatiale"],
+        retro: ["Walkman", "Cassette audio", "VHS", "Disquette", "Téléphone à cadran", "Minitel", "Tamagotchi", "Game Boy", "Pogs", "Yoyo", "Rollers", "Pin's", "K-Way", "Diddl", "Nokia 3310", "MSN Messenger", "Skyblog", "CD-Rom", "Lecteur MP3", "Club Dorothée", "Les Minikeums", "Pokémon (génération 1)", "Tetris", "Pac-Man", "Rubik's Cube", "Fluo", "Casquette vissée", "Les Incollables", "Journal de Mickey", "Spice Girls", "2Be3", "Boys band", "Nirvana", "Michael Jackson", "Britney Spears", "Daft Punk", "Lorie", "Furby", "Slinky", "Billes", "Élastique (jeu)", "Diabolo", "Super Nintendo", "Mega Drive", "PlayStation 1", "Sega", "Sonic le Hérisson", "Adibou", "L'Oncle Picsou", "Dragon Ball Z (Club Dorothée)", "Sailor Moon", "Inspecteur Gadget", "Power Rangers", "Cabine téléphonique", "Carte téléphonique", "Encarta", "Caramail", "Yahoo Moteur de recherche", "Appareil photo jetable", "Pellicule photo", "Diapositive", "Bonbon Chewing-gum Roll-Up", "Sucette Tétine", "Coupe de cheveux au bol", "Pantalon baggy", "Chaussures Buffalo", "Doc Martens", "Bandana", "Scoubidous", "La Macarena", "La Danse des Canards", "Loft Story", "Star Academy", "Nintendo 64", "Atari", "Baladeur CD", "Chaîne hi-fi", "Réponder téléphonique", "Poste de radio", "Magnétoscope", "Antenne télé", "Écran cathodique", "Jeu de rôle papier", "Cartes Pokémon (collection)", "Tamagotchi virtuel", "Jeu de cour de récré", "Console portable", "Cabine photo", "Photomaton", "Panoramique", "Feutres à paillettes", "Autocollants pailletés", "Chewing-gum au tabac (jouet)", "Journal intime à cadenas", "Baladeur cassette", "Radio-cassette", "Carte postale", "Minidisc", "Répertoire papier", "Agenda scolaire"],
+        cinema: ["Hollywood", "Tapis rouge", "Oscars", "César du cinéma", "Festival de Cannes", "Réalisateur", "Scénario", "Steven Spielberg", "Quentin Tarantino", "Christopher Nolan", "Alfred Hitchcock", "James Cameron", "Leonardo DiCaprio", "Brad Pitt", "Tom Cruise", "Johnny Depp", "Robert De Niro", "Al Pacino", "Meryl Streep", "Scarlett Johansson", "Angelina Jolie", "Marion Cotillard", "Jean Dujardin", "Louis de Funès", "Titanic", "Avatar", "Star Wars", "Jurassic Park", "Inception", "Pulp Fiction", "Le Parrain", "Gladiator", "Matrix", "Harry Potter (films)", "Le Seigneur des Anneaux", "Forrest Gump", "Retour vers le futur", "Indiana Jones", "James Bond", "Les Dents de la mer", "Alien", "Terminator", "Fight Club", "Casablanca", "La La Land", "The Avengers", "Clint Eastwood", "Morgan Freeman", "Denzel Washington", "Tom Hanks", "Will Smith", "Keanu Reeves", "Harrison Ford", "Samuel L. Jackson", "Kate Winslet", "Emma Stone", "Natalie Portman", "Alain Delon", "Jean-Paul Belmondo", "Gérard Depardieu", "Omar Sy", "Catherine Deneuve", "Sophie Marceau", "Les Bronzés", "Le Fabuleux Destin d'Amélie Poulain", "La Grande Vadrouille", "Intouchables", "Astérix et Obélix", "Les Visiteurs", "Taxi", "Le Cinquième Élément", "Léon", "Schindler's List", "Braveheart", "Interstellar", "Oppenheimer", "Barbie (film)", "The Dark Knight", "Shrek", "Toy Story", "Le Roi Lion", "The Truman Show", "Le Silence des Agneaux", "Scarface", "Chantons sous la pluie", "Pirates des Caraïbes", "Mission Impossible", "Jumanji", "Spider-Man (films)", "Batman (films)", "Superman (films)", "Rocky", "E.T.", "Ghostbusters", "Rambo", "Toy Story 2", "Coco", "Vice-Versa", "Là-haut", "Le Voyage de Chihiro"],
+        people: ["YouTubeur", "Streamer", "Influenceur", "TikTok", "Instagram", "Twitch", "Squeezie", "McFly et Carlito", "Inoxtag", "Michou", "Norman", "Cyprien", "PewDiePie", "MrBeast", "Kim Kardashian", "Kylie Jenner", "Beyoncé", "Rihanna", "Taylor Swift", "Kanye West", "Drake", "Cristiano Ronaldo", "Lionel Messi", "Kylian Mbappé", "LeBron James", "Elon Musk", "Mark Zuckerberg", "Jeff Bezos", "Bill Gates", "Oprah Winfrey", "Dwayne Johnson (The Rock)", "Zendaya", "Timothée Chalamet", "Selena Gomez", "Ariana Grande", "Justin Bieber", "Billie Eilish", "Aya Nakamura", "Orelsan", "Stromae", "Paparazzi", "Tapis rouge", "Réseaux sociaux", "David Beckham", "Paris Hilton", "Kendall Jenner", "Travis Scott", "Ed Sheeran", "Bruno Mars", "Katy Perry", "Lady Gaga", "Miley Cyrus", "Eminem", "Jay-Z", "Will Smith", "Tom Holland", "Sydney Sweeney", "Margot Robbie", "Ryan Gosling", "Pedro Pascal", "Khaby Lame", "Charli D'Amelio", "Addison Rae", "Kai Cenat", "Célébrité de la télerealité", "Chanteur populaire", "Chanteuse populaire", "Acteur célèbre", "Actrice célèbre", "Star du sport", "Milliardaire", "Créateur de contenu", "Vidéaste YouTube", "Idole des jeunes", "Icône de la mode", "Star de cinéma", "Chanteur de rap français", "Humoriste célèbre", "Présentateur télé", "Animateur radio", "Personnalité publique", "Star mondiale", "Photo de célébrité", "Story Instagram", "Live TikTok", "Fan club", "Autographe", "Selfie avec une star", "Scandale people", "Couple de stars", "Mariage de célébrité", "Interview exclusive", "Carrière musicale", "Carrière d'acteur", "Buzz sur les réseaux", "Vidéo virale", "Challenge TikTok", "Abonnés Instagram", "Chaîne YouTube", "Podcast populaire"],
+        fashion: ["Chanel", "Louis Vuitton", "Gucci", "Dior", "Prada", "Hermès", "Versace", "Balenciaga", "Yves Saint Laurent", "Burberry", "Nike", "Adidas", "Puma", "Reebok", "New Balance", "Jordan (Sneakers)", "Converse", "Vans", "Air Force 1", "Stan Smith", "Zara", "H&M", "Uniqlo", "Levi's", "Calvin Klein", "Tommy Hilfiger", "Lacoste", "Supreme", "Vogue", "Fashion Week", "Défilé de mode", "Mannequin", "Haute couture", "Sac à main", "Escarpins", "Baskets tendance", "Costume sur-mesure", "Lunettes de soleil", "Rolex", "Cartier", "Logo de marque", "Soie", "Cuir", "Jean (denim)", "Streetwear", "Givenchy", "Fendi", "Valentino", "Armani", "Dolce & Gabbana", "Karl Lagerfeld", "Coco Chanel", "Christian Dior", "Naomi Campbell", "Kate Moss", "Trench-coat", "Smoking", "Petite robe noire", "T-shirt blanc", "Blouson en cuir", "Casquette", "Chapeau", "Ceinture", "Bijoux en or", "Montre de luxe", "Parfum", "Maquillage", "Rouge à lèvres", "Vernis à ongles", "Robe de mariée", "Nœud papillon", "Cravate", "Foulard", "Écharpe", "Gants en cuir", "Bottes", "Sandales", "Tongs", "Robe de soirée", "Costume trois pièces", "Défilé de haute couture", "Créateur de mode", "Styliste", "Photographe de mode", "Magazine de mode", "Boutique de luxe", "Collection printemps-été", "Collection automne-hiver", "Tendance mode", "Accessoire de mode", "Sac de marque", "Chaussures de créateur", "Parfum de luxe", "Bijou de créateur", "Show de mode", "Podium de défilé", "Icône de style", "Look de star", "Vitrine de magasin", "Grand magasin"],
+        travel: ["France", "Italie", "Japon", "États-Unis", "Brésil", "Australie", "Égypte", "Canada", "Mexique", "Chine", "Inde", "Espagne", "Grèce", "Thaïlande", "Maroc", "Pérou", "Islande", "Norvège", "Afrique du Sud", "Argentine", "Paris", "Tokyo", "New York", "Rome", "Londres", "Rio de Janeiro", "Sydney", "Le Caire", "Pékin", "Bangkok", "Tour Eiffel", "Statue de la Liberté", "Grande Muraille de Chine", "Pyramides de Gizeh", "Colisée", "Taj Mahal", "Machu Picchu", "Passeport", "Valise", "Boussole", "Carte du monde", "Avion", "Sac à dos de voyage", "Décalage horaire", "Souvenir de voyage", "Billet d'avion", "Appareil photo", "Bateau de croisière", "Hôtel", "Auberge de jeunesse", "Guide touristique", "Douane", "Visa", "Monnaie étrangère", "Crème solaire", "Lunettes de soleil", "Gondole de Venise", "Safari", "Aurore boréale", "Plongée sous-marine", "Randonnée en montagne", "Plage de sable blanc", "Désert du Sahara", "Jungle amazonienne", "Fjord", "Allemagne", "Portugal", "Pays-Bas", "Suisse", "Suède", "Chili", "Colombie", "Vietnam", "Indonésie", "Nouvelle-Zélande", "Dubaï", "Istanbul", "Barcelone", "Venise", "Amsterdam", "Los Angeles", "Las Vegas", "San Francisco", "Montréal", "Kyoto", "Big Ben", "Mont Fuji", "Grand Canyon", "Chutes du Niagara", "Mont Everest", "Voyage en famille", "Voyage de noces", "Circuit touristique", "Excursion", "Location de vacances", "Camping", "Road trip", "Aéroport international", "Vol long-courrier", "Bagage à main"],
+        food: ["Pizza", "Burger", "Sushi", "Pâtes carbonara", "Paella", "Tacos", "Couscous", "Fondue savoyarde", "Raclette", "Crêpe", "Croissant", "Baguette", "Macaron", "Gaufre", "Tiramisu", "Éclair au chocolat", "Tartiflette", "Bœuf bourguignon", "Cassoulet", "Quiche lorraine", "Fromage", "Chocolat", "Huile d'olive", "Ail", "Épices", "Piment", "Avocat", "Saumon", "Basilic", "Baguettes chinoises", "Poêle", "Four", "Casserole", "Chef cuisinier", "Menu", "Recette de cuisine", "Tablier", "Fouet", "Rouleau à pâtisserie", "Guacamole", "Hummus", "Ramen", "Pad Thaï", "Kebab", "Fish and chips", "Nems", "Falafel", "Curry", "Camembert", "Roquefort", "Mozzarella", "Parmesan", "Cheddar", "Brie", "Feta", "Emmental", "Profiteroles", "Crème brûlée", "Tarte Tatin", "Mousse au chocolat", "Mille-feuille", "Paris-Brest", "Cheesecake", "Churros", "Donut", "Vin rouge", "Champagne", "Café espresso", "Thé vert", "Jus de fruits", "Cocktail", "Limonade", "Cidre", "Bière", "Eau gazeuse", "Couteau de chef", "Planche à découper", "Spatule", "Tire-bouchon", "Salière", "Poivrier", "Balance de cuisine", "Mixeur", "Saucisson", "Jambon", "Foie gras", "Huîtres", "Homard", "Crevettes", "Moules-frites", "Escargots", "Soupe à l'oignon", "Ratatouille", "Hot-dog", "Sandwich club", "Salade César", "Riz cantonais", "Nouilles chinoises", "Barbecue", "Glace italienne"],
+        music: ["Guitare", "Piano", "Batterie", "Violon", "Trompette", "Microphone", "Casque audio", "Saxophone", "Flûte", "Basse (instrument)", "Rock", "Pop", "Rap", "Jazz", "Musique classique", "Electro", "Reggae", "Heavy metal", "Blues", "Funk", "Michael Jackson", "Beyoncé", "Freddie Mercury", "Céline Dion", "Eminem", "Daft Punk", "Mozart", "Beethoven", "The Beatles", "Elvis Presley", "Concert", "Festival de musique", "Refrain", "Chorégraphie", "Disque d'or", "Studio d'enregistrement", "Partition musicale", "Chef d'orchestre", "Comédie musicale", "Ampli guitare", "Platine vinyle", "Enceinte Bluetooth", "Synthétiseur", "Harpe", "Ukulélé", "Accordéon", "Bob Marley", "David Bowie", "Madonna", "Rihanna", "Lady Gaga", "Coldplay", "Queen", "Rolling Stones", "Nirvana", "Johnny Hallyday", "Édith Piaf", "Stromae", "Orelsan", "Angèle", "Soprano (chanteur)", "Aya Nakamura", "DJ", "Chorale", "Opéra", "Symphonie", "Solo de guitare", "Beatbox", "Coulisses de concert", "Billet de concert", "Tournée mondiale", "Clip vidéo", "Bande originale de film", "Hymne", "Chanson d'été", "Karaoké", "Festival de rock", "Boîte de nuit", "Radio musicale", "Playlist", "Écouteurs sans fil", "Enceinte de concert", "Micro sans fil", "Scène de concert", "Chanteur de rue", "Groupe de musique", "Boys band", "Chanson française", "Musique du monde", "Instrument à cordes", "Instrument à vent", "Instrument à percussion", "Chanson d'amour", "Slow", "Danse en couple", "Boîte à musique", "Cloche", "Tambourin", "Xylophone", "Cor de chasse"],
+        sports: ["Football", "Basketball", "Tennis", "Natation", "Rugby", "Judo", "Athlétisme", "Cyclisme", "Formule 1", "Boxe", "Golf", "Gymnastique", "Handball", "Volleyball", "Ski alpin", "Snowboard", "Surf", "Skateboard", "Équitation", "Escrime", "Ballon", "Raquette", "Piscine", "Stade", "Maillot de sport", "Médaille d'or", "Sifflet d'arbitre", "Chronomètre", "Ring de boxe", "Court de tennis", "Kylian Mbappé", "LeBron James", "Rafael Nadal", "Usain Bolt", "Teddy Riner", "Serena Williams", "Cristiano Ronaldo", "Lionel Messi", "Michael Jordan", "Roger Federer", "Jeux Olympiques", "Coupe du Monde", "Grand Chelem", "Carton rouge", "Tir au but", "Marathon", "Tour de France", "Super Bowl", "Finale NBA", "Grand Prix de Formule 1", "Crampons", "Gants de boxe", "Casque de vélo", "Protège-dents", "Kimono de judo", "Combinaison de plongée", "Bâtons de ski", "Palmes", "Arbitre", "Entraîneur sportif", "Supporter", "Podium", "Hymne national", "Trophée", "Prolongations", "Mi-temps", "Penalty", "Hors-jeu", "Antoine Griezmann", "Zinédine Zidane", "Novak Djokovic", "Lewis Hamilton", "Stephen Curry", "Simone Biles", "Baseball", "Football américain", "Hockey sur glace", "Ligne d'arrivée", "Faux départ", "Record du monde", "Fair-play", "Capitaine d'équipe", "Vestiaire", "Sponsor sportif", "Championnat", "Compétition sportive", "Épreuve olympique", "Match nul", "Prolongation", "Carton jaune", "Corner", "Touche", "Panier à trois points", "Smash au tennis", "Service au tennis", "Coup droit", "Plongeon", "Aviron", "Tir à l'arc", "Pétanque"]
+    };
+
+    const THEME_META = [
+        { key: 'gen_easy', emoji: '🟢', title: 'Généraliste Facile', desc: "Des mots simples et universels du quotidien, parfait pour s'échauffer ou jouer avec des plus jeunes." },
+        { key: 'gen_medium', emoji: '🟡', title: 'Généraliste Moyen', desc: "Un mélange d'objets, de lieux et de concepts légèrement plus poussés pour corser un peu le jeu." },
+        { key: 'gen_hard', emoji: '🔴', title: 'Généraliste Difficile', desc: "Des termes complexes, du vocabulaire abstrait ou technique réservés aux plus érudits." },
+        { key: 'kids', emoji: '🐣', title: 'Kids (+4 ans)', desc: "Des animaux, objets et concepts de base adaptés aux tout-petits pour jouer dès le plus jeune âge." },
+        { key: 'family', emoji: '👨‍👩‍👧‍👦', title: 'Famille (+8 ans)', desc: "Un savant mélange de métiers, d'émotions et de la vie quotidienne accessible à toutes les générations." },
+        { key: 'retro', emoji: '📼', title: 'Retro 80-2000', desc: "Des objets, gadgets et souvenirs cultes des années 80, 90 et 2000 qui rappelleront des souvenirs." },
+        { key: 'cinema', emoji: '🎬', title: 'Cinéma', desc: "Les plus grands films, réalisateurs emblématiques et acteurs légendaires du 7ᵉ art." },
+        { key: 'people', emoji: '⭐', title: 'People / VIPS', desc: "Les célébrités, créateurs de contenu et figures incontournables d'Internet et des médias." },
+        { key: 'fashion', emoji: '👠', title: 'Mode & Luxe', desc: "Les grandes maisons de couture, les marques de vêtements et l'univers du style." },
+        { key: 'history', emoji: '🏛️', title: 'Histoire', desc: "Les grands personnages historiques, souverains, scientifiques et figures du passé." },
+        { key: 'geo', emoji: '🗺️', title: 'Géographie', desc: "Les capitales du monde, grandes métropoles, monuments et merveilles de la Terre." },
+        { key: 'science', emoji: '🔬', title: 'Sciences', desc: "Le corps humain, l'astronomie, la chimie et les concepts scientifiques essentiels." },
+        { key: 'travel', emoji: '✈️', title: 'Voyages', desc: "Les pays du globe, la culture générale du voyage et la découverte du monde." },
+        { key: 'food', emoji: '🍕', title: 'Gastronomie', desc: "Des plats gourmands, spécialités culinaires du monde et douceurs à faire deviner." },
+        { key: 'music', emoji: '🎵', title: 'Musique', desc: "Les instruments de musique, les genres musicaux et les icônes de la chanson." },
+        { key: 'sports', emoji: '⚽', title: 'Sports', desc: "Les disciplines sportives incontournables, qu'elles soient individuelles ou collectives." },
+        { key: 'pokemon', emoji: '⚡', title: 'Pokémon', desc: "Les Pokémon mythiques, dresseurs et éléments phares du monde des monstres de poche." },
+        { key: 'manga', emoji: '⛩️', title: 'Mangas', desc: "Les personnages cultes et héros emblématiques des mangas et animés japonais." },
+        { key: 'series', emoji: '📺', title: 'Séries TV', desc: "Les séries incontournables, phénomènes de streaming et productions télévisées marquantes." },
+        { key: 'gaming', emoji: '🎮', title: 'Jeux Vidéo', desc: "Les héros légendaires, consoles et franchises phares de l'histoire du jeu vidéo." },
+        { key: 'dc', emoji: '🦇', title: 'DC Comics', desc: "L'univers des super-héros et super-vilains emblématiques de Gotham et Metropolis." },
+        { key: 'harrypotter', emoji: '🪄', title: 'Harry Potter', desc: "Les sorciers, créatures, objets magiques et lieux iconiques du monde des sorciers." },
+        { key: 'marvel', emoji: '🛡️', title: 'Marvel', desc: "Les Avengers, super-héros et grands méchants du Multivers Marvel." },
+        { key: 'disney', emoji: '🏰', title: 'Disney', desc: "Les grands classiques de l'animation, princesses, princes et personnages enchantés." },
+        { key: 'starwars', emoji: '🚀', title: 'Star Wars', desc: "La Force, les Jedi, les Sith et les personnages légendaires d'une galaxie lointaine." }
+    ];
+
+    const ROUND_INFO = {
+        1: { title: "Manche 1 : Description libre", hint: "Décrivez le mot librement sans le prononcer ni le traduire. Les coéquipiers peuvent proposer autant de réponses qu'ils le veulent." },
+        2: { title: "Manche 2 : Un seul mot", hint: "Vous ne pouvez prononcer qu'UN SEUL mot d'indice par carte. Une seule proposition autorisée par carte." },
+        3: { title: "Manche 3 : Mime & Bruitages", hint: "Interdiction de parler ! Mimez et utilisez des bruitages uniquement. Une seule proposition autorisée par carte." }
+    };
+
+    let isConfigPlayerCount = 4;
+    let isConfigTeamCount = 2;
+    let isConfigTimer = 45;
+    let selectedThemes = new Set(['gen_medium']);
+    let isConfigWordCount = 30;
+    let isConfigPassRule = 'byRound';
+    let isConfigPenaltyActive = false;
+    let isConfigPenaltySeconds = 5;
+    let isConfigJoker = false;
+    let configTeamAssignments = {};
+
+    let gameState = {
+        phase: 'lobby', mode: 'team', numTeams: 2, timerConfig: 45, passRule: 'byRound',
+        penaltyActive: false, penaltySeconds: 5, isPaused: false, pausedAt: null, turnReady: false,
+        round: 1, teamRosters: {}, playerTurnIndexes: {}, currentTeam: 1,
+        activePlayerId: null, guesserId: null, idlePlayerId: null, soloRoster: [], turnRotationIndex: 0,
+        roundBonusReveal: null, turnStartAt: null, scores: {}, wordsFoundThisTurn: 0, wordsRemainingCount: 0
+    };
+
+    let fullDeck = [];
+    let hostDeck = [];
+    let jokerWord = null;
+    let currentTurnFoundCount = 0;
+    let tgvRecord = { entity: null, count: 0 };
+    let passesPerEntity = {};
+    let foundCountPerPlayer = {};
+    let passesPerWordTotal = {};
+    let wordFoundLog = [];
+    let lastFoundAction = null;
+    let gameTimerRAF = null;
+    let clockOffset = 0;
+    let currentStreak = 0;
+    let lastAnnouncedTurnId = null;
+
+    let hostBonusDescriberWords = [];
+    let hostBonusGuesserWords = [];
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.innerText = str == null ? '' : str;
+        return div.innerHTML;
+    }
+
+    function isHost() { return getHostId() === myId; }
+
+    function getHostId() {
+        const ids = Object.keys(presentPlayers);
+        if (ids.length === 0) return null;
+        return ids.reduce((a, b) => (presentPlayersJoinedAt[a] <= presentPlayersJoinedAt[b] ? a : b));
+    }
+
+    function refreshHostStatus() {
+        if (gameState.phase !== 'lobby') return;
+        const hostView = document.getElementById('host-config-view');
+        const nonHostView = document.getElementById('non-host-waiting');
+        if (isHost()) {
+            hostView.style.display = 'block';
+            nonHostView.style.display = 'none';
+            populateThemeSelect();
+            renderTeamAssignmentUI();
+        } else {
+            hostView.style.display = 'none';
+            nonHostView.style.display = 'block';
+        }
+        relocateConfigPanel();
+    }
+
+    function relocateConfigPanel() {
+        const configView = document.getElementById('host-config-view');
+        const desktopSlot = document.getElementById('host-config-desktop-slot');
+        const rightPlaceholder = document.getElementById('host-config-right-placeholder');
+        const gameWaitingView = document.getElementById('game-waiting-view');
+        if (!configView || !desktopSlot || !gameWaitingView) return;
+
+        const shouldBeOnLeft = isHost() && window.innerWidth >= 900 && gameState.phase === 'lobby';
+
+        if (shouldBeOnLeft) {
+            if (configView.parentElement !== desktopSlot) desktopSlot.appendChild(configView);
+            if (rightPlaceholder) rightPlaceholder.style.display = 'block';
+        } else {
+            if (configView.parentElement !== gameWaitingView) gameWaitingView.appendChild(configView);
+            if (rightPlaceholder) rightPlaceholder.style.display = 'none';
+        }
+    }
+
+    let relocateResizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(relocateResizeTimer);
+        relocateResizeTimer = setTimeout(relocateConfigPanel, 150);
+    });
+
+    function populateThemeSelect() {
+        const container = document.getElementById('theme-list-container');
+        if (container.dataset.populated) return;
+        container.innerHTML = THEME_META.map(t => `
+            <div class="theme-row${selectedThemes.has(t.key) ? ' selected' : ''}" id="theme-row-${t.key}">
+                <div class="theme-row-text">
+                    <div class="theme-row-title">${t.emoji} ${escapeHtml(t.title)}</div>
+                    <div class="theme-row-desc">${escapeHtml(t.desc)}</div>
+                </div>
+                <button type="button" class="theme-toggle-btn${selectedThemes.has(t.key) ? ' on' : ''}" id="theme-toggle-${t.key}" onclick="toggleThemeSelection('${t.key}')">${selectedThemes.has(t.key) ? 'Oui' : 'Non'}</button>
+            </div>
+        `).join('');
+        container.dataset.populated = 'true';
+        updateThemeMultiMsg();
+    }
+
+    function toggleThemeSelection(key) {
+        if (selectedThemes.has(key)) {
+            if (selectedThemes.size <= 1) return;
+            selectedThemes.delete(key);
+        } else {
+            selectedThemes.add(key);
+        }
+        const row = document.getElementById(`theme-row-${key}`);
+        const btn = document.getElementById(`theme-toggle-${key}`);
+        const isOn = selectedThemes.has(key);
+        row.classList.toggle('selected', isOn);
+        btn.classList.toggle('on', isOn);
+        btn.innerText = isOn ? 'Oui' : 'Non';
+        updateThemeMultiMsg();
+    }
+
+    function updateThemeMultiMsg() {
+        document.getElementById('theme-multi-msg').style.display = selectedThemes.size > 1 ? 'block' : 'none';
+    }
+
+    function adjustPlayerCount(delta) {
+        const prevCount = isConfigPlayerCount;
+        isConfigPlayerCount = Math.max(2, Math.min(24, isConfigPlayerCount + delta));
+        if (prevCount < 4 && isConfigPlayerCount >= 4) isConfigTeamCount = 2;
+        document.getElementById('player-count-value').innerText = isConfigPlayerCount;
+        renderTeamAssignmentUI();
+    }
+
+    function adjustTeamCount(delta) {
+        const maxAllowed = Math.max(2, Math.min(3, Math.floor(isConfigPlayerCount / 2)));
+        isConfigTeamCount = Math.max(2, Math.min(maxAllowed, isConfigTeamCount + delta));
+        document.getElementById('team-count-value').innerText = isConfigTeamCount;
+        Object.keys(configTeamAssignments).forEach(id => {
+            if (configTeamAssignments[id] > isConfigTeamCount) configTeamAssignments[id] = 1;
+        });
+        renderTeamAssignmentUI();
+    }
+
+    function selectTimer(val) {
+        isConfigTimer = val;
+        document.querySelectorAll('#timer-select .timer-option').forEach(el => {
+            el.classList.toggle('active', parseInt(el.dataset.val) === val);
+        });
+    }
+
+    function selectWordCount(val) {
+        isConfigWordCount = val;
+        const label = document.getElementById('wordcount-value');
+        if (label) label.innerText = val;
+        const range = document.getElementById('wordcount-range');
+        if (range && parseInt(range.value) !== val) range.value = val;
+    }
+
+    function togglePenaltyDropdown() {
+        const isChecked = document.getElementById('penalty-toggle').checked;
+        document.getElementById('penalty-dropdown-container').style.display = isChecked ? 'block' : 'none';
+    }
+
+    function assignPlayerTeam(peerId, team) {
+        configTeamAssignments[peerId] = team;
+        renderTeamAssignmentUI();
+    }
+
+    function randomizeTeams() {
+        const ids = Object.keys(presentPlayers);
+        const shuffled = [...ids];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        shuffled.forEach((id, i) => {
+            configTeamAssignments[id] = (i % isConfigTeamCount) + 1;
+        });
+        renderTeamAssignmentUI();
+    }
+
+    function renderTeamAssignmentUI() {
+        const ids = Object.keys(presentPlayers);
+        const preview = document.getElementById('team-preview');
+        const soloPreview = document.getElementById('solo-player-preview');
+        const startBtn = document.getElementById('start-game-btn');
+        const status = document.getElementById('host-config-status');
+        const playerCountStatus = document.getElementById('player-count-status');
+        const teamSection = document.getElementById('team-count-section');
+        const soloSection = document.getElementById('solo-mode-section');
+        const jokerBlock = document.getElementById('joker-option-block');
+        const soloBonusNote = document.getElementById('solo-bonus-note');
+
+        const isSoloMode = isConfigPlayerCount < 4;
+        teamSection.style.display = isSoloMode ? 'none' : 'block';
+        soloSection.style.display = isSoloMode ? 'block' : 'none';
+        jokerBlock.style.display = isSoloMode ? 'none' : 'block';
+        soloBonusNote.style.display = isSoloMode ? 'block' : 'none';
+
+        if (ids.length < isConfigPlayerCount) {
+            const missing = isConfigPlayerCount - ids.length;
+            playerCountStatus.innerText = `Il manque encore ${missing} joueur${missing > 1 ? 's' : ''} (${ids.length}/${isConfigPlayerCount} connecté${ids.length > 1 ? 's' : ''}).`;
+            playerCountStatus.className = 'status-line';
+        } else if (ids.length > isConfigPlayerCount) {
+            const extra = ids.length - isConfigPlayerCount;
+            playerCountStatus.innerText = `${extra} joueur${extra > 1 ? 's' : ''} en trop (${ids.length}/${isConfigPlayerCount} connecté${ids.length > 1 ? 's' : ''}).`;
+            playerCountStatus.className = 'status-line error';
+        } else {
+            playerCountStatus.innerText = `Tous les joueurs sont connectés (${ids.length}/${isConfigPlayerCount}).`;
+            playerCountStatus.className = 'status-line ok';
+        }
+
+        if (isSoloMode) {
+            document.getElementById('solo-mode-title').innerText = isConfigPlayerCount === 3 ? 'Mode 1 contre 1 contre 1' : 'Mode 1 contre 1';
+            soloPreview.innerHTML = ids.map(id =>
+                `<div class="team-preview-row"><span>${escapeHtml(presentPlayers[id] || '—')}${id === myId ? ' (toi)' : ''}</span></div>`
+            ).join('') || '<div class="team-group-empty">Aucun joueur</div>';
+            updateVideoTileLabels();
+
+            if (ids.length !== isConfigPlayerCount) {
+                startBtn.disabled = true;
+                status.innerText = ids.length < isConfigPlayerCount ? 'En attente des joueurs restants...' : "Trop de joueurs sont connectés : augmente le nombre de joueurs visé, ou fais partir les joueurs en trop.";
+            } else {
+                startBtn.disabled = false;
+                status.innerText = '';
+            }
+            return;
+        }
+
+        const maxAllowedTeams = Math.max(2, Math.min(3, Math.floor(isConfigPlayerCount / 2)));
+        if (isConfigTeamCount > maxAllowedTeams) {
+            isConfigTeamCount = Math.max(2, maxAllowedTeams);
+            const teamValueEl = document.getElementById('team-count-value');
+            if (teamValueEl) teamValueEl.innerText = isConfigTeamCount;
+        }
+
+        ids.forEach((id, i) => {
+            if (!configTeamAssignments[id] || configTeamAssignments[id] > isConfigTeamCount) {
+                configTeamAssignments[id] = (i % isConfigTeamCount) + 1;
+            }
+        });
+        Object.keys(configTeamAssignments).forEach(id => {
+            if (!ids.includes(id)) delete configTeamAssignments[id];
+        });
+
+        let html = '';
+        let hasEmptyTeam = false;
+        for (let t = 1; t <= isConfigTeamCount; t++) {
+            const members = ids.filter(id => configTeamAssignments[id] === t);
+            if (members.length < 2) hasEmptyTeam = true;
+            html += `<div class="team-group"><div class="team-group-title">Équipe ${t}${members.length < 2 ? ' ⚠️ min. 2 joueurs' : ''}</div>`;
+            html += members.map(id => {
+                const name = presentPlayers[id] || '—';
+                const teamButtons = Array.from({ length: isConfigTeamCount }, (_, i) => i + 1).map(n =>
+                    `<button type="button" class="team-pick-btn${n === t ? ' active' : ''}" onclick="assignPlayerTeam('${id}', ${n})">${n}</button>`
+                ).join('');
+                return `<div class="team-preview-row"><span>${escapeHtml(name)}${id === myId ? ' (toi)' : ''}</span><span class="team-pick-group">${teamButtons}</span></div>`;
+            }).join('') || '<div class="team-group-empty">Aucun joueur</div>';
+            html += `</div>`;
+        }
+        preview.innerHTML = html;
+
+        if (ids.length !== isConfigPlayerCount) {
+            startBtn.disabled = true;
+            status.innerText = ids.length < isConfigPlayerCount ? 'En attente des joueurs restants...' : "Trop de joueurs sont connectés : augmente le nombre de joueurs visé, ou fais partir les joueurs en trop.";
+        } else if (hasEmptyTeam) {
+            startBtn.disabled = true;
+            status.innerText = 'Chaque équipe doit avoir au moins 2 joueurs.';
+        } else {
+            startBtn.disabled = false;
+            status.innerText = '';
+        }
+
+        updateVideoTileLabels();
+    }
+
+    function shuffleGame(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function isPassAllowed() {
+        if (gameState.passRule === 'always') return true;
+        if (gameState.passRule === 'never') return false;
+        return gameState.round > 1;
+    }
+
+    function hostStartGame() {
+        if (!isHost()) return;
+        const ids = Object.keys(presentPlayers);
+        if (ids.length < 2 || ids.length !== isConfigPlayerCount) return;
+
+        const isSoloMode = isConfigPlayerCount < 4;
+        if (!isSoloMode) {
+            const counts = {};
+            ids.forEach(id => { const t = configTeamAssignments[id] || 1; counts[t] = (counts[t] || 0) + 1; });
+            for (let t = 1; t <= isConfigTeamCount; t++) {
+                if ((counts[t] || 0) < 2) return;
+            }
+        }
+
+        isConfigPassRule = document.getElementById('passrule-select').value;
+        isConfigPenaltyActive = document.getElementById('penalty-toggle').checked;
+        isConfigPenaltySeconds = parseInt(document.getElementById('penalty-seconds-select').value) || 5;
+        isConfigJoker = !isSoloMode && document.getElementById('joker-toggle').checked;
+
+        const activeThemes = selectedThemes.size > 0 ? [...selectedThemes] : ['gen_medium'];
+        const mergedWords = [...new Set(activeThemes.flatMap(k => WORD_DATABASE[k] || []))];
+        const themeBank = shuffleGame(mergedWords);
+        fullDeck = themeBank.slice(0, isConfigWordCount);
+        jokerWord = isConfigJoker && fullDeck.length > 0 ? fullDeck[Math.floor(Math.random() * fullDeck.length)] : null;
+
+        passesPerEntity = {};
+        foundCountPerPlayer = {};
+        passesPerWordTotal = {};
+        wordFoundLog = [];
+        tgvRecord = { entity: null, count: 0 };
+        ids.forEach(id => { passesPerEntity[id] = 0; foundCountPerPlayer[id] = 0; });
+
+        if (isSoloMode) {
+            const scores = {};
+            ids.forEach(id => { scores[id] = 0; });
+
+            gameState = {
+                phase: 'round-intro', mode: 'solo', numTeams: 0, timerConfig: isConfigTimer,
+                passRule: isConfigPassRule, penaltyActive: isConfigPenaltyActive, penaltySeconds: isConfigPenaltySeconds,
+                isPaused: false, pausedAt: null, turnReady: false, round: 1, teamRosters: {}, playerTurnIndexes: {},
+                currentTeam: 1, soloRoster: ids, turnRotationIndex: 0, activePlayerId: null, guesserId: null,
+                idlePlayerId: null, roundBonusReveal: null, turnStartAt: null, scores, wordsFoundThisTurn: 0,
+                wordsRemainingCount: fullDeck.length
+            };
+            applySoloTurnRoles(0);
+        } else {
+            const teamRosters = {};
+            for (let t = 1; t <= isConfigTeamCount; t++) teamRosters[t] = [];
+            ids.forEach(id => {
+                const team = configTeamAssignments[id] || 1;
+                teamRosters[team].push(id);
+            });
+            for (let t = 1; t <= isConfigTeamCount; t++) {
+                if (teamRosters[t].length === 0) {
+                    const donor = Object.keys(teamRosters).sort((a, b) => teamRosters[b].length - teamRosters[a].length)[0];
+                    teamRosters[t].push(teamRosters[donor].pop());
+                }
+            }
+
+            const scores = {};
+            const playerTurnIndexes = {};
+            for (let t = 1; t <= isConfigTeamCount; t++) { scores[t] = 0; playerTurnIndexes[t] = 0; }
+
+            gameState = {
+                phase: 'round-intro', mode: 'team', numTeams: isConfigTeamCount, timerConfig: isConfigTimer,
+                passRule: isConfigPassRule, penaltyActive: isConfigPenaltyActive, penaltySeconds: isConfigPenaltySeconds,
+                isPaused: false, pausedAt: null, turnReady: false, round: 1, teamRosters, playerTurnIndexes,
+                currentTeam: 1, soloRoster: [], turnRotationIndex: 0, activePlayerId: teamRosters[1][0], guesserId: null,
+                idlePlayerId: null, roundBonusReveal: null, turnStartAt: null, scores, wordsFoundThisTurn: 0,
+                wordsRemainingCount: fullDeck.length
+            };
+        }
+
+        broadcastGameState();
+    }
+
+    function applySoloTurnRoles(rotationIndex) {
+        const roster = gameState.soloRoster;
+        const n = roster.length;
+        gameState.turnRotationIndex = rotationIndex;
+        gameState.activePlayerId = roster[rotationIndex % n];
+        gameState.guesserId = roster[(rotationIndex + 1) % n];
+        gameState.idlePlayerId = n >= 3 ? roster[(rotationIndex + 2) % n] : null;
+    }
+
+    function drawSoloRoundBonuses() {
+        const pool = shuffleGame([...fullDeck]);
+        hostBonusDescriberWords = pool.slice(0, 5);
+        hostBonusGuesserWords = pool.slice(5, 10);
+    }
+
+    function hostBeginRound() {
+        if (!isHost()) return;
+        hostDeck = [...fullDeck];
+        if (gameState.mode === 'solo') {
+            drawSoloRoundBonuses();
+            gameState.roundBonusReveal = null;
+            applySoloTurnRoles(gameState.turnRotationIndex);
+        }
+        gameState.phase = 'playing';
+        gameState.turnStartAt = null;
+        gameState.turnReady = false;
+        gameState.wordsFoundThisTurn = 0;
+        gameState.wordsRemainingCount = hostDeck.length;
+        gameState.hasUndo = false;
+        currentTurnFoundCount = 0;
+        lastFoundAction = null;
+        broadcastGameState();
+    }
+
+    function hostGoToNextRoundIntro() {
+        if (!isHost()) return;
+        gameState.round++;
+        if (gameState.mode === 'solo') {
+            applySoloTurnRoles(gameState.turnRotationIndex);
+        } else {
+            gameState.currentTeam = 1;
+            gameState.activePlayerId = gameState.teamRosters[1][gameState.playerTurnIndexes[1] % gameState.teamRosters[1].length];
+        }
+        gameState.phase = 'round-intro';
+        broadcastGameState();
+    }
+
+    async function shareRoomCode() {
+        const text = `🎥 Rejoins ma partie de Rush'Up! Live avec le code : ${roomCode}\nhttps://rushupgame.github.io/onlinegame/`;
+        if (navigator.share) {
+            try { await navigator.share({ title: "Rush'Up! Live", text }); } catch (err) {}
+        } else if (navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showGameToast('📋 Code copié dans le presse-papier !', 'joker');
+            } catch (err) {}
+        }
+    }
+
+    function hostRestartToConfig() {
+        if (!isHost()) return;
+        gameState.phase = 'lobby';
+        broadcastGameState();
+    }
+
+    function confirmRestartToConfig() {
+        if (!isHost()) return;
+        document.getElementById('restart-confirm-modal').classList.add('active');
+    }
+
+    function closeRestartConfirmModal() {
+        document.getElementById('restart-confirm-modal').classList.remove('active');
+    }
+
+    function doRestartToConfig() {
+        closeRestartConfirmModal();
+        hostRestartToConfig();
+    }
+
+    function sendGameMsg(to, type, data) {
+        channel.send({ type: 'broadcast', event: 'game-msg', payload: { to, from: myId, type, data } });
+    }
+
+    function broadcastGameState() {
+        sendGameMsg('all', 'state', { ...gameState, hostNow: Date.now() });
+        applyGameState(gameState);
+    }
+
+    function hostSendSecretWord(streakMode) {
+        if (hostDeck.length === 0) return;
+        const word = hostDeck[0];
+        const isJoker = jokerWord !== null && word === jokerWord;
+        sendGameMsg(gameState.activePlayerId, 'secret-word', { word, isJoker, streakMode: streakMode || 'found' });
+        if (gameState.activePlayerId === myId) {
+            showSecretWord(word, isJoker, streakMode || 'found');
+        }
+    }
+
+    function handleGameMessage(payload) {
+        if (payload.to !== 'all' && payload.to !== myId) return;
+
+        if (payload.type === 'state') {
+            if (payload.from !== myId && typeof payload.data.hostNow === 'number') {
+                clockOffset = payload.data.hostNow - Date.now();
+            }
+            applyGameState(payload.data);
+        } else if (payload.type === 'secret-word') {
+            showSecretWord(payload.data.word, payload.data.isJoker, payload.data.streakMode || 'found');
+        } else if (payload.type === 'final-summary') {
+            renderFinalSummary(payload.data);
+        } else if (payload.type === 'action' && isHost()) {
+            handlePlayerAction(payload.from, payload.data.action);
+        } else if (payload.type === 'reaction') {
+            showReaction(payload.data.emoji);
+        } else if (payload.type === 'bonus-notify') {
+            showBonusNotify(payload.data);
+        }
+    }
+
+    function showBonusNotify(data) {
+        const isSelf = data.winnerId === myId;
+        const roleLabel = data.bonusType === 'describer' ? 'Descripteur' : 'Devineur';
+        const text = isSelf
+            ? `🎁 Toi (${roleLabel}) : Carte Bonus ! +3 pts`
+            : `🎁 ${data.winnerName} (${roleLabel}) a la Carte Bonus ! +3 pts`;
+        showGameToast(text, isSelf ? 'bonus-self' : 'bonus-other');
+    }
+
+    let lastReactionSentAt = 0;
+    function sendReaction(emoji) {
+        const now = Date.now();
+        if (now - lastReactionSentAt < 350) return;
+        lastReactionSentAt = now;
+        showReaction(emoji);
+        if (channel) {
+            channel.send({ type: 'broadcast', event: 'game-msg', payload: { to: 'all', from: myId, type: 'reaction', data: { emoji } } });
+        }
+    }
+
+    function showReaction(emoji) {
+        const layer = document.getElementById('reactions-fly-layer');
+        if (!layer) return;
+        const el = document.createElement('div');
+        el.className = 'reaction-particle';
+        el.innerText = emoji;
+        el.style.left = `${10 + Math.random() * 80}%`;
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 2300);
+    }
+
+    function handlePlayerAction(fromId, action) {
+        if (fromId !== gameState.activePlayerId || gameState.phase !== 'playing') return;
+
+        if (action === 'ready') {
+            if (gameState.turnReady) return;
+            gameState.turnReady = true;
+            gameState.turnStartAt = Date.now();
+            broadcastGameState();
+            hostSendSecretWord();
+            return;
+        }
+
+        if (!gameState.turnReady) return;
+
+        if (action === 'found') {
+            const word = hostDeck[0];
+
+            if (gameState.mode === 'solo') {
+                const describerId = gameState.activePlayerId;
+                const guesserId = gameState.guesserId;
+                let describerPoints = 1;
+                let guesserPoints = 1;
+                let bonusType = null;
+
+                if (hostBonusDescriberWords.includes(word)) {
+                    describerPoints += 3;
+                    bonusType = 'describer';
+                } else if (hostBonusGuesserWords.includes(word)) {
+                    guesserPoints += 3;
+                    bonusType = 'guesser';
+                }
+
+                gameState.scores[describerId] = (gameState.scores[describerId] || 0) + describerPoints;
+                gameState.scores[guesserId] = (gameState.scores[guesserId] || 0) + guesserPoints;
+                gameState.wordsFoundThisTurn++;
+                currentTurnFoundCount++;
+                foundCountPerPlayer[describerId] = (foundCountPerPlayer[describerId] || 0) + 1;
+
+                if (currentTurnFoundCount > tgvRecord.count) {
+                    tgvRecord = { entity: describerId, count: currentTurnFoundCount };
+                }
+
+                wordFoundLog.push({ word, round: gameState.round, describerId, guesserId, bonus: bonusType });
+                lastFoundAction = { word, mode: 'solo', describerId, guesserId, describerPoints, guesserPoints, turnFoundBefore: currentTurnFoundCount - 1 };
+                gameState.hasUndo = true;
+
+                hostDeck.shift();
+                gameState.wordsRemainingCount = hostDeck.length;
+
+                if (bonusType) {
+                    const winnerId = bonusType === 'describer' ? describerId : guesserId;
+                    const winnerName = presentPlayers[winnerId] || remoteNames[winnerId] || (winnerId === myId ? myName : '?');
+                    const msg = { winnerId, winnerName: escapeHtml(winnerName), bonusType };
+                    sendGameMsg('all', 'bonus-notify', msg);
+                    showBonusNotify(msg);
+                }
+
+                if (hostDeck.length === 0) hostEndRound();
+                else { broadcastGameState(); hostSendSecretWord(); }
+                return;
+            }
+
+            const isJoker = jokerWord !== null && word === jokerWord;
+            const points = isJoker ? 2 : 1;
+            const team = gameState.currentTeam;
+
+            gameState.scores[team] = (gameState.scores[team] || 0) + points;
+            gameState.wordsFoundThisTurn++;
+            currentTurnFoundCount++;
+            foundCountPerPlayer[fromId] = (foundCountPerPlayer[fromId] || 0) + points;
+
+            if (currentTurnFoundCount > tgvRecord.count) {
+                tgvRecord = { entity: fromId, count: currentTurnFoundCount };
+            }
+
+            wordFoundLog.push({ word, round: gameState.round, team, playerId: fromId, joker: isJoker });
+            lastFoundAction = { word, playerId: fromId, team, points, turnFoundBefore: currentTurnFoundCount - 1 };
+            gameState.hasUndo = true;
+
+            hostDeck.shift();
+            gameState.wordsRemainingCount = hostDeck.length;
+
+            if (hostDeck.length === 0) hostEndRound();
+            else { broadcastGameState(); hostSendSecretWord(); }
+        } else if (action === 'pass') {
+            if (!isPassAllowed()) return;
+            const word = hostDeck[0];
+            passesPerEntity[fromId] = (passesPerEntity[fromId] || 0) + 1;
+            passesPerWordTotal[word] = (passesPerWordTotal[word] || 0) + 1;
+            hostDeck.push(hostDeck.shift());
+            lastFoundAction = null;
+            gameState.hasUndo = false;
+
+            if (gameState.penaltyActive) {
+                gameState.turnStartAt -= gameState.penaltySeconds * 1000;
+                const elapsed = (Date.now() - gameState.turnStartAt) / 1000;
+                if (gameState.timerConfig - elapsed <= 0) { hostAdvanceTurn(); return; }
+                broadcastGameState();
+            }
+            hostSendSecretWord('break');
+        } else if (action === 'undo') {
+            if (!lastFoundAction) return;
+            if (gameState.mode === 'solo') {
+                if (lastFoundAction.describerId !== fromId) return;
+                gameState.scores[lastFoundAction.describerId] -= lastFoundAction.describerPoints;
+                gameState.scores[lastFoundAction.guesserId] -= lastFoundAction.guesserPoints;
+                foundCountPerPlayer[lastFoundAction.describerId] -= 1;
+            } else {
+                if (lastFoundAction.playerId !== fromId) return;
+                gameState.scores[lastFoundAction.team] -= lastFoundAction.points;
+                foundCountPerPlayer[fromId] -= lastFoundAction.points;
+            }
+            currentTurnFoundCount = lastFoundAction.turnFoundBefore;
+            gameState.wordsFoundThisTurn = Math.max(0, gameState.wordsFoundThisTurn - 1);
+            wordFoundLog.pop();
+            hostDeck.unshift(lastFoundAction.word);
+            gameState.wordsRemainingCount = hostDeck.length;
+            lastFoundAction = null;
+            gameState.hasUndo = false;
+            broadcastGameState();
+            hostSendSecretWord('undo');
+        } else if (action === 'timeout') {
+            if (gameState.isPaused) return;
+            hostAdvanceTurn();
+        } else if (action === 'pause') {
+            if (gameState.isPaused) return;
+            gameState.isPaused = true;
+            gameState.pausedAt = Date.now();
+            broadcastGameState();
+        } else if (action === 'resume') {
+            if (!gameState.isPaused) return;
+            gameState.turnStartAt += (Date.now() - gameState.pausedAt);
+            gameState.isPaused = false;
+            gameState.pausedAt = null;
+            broadcastGameState();
+        }
+    }
+
+    function hostAdvanceTurn() {
+        if (gameState.mode === 'solo') {
+            const nextIndex = (gameState.turnRotationIndex + 1) % gameState.soloRoster.length;
+            applySoloTurnRoles(nextIndex);
+        } else {
+            const team = gameState.currentTeam;
+            gameState.playerTurnIndexes[team] = (gameState.playerTurnIndexes[team] + 1) % gameState.teamRosters[team].length;
+            gameState.currentTeam = (gameState.currentTeam % gameState.numTeams) + 1;
+            const nextTeam = gameState.currentTeam;
+            gameState.activePlayerId = gameState.teamRosters[nextTeam][gameState.playerTurnIndexes[nextTeam] % gameState.teamRosters[nextTeam].length];
+        }
+        gameState.turnStartAt = null;
+        gameState.turnReady = false;
+        gameState.wordsFoundThisTurn = 0;
+        currentTurnFoundCount = 0;
+        lastFoundAction = null;
+        gameState.hasUndo = false;
+        broadcastGameState();
+    }
+
+    function hostEndRound() {
+        if (gameState.mode === 'solo') {
+            gameState.roundBonusReveal = {
+                round: gameState.round,
+                describerBonus: [...hostBonusDescriberWords],
+                guesserBonus: [...hostBonusGuesserWords],
+                foundWords: wordFoundLog
+                    .filter(e => e.round === gameState.round)
+                    .map(e => ({ word: e.word, describerId: e.describerId, guesserId: e.guesserId, bonus: e.bonus }))
+            };
+        }
+        if (gameState.round < 3) {
+            gameState.phase = 'round-end';
+            broadcastGameState();
+        } else {
+            gameState.phase = 'final';
+            broadcastGameState();
+            sendGameMsg('all', 'final-summary', buildFinalSummary());
+            renderFinalSummary(buildFinalSummary());
+        }
+    }
+
+    function buildFinalSummary() {
+        let bestRatio = -1;
+        let brainWinnerId = null;
+        let brainDetail = '';
+
+        const rosterIds = gameState.mode === 'solo' ? gameState.soloRoster : Object.values(gameState.teamRosters).flat();
+        rosterIds.forEach(playerId => {
+            const val = foundCountPerPlayer[playerId] || 0;
+            const pas = passesPerEntity[playerId] || 0;
+            const ratio = (pas === 0) ? (val * 10) : (val / pas);
+            if (val > 0 && ratio > bestRatio) {
+                bestRatio = ratio;
+                brainWinnerId = playerId;
+                brainDetail = pas === 0 ? `${val} mots (Aucun mot passé !)` : `${val} mots / ${pas} passés (Ratio: ${ratio.toFixed(2)})`;
+            }
+        });
+
+        let maxWordPasses = 0;
+        let fishWord = null;
+        Object.keys(passesPerWordTotal).forEach(w => {
+            if (passesPerWordTotal[w] > maxWordPasses) {
+                maxWordPasses = passesPerWordTotal[w];
+                fishWord = w;
+            }
+        });
+
+        return {
+            mode: gameState.mode, scores: gameState.scores, numTeams: gameState.numTeams, soloRoster: gameState.soloRoster,
+            tgv: tgvRecord.count > 0 ? { name: escapeHtml(presentPlayers[tgvRecord.entity] || remoteNames[tgvRecord.entity] || '—'), count: tgvRecord.count } : null,
+            brain: brainWinnerId ? { name: escapeHtml(presentPlayers[brainWinnerId] || remoteNames[brainWinnerId] || '—'), detail: brainDetail } : null,
+            fish: fishWord ? { word: escapeHtml(fishWord), count: maxWordPasses } : null,
+            wordLog: wordFoundLog.map(e => gameState.mode === 'solo'
+                ? { ...e, word: escapeHtml(e.word), describerName: escapeHtml(presentPlayers[e.describerId] || remoteNames[e.describerId] || '—'), guesserName: escapeHtml(presentPlayers[e.guesserId] || remoteNames[e.guesserId] || '—') }
+                : { ...e, word: escapeHtml(e.word), playerName: escapeHtml(presentPlayers[e.playerId] || remoteNames[e.playerId] || '—') })
+        };
+    }
+
+    function applyGameState(state) {
+        gameState = state;
+        relocateConfigPanel();
+        updateVideoTileLabels();
+        updateHeaderFooterPlacement(state.phase !== 'lobby');
+        document.getElementById('host-new-theme-btn').style.display = (state.phase !== 'lobby' && isHost()) ? 'inline-block' : 'none';
+
+        ['game-waiting-view', 'round-intro-view', 'game-active-view', 'round-end-view', 'final-view'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+
+        if (state.phase === 'lobby') {
+            document.getElementById('game-waiting-view').style.display = 'block';
+            setSpotlightPlayer(getHostId());
+            refreshHostStatus();
+            return;
+        }
+
+        if (state.phase === 'round-intro') {
+            document.getElementById('round-intro-view').style.display = 'block';
+            const info = ROUND_INFO[state.round];
+            document.getElementById('round-intro-title').innerText = info.title;
+            document.getElementById('round-intro-hint').innerText = info.hint;
+            const soloRules = document.getElementById('round-intro-solo-rules');
+            if (state.mode === 'solo') {
+                const roleLine = state.soloRoster && state.soloRoster.length >= 3
+                    ? 'À chaque tour (chrono), un joueur décrit 🎤, un autre devine 👂 et le troisième observe 💤 — les rôles tournent à chaque chrono, tout le monde joue les trois rôles.'
+                    : 'À chaque tour (chrono), un joueur décrit 🎤 et l\'autre devine 👂 — les rôles s\'échangent à chaque chrono.';
+                soloRules.style.display = 'block';
+                soloRules.innerHTML = `
+                    <strong>🕹️ Rappel du mode ${state.soloRoster && state.soloRoster.length >= 3 ? '1v1v1' : '1v1'}</strong><br>
+                    ${roleLine}<br>
+                    Une carte trouvée (bouton « Trouver ») rapporte <strong>+1 point</strong> au Descripteur ET au Devineur.<br>
+                    5 cartes « Bonus Descripteur » et 5 « Bonus Devineur » ont été tirées en secret pour cette manche : si l'une d'elles est trouvée, elle rapporte <strong>+3 points de plus</strong> à celui qui en bénéficie — mais personne ne sait lesquelles avant de les trouver ou avant la révélation en fin de manche.
+                `;
+            } else { soloRules.style.display = 'none'; }
+            document.getElementById('round-intro-host-btn-wrap').style.display = isHost() ? 'block' : 'none';
+            document.getElementById('round-intro-wait-text').style.display = isHost() ? 'none' : 'block';
+            setSpotlightPlayer(getHostId());
+            return;
+        }
+
+        if (state.phase === 'playing') {
+            document.getElementById('game-active-view').style.display = 'block';
+            document.getElementById('round-pill').innerText = ROUND_INFO[state.round].title;
+
+            const isSolo = state.mode === 'solo';
+            const activeName = presentPlayers[state.activePlayerId] || remoteNames[state.activePlayerId] || (state.activePlayerId === myId ? myName : '—');
+            const activeTeamNum = !isSolo && state.teamRosters ? (Object.keys(state.teamRosters).find(t => state.teamRosters[t].includes(state.activePlayerId)) || '?') : null;
+            const guesserName = isSolo ? (presentPlayers[state.guesserId] || remoteNames[state.guesserId] || (state.guesserId === myId ? myName : '—')) : null;
+            const idleName = isSolo && state.idlePlayerId ? (presentPlayers[state.idlePlayerId] || remoteNames[state.idlePlayerId] || (state.idlePlayerId === myId ? myName : '—')) : null;
+            const isMyTurn = state.activePlayerId === myId;
+            const isMyGuessTurn = isSolo && state.guesserId === myId;
+
+            setSpotlightPlayer(state.activePlayerId);
+            if (isSolo) renderSoloScoreboard(state.scores, state.soloRoster, 'scoreboard');
+            else renderScoreboard(state.scores, state.numTeams, 'scoreboard');
+
+            if (!state.turnReady) {
+                document.getElementById('turn-confirm-view').style.display = 'block';
+                document.getElementById('turn-active-view').style.display = 'none';
+                document.getElementById('turn-confirm-name').innerText = activeName;
+                if (isSolo) {
+                    document.getElementById('turn-confirm-team').innerText = '🎤 Descripteur';
+                    let teammatesText = `👂 Devineur : ${guesserName}`;
+                    if (idleName) teammatesText += ` · 💤 Observe ce tour : ${idleName}`;
+                    document.getElementById('turn-confirm-teammates').innerText = teammatesText;
+                } else {
+                    document.getElementById('turn-confirm-team').innerText = `Équipe ${activeTeamNum}`;
+                    const teammates = (state.teamRosters && state.teamRosters[activeTeamNum]) ? state.teamRosters[activeTeamNum]
+                        .map(id => presentPlayers[id] || remoteNames[id] || (id === myId ? myName : '?'))
+                        .join(', ') : '';
+                    document.getElementById('turn-confirm-teammates').innerText = teammates ? `Joueurs de l'équipe ${activeTeamNum} : ${teammates}` : '';
+                }
+                document.getElementById('turn-confirm-ready-btn').style.display = isMyTurn ? 'block' : 'none';
+                const waitText = document.getElementById('turn-confirm-wait-text');
+                waitText.style.display = isMyTurn ? 'none' : 'block';
+                waitText.innerText = isMyGuessTurn ? `C'est à toi de deviner ! En attente que ${activeName} confirme...` : `En attente que ${activeName} confirme...`;
+                if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
+                currentStreak = 0;
+                clearTimeout(actionLockFailsafe);
+                lockActionButtons(false);
+                if (isMyTurn && lastAnnouncedTurnId !== state.activePlayerId) vibrate([40, 80, 40]);
+                lastAnnouncedTurnId = state.activePlayerId;
+                return;
+            }
+
+            document.getElementById('turn-confirm-view').style.display = 'none';
+            document.getElementById('turn-active-view').style.display = 'block';
+
+            if (isSolo) {
+                if (isMyTurn) {
+                    document.getElementById('active-player-name').innerText = '🎤 Toi (Descripteur)';
+                    document.getElementById('active-team-name').innerText = `👂 Devineur : ${guesserName}`;
+                } else if (isMyGuessTurn) {
+                    document.getElementById('active-player-name').innerText = `👂 Toi (Devineur)`;
+                    document.getElementById('active-team-name').innerText = `🎤 ${activeName} décrit`;
+                } else {
+                    document.getElementById('active-player-name').innerText = `🎤 ${activeName}`;
+                    document.getElementById('active-team-name').innerText = `👂 Devineur : ${guesserName}`;
+                }
+            } else {
+                document.getElementById('active-player-name').innerText = `🎤 ${activeName}`;
+                document.getElementById('active-team-name').innerText = `Équipe ${activeTeamNum}`;
+            }
+
+            document.getElementById('game-action-btns').style.display = (isMyTurn && !state.isPaused) ? 'grid' : 'none';
+            document.getElementById('pass-btn').disabled = actionLocked || !isPassAllowed();
+            document.getElementById('undo-btn').style.display = (isMyTurn && state.hasUndo && !state.isPaused) ? 'block' : 'none';
+            const pauseBtn = document.getElementById('pause-btn');
+            pauseBtn.style.display = isMyTurn ? 'flex' : 'none';
+            pauseBtn.innerText = state.isPaused ? '▶️' : '⏸️';
+
+            const wordCard = document.getElementById('word-card');
+            if (!isMyTurn) {
+                wordCard.classList.add('locked');
+                wordCard.innerText = isMyGuessTurn ? `🔒 ${activeName} décrit un mot secret` : '🔒 Mot secret';
+            }
+
+            if (!isMyTurn) currentStreak = 0;
+            restartTimerLoop(state);
+            return;
+        }
+
+        if (state.phase === 'round-end') {
+            document.getElementById('round-end-view').style.display = 'block';
+            if (state.mode === 'solo') {
+                renderSoloScoreboard(state.scores, state.soloRoster, 'round-end-scoreboard');
+                renderSoloRoundRecap(state);
+            } else {
+                renderScoreboard(state.scores, state.numTeams, 'round-end-scoreboard');
+                document.getElementById('round-end-solo-recap').style.display = 'none';
+            }
+            document.getElementById('round-end-host-btn-wrap').style.display = isHost() ? 'block' : 'none';
+            document.getElementById('round-end-wait-text').style.display = isHost() ? 'none' : 'block';
+            setSpotlightPlayer(getHostId());
+            if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
+            return;
+        }
+
+        if (state.phase === 'final') {
+            document.getElementById('final-view').style.display = 'block';
+            if (state.mode === 'solo') renderSoloScoreboard(state.scores, state.soloRoster, 'final-scoreboard');
+            else renderScoreboard(state.scores, state.numTeams, 'final-scoreboard');
+            document.getElementById('final-host-btn-wrap').style.display = isHost() ? 'block' : 'none';
+            document.getElementById('final-wait-text').style.display = isHost() ? 'none' : 'block';
+            setSpotlightPlayer(getHostId());
+            if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
+            return;
+        }
+    }
+
+    function showSecretWord(word, isJoker, streakMode) {
+        const wordCard = document.getElementById('word-card');
+        wordCard.classList.remove('locked');
+        wordCard.innerText = isJoker ? `🃏 ${word}` : word;
+        clearTimeout(actionLockFailsafe);
+        lockActionButtons(false);
+
+        if (streakMode === 'break') currentStreak = 0;
+        else if (streakMode === 'undo') currentStreak = Math.max(0, currentStreak - 1);
+        else currentStreak++;
+
+        if (isJoker) showGameToast('🃏 MOT JOKER ! +2', 'joker');
+        else if (streakMode === 'found' && currentStreak >= 3) showGameToast(`🔥 Combo x${currentStreak}`, 'combo');
+    }
+
+    function showGameToast(message, variant) {
+        let toast = document.getElementById('game-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'game-toast';
+            toast.className = 'game-toast';
+            document.getElementById('game-section').prepend(toast);
+        }
+        toast.innerText = message;
+        toast.className = 'game-toast show' + (variant ? ` ${variant}` : '');
+        clearTimeout(toast._hideTimeout);
+        toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function renderScoreboard(scores, numTeams, targetId) {
+        const el = document.getElementById(targetId);
+        const myTeam = gameState.teamRosters ? Object.keys(gameState.teamRosters).find(t => gameState.teamRosters[t].includes(myId)) : null;
+        let html = '';
+        for (let t = 1; t <= numTeams; t++) {
+            const mine = String(t) === String(myTeam);
+            const members = gameState.teamRosters && gameState.teamRosters[t]
+                ? gameState.teamRosters[t].map(id => escapeHtml(presentPlayers[id] || remoteNames[id] || (id === myId ? myName : '?'))).join(', ')
+                : '';
+            html += `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>Équipe ${t}${mine ? ' (toi)' : ''}${members ? ` — ${members}` : ''}</span><span class="pts">${scores[t] || 0}</span></div>`;
+        }
+        el.innerHTML = html;
+    }
+
+    function renderSoloScoreboard(scores, roster, targetId) {
+        const el = document.getElementById(targetId);
+        const sorted = [...(roster || [])].sort((a, b) => (scores[b] || 0) - (scores[a] || 0));
+        el.innerHTML = sorted.map(id => {
+            const mine = id === myId;
+            const name = escapeHtml(presentPlayers[id] || remoteNames[id] || (mine ? myName : '?'));
+            return `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>${name}${mine ? ' (toi)' : ''}</span><span class="pts">${scores[id] || 0}</span></div>`;
+        }).join('');
+    }
+
+    function renderSoloRoundRecap(state) {
+        const el = document.getElementById('round-end-solo-recap');
+        if (!el) return;
+        if (state.mode !== 'solo' || !state.roundBonusReveal) {
+            el.style.display = 'none';
+            el.innerHTML = '';
+            return;
+        }
+        el.style.display = 'block';
+        const reveal = state.roundBonusReveal;
+        const roundWords = reveal.foundWords || [];
+        const nameOf = id => escapeHtml(presentPlayers[id] || remoteNames[id] || (id === myId ? myName : '?'));
+
+        const bonusHtml = `
+            <div class="config-group">
+                <label>🎁 Cartes bonus de la manche ${reveal.round} (révélées)</label>
+                <div class="checkbox-hint" style="margin-left:0;">
+                    <strong>Bonus Descripteur (+3 pts) :</strong> ${reveal.describerBonus.map(escapeHtml).join(', ') || '—'}<br>
+                    <strong>Bonus Devineur (+3 pts) :</strong> ${reveal.guesserBonus.map(escapeHtml).join(', ') || '—'}
+                </div>
+            </div>`;
+
+        const recapHtml = roundWords.length ? roundWords.map(e => {
+            const bonusTag = e.bonus === 'describer' ? ' 🎁 (bonus Descripteur)' : (e.bonus === 'guesser' ? ' 🎁 (bonus Devineur)' : '');
+            return `<div class="recap-row"><span>${escapeHtml(e.word)}${bonusTag}</span><span>🎤 ${nameOf(e.describerId)} · 👂 ${nameOf(e.guesserId)}</span></div>`;
+        }).join('') : '<div class="recap-row"><span>Aucun mot trouvé cette manche.</span></div>';
+
+        el.innerHTML = bonusHtml + `
+            <div class="config-group">
+                <label>📜 Cartes trouvées cette manche</label>
+                <div class="word-recap-body open">${recapHtml}</div>
+            </div>`;
+    }
+
+    function renderFinalSummary(summary) {
+        document.getElementById('trophies-container').innerHTML = `
+            <div class="trophy-card">
+                <div class="trophy-icon">🚄</div>
+                <div class="trophy-details">
+                    <span class="trophy-title">Le TGV</span>
+                    <span class="trophy-winner">${summary.tgv ? `${summary.tgv.name} (${summary.tgv.count} mots)` : '—'}</span>
+                    <span class="trophy-desc">Plus grand nombre de mots devinés en un seul tour !</span>
+                </div>
+            </div>
+            <div class="trophy-card">
+                <div class="trophy-icon">🧠</div>
+                <div class="trophy-details">
+                    <span class="trophy-title">Le Cerveau</span>
+                    <span class="trophy-winner">${summary.brain ? `${summary.brain.name}<br><small style="color:var(--text-muted);">${summary.brain.detail}</small>` : '—'}</span>
+                    <span class="trophy-desc">Meilleur ratio mots trouvés / mots passés !</span>
+                </div>
+            </div>
+            <div class="trophy-card">
+                <div class="trophy-icon">🐟</div>
+                <div class="trophy-details">
+                    <span class="trophy-title">Le Poisson Rouge</span>
+                    <span class="trophy-winner">${summary.fish ? `${summary.fish.word} (passé ${summary.fish.count} fois)` : '—'}</span>
+                    <span class="trophy-desc">Le mot le plus souvent passé de la partie !</span>
+                </div>
+            </div>
+        `;
+
+        const recapEl = document.getElementById('word-recap-body');
+        recapEl.innerHTML = summary.wordLog.map(e => summary.mode === 'solo'
+            ? `<div class="recap-row"><span>${e.bonus ? '🎁 ' : ''}${e.word}</span><span>Manche ${e.round} · 🎤 ${e.describerName} · 👂 ${e.guesserName}</span></div>`
+            : `<div class="recap-row"><span>${e.joker ? '🃏 ' : ''}${e.word}</span><span>Manche ${e.round} · Équipe ${e.team} · ${e.playerName}</span></div>`
+        ).join('') || '<div class="recap-row"><span>Aucun mot enregistré.</span></div>';
+    }
+
+    function toggleWordRecap() {
+        const body = document.getElementById('word-recap-body');
+        const arrow = document.getElementById('word-recap-arrow');
+        body.classList.toggle('open');
+        arrow.innerText = body.classList.contains('open') ? '▴' : '▾';
+    }
+
+    let warned3s = false;
+
+    function restartTimerLoop(state) {
+        if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
+        const display = document.getElementById('game-timer-display');
+        warned3s = false;
+
+        if (state.isPaused) {
+            const elapsedAtPause = (state.pausedAt - state.turnStartAt) / 1000;
+            const remaining = Math.max(0, Math.ceil(state.timerConfig - elapsedAtPause));
+            display.innerText = `⏸️ ${remaining}s`;
+            display.classList.add('paused');
+            display.classList.remove('warning');
+            return;
+        }
+        display.classList.remove('paused');
+
+        function tick() {
+            const elapsed = (Date.now() + clockOffset - state.turnStartAt) / 1000;
+            const remaining = Math.max(0, Math.ceil(state.timerConfig - elapsed));
+            display.innerText = `${remaining}s`;
+            display.classList.toggle('warning', remaining <= 10);
+
+            if (remaining <= 3 && remaining > 0 && !warned3s && state.activePlayerId === myId) {
+                warned3s = true;
+                vibrate([25, 60, 25, 60, 25]);
+            }
+
+            if (remaining <= 0) {
+                if (state.activePlayerId === myId) {
+                    vibrate(150);
+                    sendPlayerAction('timeout');
+                }
+                return;
+            }
+            gameTimerRAF = requestAnimationFrame(tick);
+        }
+        tick();
+    }
+
+    function togglePause() {
+        if (gameState.activePlayerId !== myId) return;
+        sendPlayerAction(gameState.isPaused ? 'resume' : 'pause');
+    }
+
+    function vibrate(pattern) {
+        if (navigator.vibrate) {
+            try { navigator.vibrate(pattern); } catch (err) {}
+        }
+    }
+
+    let actionLocked = false;
+    let actionLockFailsafe = null;
+
+    function lockActionButtons(locked) {
+        actionLocked = locked;
+        const foundBtn = document.getElementById('found-btn');
+        const passBtn = document.getElementById('pass-btn');
+        if (foundBtn) foundBtn.disabled = locked;
+        if (passBtn) passBtn.disabled = locked || !isPassAllowed();
+    }
+
+    function sendPlayerAction(action) {
+        if (gameState.activePlayerId !== myId) return;
+        if ((action === 'found' || action === 'pass') && actionLocked) return;
+        if (action === 'undo') {
+            document.getElementById('undo-btn').style.display = 'none';
+        }
+        if (action === 'found') vibrate(35);
+        else if (action === 'pass') vibrate([20, 40, 20]);
+        else if (action === 'ready') vibrate(15);
+        if (action === 'found' || action === 'pass') {
+            lockActionButtons(true);
+            clearTimeout(actionLockFailsafe);
+            actionLockFailsafe = setTimeout(() => lockActionButtons(false), 2500);
+        }
+        if (isHost()) {
+            handlePlayerAction(myId, action);
+        } else {
+            sendGameMsg(getHostId(), 'action', { action });
+        }
+    }
+
+    function resetGameState() {
+        if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
+        gameState = {
+            phase: 'lobby', mode: 'team', numTeams: 2, timerConfig: 45, passRule: 'byRound',
+            penaltyActive: false, penaltySeconds: 5, isPaused: false, pausedAt: null, turnReady: false,
+            round: 1, teamRosters: {}, playerTurnIndexes: {}, currentTeam: 1,
+            soloRoster: [], turnRotationIndex: 0, activePlayerId: null, guesserId: null, idlePlayerId: null,
+            roundBonusReveal: null, turnStartAt: null, scores: {}, wordsFoundThisTurn: 0, wordsRemainingCount: 0
+        };
+        fullDeck = [];
+        hostDeck = [];
+        jokerWord = null;
+        hostBonusDescriberWords = [];
+        hostBonusGuesserWords = [];
+        wordFoundLog = [];
+        clockOffset = 0;
+        currentStreak = 0;
+        lastAnnouncedTurnId = null;
+        clearTimeout(actionLockFailsafe);
+        actionLocked = false;
+        configTeamAssignments = {};
+        document.getElementById('game-waiting-view').style.display = 'block';
+        document.getElementById('game-active-view').style.display = 'none';
+        document.getElementById('round-intro-view').style.display = 'none';
+        document.getElementById('round-end-view').style.display = 'none';
+        document.getElementById('final-view').style.display = 'none';
+        setSpotlightPlayer(null);
+        updateHeaderFooterPlacement(false);
+    }
+</script>
+</body>
+</html>
