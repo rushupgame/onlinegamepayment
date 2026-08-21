@@ -2251,9 +2251,13 @@
                 expiresAt: data && data.expiresAt || null
             });
         } catch (e) {
-            // Pas de connexion / edge function indisponible : on garde le dernier statut
-            // connu en cache local plutôt que de bloquer le joueur.
-            console.warn('Vérification VIP impossible, statut en cache conservé.', e);
+            // Erreur réseau / edge function en échec : on repasse en NON-VIP par défaut
+            // (fail-safe) plutôt que de garder un éventuel vieux statut en cache — sinon un
+            // cache VIP resté d'un test précédent (autre compte, ancienne version) donnerait
+            // l'impression à tort que le compte est VIP. Le détail de l'erreur est loggé pour
+            // pouvoir diagnostiquer (voir aussi Dashboard > Edge Functions > verify-access > Logs).
+            console.error('Vérification VIP impossible, statut repassé à non-VIP :', e);
+            persistVipStatus({ isVip: false, planType: null, expiresAt: null });
         }
     }
 
