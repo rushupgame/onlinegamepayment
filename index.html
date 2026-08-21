@@ -1325,8 +1325,7 @@
 
     /* --- Badge/verrou VIP sur thématiques & vibes --- */
     .vip-crown { margin-left: 4px; filter: drop-shadow(0 0 2px rgba(255,184,0,0.6)); }
-    .theme-row.locked, .vibe-swatch.locked { opacity: 0.55; position: relative; }
-    .theme-toggle-btn.locked-btn { background: linear-gradient(90deg,#ffb800,#ff8c1a); color:#1a1400; }
+    .theme-toggle-btn.locked-btn { background: linear-gradient(90deg,#ffb800,#ff8c1a); color:#1a1400; font-weight: 800; }
     .vip-pill {
         display: inline-flex; align-items: center; gap: 4px;
         background: linear-gradient(90deg,#ffb800,#ff8c1a); color:#1a1400;
@@ -1435,6 +1434,31 @@
         color: #1a1400;
         font-weight: 800;
     }
+
+    .account-info-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-sm);
+        font-size: 0.82rem;
+    }
+    .account-info-email { color: var(--text-main); font-weight: 700; }
+    .account-info-password { color: var(--text-muted); font-family: monospace; letter-spacing: 1px; }
+    .account-info-eye, .account-info-logout {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--card-border);
+        color: var(--text-main);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        cursor: pointer;
+    }
+    .account-info-logout { margin-left: auto; }
 
     .game-toast {
         position: fixed;
@@ -1626,7 +1650,7 @@
 <!-- ÉCRAN 2 : Salon vidéo -->
 <div id="room-screen" class="screen">
     <div class="room-header" id="room-header">
-        <div class="room-code-badge"><span class="room-code-label">Code de session</span> <span id="room-code-display">—</span></div>
+        <div class="room-code-badge" onclick="shareRoomCode()" style="cursor:pointer;" title="Partager le code"><span class="room-code-label">Code de session</span> <span id="room-code-display">—</span></div>
     </div>
 
     <div id="connection-banner" class="connection-banner" style="display:none;">
@@ -1858,6 +1882,12 @@
             <button class="leave-btn action-btn-leave" onclick="leaveRoom()">🚪 Quitter le salon</button>
         </div>
         <div class="sameroom-hint-text">💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.</div>
+        <div class="account-info-bar" id="account-info-bar" style="display:none;">
+            <span class="account-info-email" id="account-info-email">—</span>
+            <span class="account-info-password" id="account-info-password">••••••••</span>
+            <button type="button" class="account-info-eye" id="account-info-eye-btn" onclick="toggleAccountPasswordVisibility()" title="Afficher/masquer le mot de passe">👁️</button>
+            <button type="button" class="account-info-logout" onclick="signOutAccount()">Déconnexion</button>
+        </div>
     </footer>
 </div>
 
@@ -1905,7 +1935,7 @@
 
         <div id="vip-modal-locked-body">
             <div class="vip-modal-title">👑 Passe VIP</div>
-            <p class="vip-modal-sub" id="vip-modal-reason">Débloque les salons jusqu'à 24 joueurs, toutes les thématiques et toutes les Vibes.</p>
+            <p class="vip-modal-sub" id="vip-modal-reason">Débloque les salons jusqu'à 24 joueurs et toutes les thématiques.</p>
 
             <div class="vip-offers">
                 <div class="vip-offer-card">
@@ -2041,14 +2071,7 @@
     const VIBE_STORAGE_KEY = 'rushup_vibe';
 
     function applyVibe(key, persist) {
-        // Les Vibes hors du socle gratuit sont réservées au Pass VIP : on ouvre la modale
-        // de paiement au lieu d'appliquer le skin. (fonction VIP_FREE_VIBES/isVip définies
-        // plus haut, dans le bloc VIP/FREEMIUM)
-        if (typeof VIP_FREE_VIBES !== 'undefined' && !VIP_FREE_VIBES.has(key) && !isVip()) {
-            const meta = VIBES.find(v => v.key === key);
-            openVipModal(`👑 La Vibe "${meta ? meta.name : ''}" est réservée au Pass VIP.`);
-            return;
-        }
+        // Toutes les Vibes sont gratuites (plus de restriction VIP ici).
         document.body.className = document.body.className.replace(/\bvibe-\S+/g, '').trim();
         if (key && key !== 'basic') document.body.classList.add(`vibe-${key}`);
         if (persist) {
@@ -2062,15 +2085,12 @@
         if (!grid) return;
         let current = 'basic';
         try { current = localStorage.getItem(VIBE_STORAGE_KEY) || 'basic'; } catch (e) { /* pas bloquant */ }
-        const vip = typeof isVip === 'function' ? isVip() : true;
-        grid.innerHTML = VIBES.map(v => {
-            const locked = typeof VIP_FREE_VIBES !== 'undefined' && !VIP_FREE_VIBES.has(v.key) && !vip;
-            return `
-            <div class="vibe-swatch${v.key === current ? ' active' : ''}${locked ? ' locked' : ''}" onclick="applyVibe('${v.key}', true)" title="${escapeHtml(v.desc)}">
-                <div class="vibe-swatch-preview" style="background: linear-gradient(135deg, ${vibePreviewGradient(v.key)});">${locked ? '👑' : v.emoji}</div>
-                <div class="vibe-swatch-name">${escapeHtml(v.name)}${locked ? ' <span class="vip-crown">👑</span>' : ''}</div>
-            </div>`;
-        }).join('');
+        grid.innerHTML = VIBES.map(v => `
+            <div class="vibe-swatch${v.key === current ? ' active' : ''}" onclick="applyVibe('${v.key}', true)" title="${escapeHtml(v.desc)}">
+                <div class="vibe-swatch-preview" style="background: linear-gradient(135deg, ${vibePreviewGradient(v.key)});">${v.emoji}</div>
+                <div class="vibe-swatch-name">${escapeHtml(v.name)}</div>
+            </div>`
+        ).join('');
     }
 
     // Aperçu visuel de chaque vibe dans la grille de sélection (mêmes teintes que les
@@ -2190,9 +2210,11 @@
             }
 
             authSession = data.session;
+            currentAccountPassword = password; // gardé en mémoire (jamais persisté) pour l'afficher/masquer dans le footer
             closeAuthModal();
             await checkVipStatus();
             refreshVipUI();
+            updateAccountInfoBar();
             if (pendingAfterAuth) { const fn = pendingAfterAuth; pendingAfterAuth = null; fn(); }
         } catch (e) {
             const msg = (e && e.message) || '';
@@ -2203,11 +2225,46 @@
         }
     }
 
+    // --- Barre "compte" du footer (hôte connecté uniquement) : email visible, mot de passe
+    // masqué par défaut avec bouton pour le démasquer, et déconnexion. Le mot de passe n'est
+    // gardé qu'en mémoire JS (jamais dans localStorage) : après un rechargement de page, la
+    // session reste active mais le mot de passe n'est plus mémorisé (il faut se reconnecter
+    // pour le réafficher) — c'est volontaire, pour ne pas le stocker en clair sur le disque.
+    let currentAccountPassword = null;
+    let accountPasswordVisible = false;
+
+    function updateAccountInfoBar() {
+        const bar = document.getElementById('account-info-bar');
+        if (!bar) return;
+        const show = isLoggedIn() && typeof isHost === 'function' && isHost();
+        bar.style.display = show ? 'flex' : 'none';
+        if (!show) return;
+        document.getElementById('account-info-email').innerText = authSession.user.email || '—';
+        renderAccountPassword();
+    }
+
+    function renderAccountPassword() {
+        const el = document.getElementById('account-info-password');
+        if (!currentAccountPassword) {
+            el.innerText = '•••• (reconnecte-toi pour l\'afficher)';
+            return;
+        }
+        el.innerText = accountPasswordVisible ? currentAccountPassword : '•'.repeat(Math.max(8, currentAccountPassword.length));
+    }
+
+    function toggleAccountPasswordVisibility() {
+        accountPasswordVisible = !accountPasswordVisible;
+        renderAccountPassword();
+    }
+
     async function signOutAccount() {
         await supabaseClient.auth.signOut();
         authSession = null;
+        currentAccountPassword = null;
+        accountPasswordVisible = false;
         persistVipStatus({ isVip: false, planType: null, expiresAt: null });
         closeVipModal();
+        updateAccountInfoBar();
     }
 
     // ================================================================
@@ -2277,12 +2334,10 @@
     }
 
     function vipThemeKeys() {
-        // Seules les thématiques de base restent gratuites : le reste est réservé au Pass VIP.
-        const FREE_THEMES = new Set(['gen_easy', 'gen_medium', 'family']);
+        // Thématiques de base gratuites : le reste est réservé au Pass VIP.
+        const FREE_THEMES = new Set(['gen_easy', 'gen_medium', 'kids', 'family']);
         return FREE_THEMES;
     }
-
-    const VIP_FREE_VIBES = new Set(['basic', 'blackpepper', 'coconut', 'strawberry', 'bubblegum', 'blueberry']);
 
     function openVipModal(reason) {
         // Pas de compte connecté : on propose de s'inscrire/se connecter d'abord (le VIP est
@@ -2294,7 +2349,7 @@
         document.getElementById('vip-modal-status').innerText = '';
         document.getElementById('vip-modal-status').className = 'vip-modal-status';
         document.getElementById('vip-modal-reason').innerText = reason ||
-            'Débloque les salons jusqu\'à 24 joueurs, toutes les thématiques et toutes les Vibes.';
+            'Débloque les salons jusqu\'à 24 joueurs et toutes les thématiques.';
         const isVipNow = isVip();
         document.getElementById('vip-modal-locked-body').style.display = isVipNow ? 'none' : 'block';
         document.getElementById('vip-modal-already-body').style.display = isVipNow ? 'block' : 'none';
@@ -2331,6 +2386,12 @@
     let oneTimePollTimer = null;
 
     async function startOneTimePurchase(planType) {
+        // La fenêtre PayPal DOIT s'ouvrir de façon synchrone, dans le même tick que le clic —
+        // sinon la plupart des navigateurs (Chrome, Safari, Firefox) la bloquent comme popup
+        // indésirable après un `await`, et rien ne se passe visiblement (c'était le bug : les
+        // boutons semblaient ne "rien faire"). On ouvre donc tout de suite une fenêtre vide,
+        // puis on la redirige vers l'URL PayPal une fois l'Edge Function répondue.
+        const popup = window.open('', 'rushup_paypal', 'width=460,height=680');
         setVipModalStatus('Création du paiement PayPal…', 'pending');
         try {
             const { data, error } = await supabaseClient.functions.invoke('verify-access', {
@@ -2338,7 +2399,23 @@
             });
             if (error || !data || !data.approveUrl || !data.orderId) throw error || new Error('Réponse invalide');
 
-            oneTimePopup = window.open(data.approveUrl, 'rushup_paypal', 'width=460,height=680');
+            if (popup && !popup.closed) {
+                popup.location.href = data.approveUrl;
+                oneTimePopup = popup;
+            } else {
+                // La fenêtre a quand même été bloquée (bloqueur de popup agressif) : on
+                // propose un lien cliquable en secours plutôt que de rester silencieux.
+                setVipModalStatus('Ta fenêtre popup a été bloquée. ', 'error');
+                const status = document.getElementById('vip-modal-status');
+                const link = document.createElement('a');
+                link.href = data.approveUrl;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.innerText = 'Clique ici pour payer avec PayPal';
+                link.style.color = '#ffd54f';
+                status.appendChild(link);
+                oneTimePopup = null;
+            }
             setVipModalStatus('Finalise le paiement dans la fenêtre PayPal…', 'pending');
 
             clearInterval(oneTimePollTimer);
@@ -2355,11 +2432,14 @@
                         setVipModalStatus('✅ Paiement confirmé, VIP activé !', 'ok');
                         setTimeout(() => openVipModal(), 900);
                     } catch (e) {
+                        console.error('Capture PayPal échouée :', e);
                         setVipModalStatus("Le paiement n'a pas pu être confirmé. Réessaie ou contacte le support.", 'error');
                     }
                 }
             }, 1000);
         } catch (e) {
+            console.error('Création de commande PayPal échouée :', e);
+            if (popup && !popup.closed) popup.close();
             setVipModalStatus("Impossible de démarrer le paiement pour l'instant.", 'error');
         }
     }
@@ -2407,6 +2487,7 @@
                 body: { action: 'redeem-promo', code }
             });
             if (error || !data || !data.success) {
+                console.error('Code promo refusé :', error, data);
                 setVipModalStatus((data && data.message) || 'Code promo invalide ou déjà utilisé.', 'error');
                 return;
             }
@@ -2415,6 +2496,7 @@
             input.value = '';
             setTimeout(() => openVipModal(), 900);
         } catch (e) {
+            console.error('Erreur redeemPromoCode :', e);
             setVipModalStatus('Erreur lors de la vérification du code.', 'error');
         }
     }
@@ -2446,6 +2528,7 @@
         supabaseClient.auth.onAuthStateChange((_event, session) => {
             authSession = session;
             checkVipStatus().then(refreshVipUI);
+            updateAccountInfoBar();
         });
         refreshVipUI();
         checkVipStatus();
@@ -2622,7 +2705,7 @@
 
         // Empêche l'écran de se verrouiller pendant qu'on est en salon (webcam + partie) :
         // un écran qui s'éteint casse le chrono et la vidéo en pleine partie sur mobile.
-        if (id === 'room-screen') requestWakeLock();
+        if (id === 'room-screen') { requestWakeLock(); updateAccountInfoBar(); }
         else releaseWakeLock();
     }
 
@@ -3611,10 +3694,17 @@
         const container = document.getElementById('theme-list-container');
         if (container.dataset.populated) return;
         const freeThemes = vipThemeKeys();
-        container.innerHTML = THEME_META.map(t => {
+        // Thématiques gratuites en premier, puis les VIP — dans chaque groupe, on garde
+        // l'ordre défini dans THEME_META.
+        const sortedThemes = [...THEME_META].sort((a, b) => {
+            const aFree = freeThemes.has(a.key) ? 0 : 1;
+            const bFree = freeThemes.has(b.key) ? 0 : 1;
+            return aFree - bFree;
+        });
+        container.innerHTML = sortedThemes.map(t => {
             const locked = !freeThemes.has(t.key) && !isVip();
             return `
-            <div class="theme-row${selectedThemes.has(t.key) ? ' selected' : ''}${locked ? ' locked' : ''}" id="theme-row-${t.key}">
+            <div class="theme-row${selectedThemes.has(t.key) ? ' selected' : ''}" id="theme-row-${t.key}">
                 <div class="theme-row-text">
                     <div class="theme-row-title">${t.emoji} ${escapeHtml(t.title)}${!freeThemes.has(t.key) ? ' <span class="vip-crown">👑</span>' : ''}</div>
                     <div class="theme-row-desc">${escapeHtml(t.desc)}</div>
