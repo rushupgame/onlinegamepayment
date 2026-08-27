@@ -261,6 +261,25 @@
     .screen { display: none; width: 100%; max-width: 900px; }
     .screen.active { display: flex; flex-direction: column; align-items: center; }
 
+    /* Écrans "Comment veux-tu jouer" / Créer / Rejoindre : contenu centré (titre, texte du
+       rappel de règles, boutons), comme demandé explicitement. */
+    #entry-choice-card, #create-form-card, #join-form-card {
+        text-align: center;
+    }
+    #entry-choice-card .rules-recap,
+    #entry-choice-card .rules-recap-steps,
+    #entry-choice-card .rules-recap-step {
+        text-align: center;
+    }
+    #entry-choice-card .rules-recap-step {
+        flex-direction: column;
+        align-items: center;
+    }
+    #create-form-card .config-group,
+    #join-form-card .config-group {
+        align-items: center;
+    }
+
     .room-header {
         display: flex;
         justify-content: space-between;
@@ -957,6 +976,77 @@
     }
     #legal-modal .modal-body, #rules-modal .modal-body { text-align: left; }
 
+    /* --- Modale de connexion / création de compte (onglets, comme Rush'Up!) --- */
+    .auth-modal-card { position: relative; max-width: 440px; text-align: left; }
+    .auth-modal-title { font-size: 1.5rem; font-weight: 900; color: var(--text-main); margin: 4px 0 6px; text-align: left; }
+    .auth-modal-sub { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; text-align: left; margin: 0 0 18px; }
+    .auth-tabs {
+        display: flex;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 4px;
+        margin-bottom: 20px;
+    }
+    .auth-tab {
+        flex: 1;
+        padding: 12px 8px;
+        border-radius: calc(var(--radius) - 4px);
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .auth-tab.active {
+        background: var(--card-bg);
+        color: var(--text-main);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .auth-field-group { margin-bottom: 16px; min-width: 0; }
+    .auth-field-group label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        margin-bottom: 6px;
+    }
+    .auth-field-group input {
+        width: 100%;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-sm);
+        padding: 13px 14px;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        box-sizing: border-box;
+    }
+    .auth-field-group input::placeholder { color: var(--text-muted); }
+    /* Le champ natif type="date" réserve en interne une largeur fixe pour ses segments
+       jour/mois/année + l'icône calendrier, ce qui peut dépasser la largeur de l'encart
+       sur mobile (surtout iOS Safari) malgré le width:100% ci-dessus. On force un rendu
+       plus compact et on interdit tout débordement horizontal de l'encart lui-même. */
+    .auth-field-group input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        min-width: 0;
+        max-width: 100%;
+        padding: 13px 10px;
+        font-size: 0.88rem;
+        color-scheme: dark;
+    }
+    .auth-modal-card { overflow-x: hidden; }
+    .auth-field-hint { font-size: 0.76rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+    .auth-reset-row { text-align: center; margin-top: 12px; }
+    .auth-reset-row button {
+        background: transparent; border: none; color: var(--text-muted);
+        font-size: 0.82rem; font-weight: 600; text-decoration: underline; cursor: pointer;
+    }
+    .auth-reset-row button:hover { color: var(--text-main); }
+
     /* --- Menu hamburger : regroupe en haut tout le statut/réglages de la partie, pour
          libérer l'écran de jeu sur mobile. --- */
     .hamburger-btn {
@@ -1035,17 +1125,25 @@
     .hamburger-menu-item-danger { color: var(--primary); }
     .hamburger-menu-item-danger:hover { background: rgba(255, 71, 87, 0.12); }
 
-    .top-bar {
+    /* --- Header pré-salon (écran "Comment veux-tu jouer", Créer/Rejoindre) : logo + Home/Son/
+         Règles directement accessibles, comme le header par défaut de Rush'Up!. --- */
+    .brand-header-outer {
         width: 100%;
         max-width: 480px;
+        margin-bottom: 8px;
+        z-index: 2;
+        display: none;
+    }
+    .brand-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 6px;
         min-height: 38px;
+        padding: 0 4px;
     }
-    .top-bar-logo {
-        font-size: 1.15rem;
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .app-title-sm {
+        font-size: 1.3rem;
         font-weight: 900;
         letter-spacing: -0.5px;
         background: linear-gradient(135deg, #ff4757, #ffa502);
@@ -1055,19 +1153,51 @@
         align-items: center;
         gap: 4px;
     }
-    .top-bar-logo .live-badge {
+    .app-title-sm .live-badge {
         background: var(--primary);
         -webkit-text-fill-color: #fff;
         color: #fff;
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 800;
         padding: 2px 7px;
         border-radius: 999px;
         letter-spacing: 0.04em;
         vertical-align: middle;
     }
-    .top-bar { display: none; }
-    body:not(.on-entry) .top-bar { display: flex; }
+
+    /* --- Header salon (lobby / configuration) : code de session + Partager (même ligne),
+         menu ☰ collé à droite. Pas de logo ici (demande explicite). --- */
+    .room-lobby-header {
+        display: none;
+        width: 100%;
+        max-width: 480px;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        min-height: 38px;
+    }
+    .room-lobby-header .room-code-badge { flex: 1; margin: 0; }
+    .room-lobby-header .action-btn-share { width: auto; margin: 0; padding: 8px 14px; font-size: 0.8rem; flex: 0 0 auto; }
+
+    /* --- Menu ☰ replié dans le footer pendant une manche active : le header disparaît
+         entièrement pour ne laisser que le mot à deviner et les actions de tour. --- */
+    .in-game-footer-menu {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+    .in-game-footer-menu .room-code-badge { flex: 1; margin: 0; }
+
+    body.on-landing .brand-header-outer,
+    body.on-landing .room-lobby-header { visibility: hidden; }
+    body.pre-room .brand-header-outer { display: block; }
+    body.on-config .room-lobby-header { display: flex; }
+    body.in-game .brand-header-outer,
+    body.in-game .room-lobby-header { display: none !important; }
+    body.in-game .in-game-footer-menu { display: flex; }
+    body.in-game .persistent-footer-outer,
+    body.in-game .version-footer { display: none !important; }
 
     /* --- Écran d'accueil : sélection de langue (premier écran, façon Rush'Up!) --- */
     .landing-title {
@@ -1103,6 +1233,79 @@
     }
     .btn-lang:hover, .btn-lang:active { background: rgba(255,255,255,0.14); }
     .entry-footer-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+
+    /* --- Footer persistant (Vibes / VIP / Installer / Soutenir / Légal) : identique à
+         Rush'Up!, collé en bas, visible sur l'accueil et les écrans de salon/config, masqué
+         seulement pendant une manche active (voir body.in-game ci-dessus). --- */
+    .persistent-footer-outer {
+        width: 100%;
+        max-width: 480px;
+        padding: 0 14px;
+        box-sizing: border-box;
+        margin-top: 10px;
+        z-index: 2;
+    }
+    .vibe-vip-row { display: flex; gap: 10px; width: 100%; margin-top: 6px; }
+    .vibe-vip-row .leave-btn { flex: 1; margin-top: 0; }
+
+    .version-footer {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        opacity: 0.85;
+        margin-top: auto;
+        padding-top: 20px;
+        padding-left: 14px;
+        padding-right: 14px;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.3;
+        width: 100%;
+        max-width: 480px;
+        text-align: center;
+        z-index: 2;
+    }
+    .btn-pwa-install {
+        background: rgba(112, 161, 255, 0.15);
+        color: #70a1ff;
+        border: 1px solid rgba(112, 161, 255, 0.4);
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-top: 6px;
+        transition: all 0.2s ease;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .btn-pwa-install:hover { background: rgba(112, 161, 255, 0.3); border-color: #70a1ff; }
+    .donate-btn, .legal-btn {
+        background: rgba(255, 71, 87, 0.15);
+        color: #ff4757;
+        border: 1px solid rgba(255, 71, 87, 0.4);
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-top: 4px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .legal-btn { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); border: 1px solid var(--card-border); }
+    .donate-btn:hover { background: rgba(255, 71, 87, 0.3); border-color: #ff4757; }
+    .legal-btn:hover { background: rgba(255, 255, 255, 0.15); color: var(--text-main); border-color: rgba(255, 255, 255, 0.3); }
 
     /* --- Stats avancées (écran de fin) --- */
     .kpi-dashboard-grid {
@@ -1842,15 +2045,29 @@
     }
 </style>
 </head>
-<body class="on-entry">
+<body class="on-landing">
 
-<!-- Barre du haut : logo compact + menu hamburger (statut connecté/VIP, thématique, vibes,
-     règles, son, vibration, installer l'app, soutenir le dev, mentions légales, recommencer
-     la partie pour l'hôte). Masquée sur l'écran d'accueil (le logo plein format y vit déjà
-     dans #lang-select-view / le choix de salon). -->
-<div class="top-bar" id="top-bar">
-    <span class="top-bar-logo">🎥 Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge">LIVE</span></span>
-    <button type="button" class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburgerMenu()" aria-label="Menu">☰</button>
+<!-- Header pré-salon ("Comment veux-tu jouer", Créer/Rejoindre un salon) : logo + Home/Son/
+     Règles directement accessibles, comme le header par défaut de Rush'Up!. Masqué sur l'écran
+     de langue (le grand logo y vit déjà en plein format) et une fois dans un salon. -->
+<div class="brand-header-outer" id="pre-room-header">
+    <div class="brand-header">
+        <h1 class="app-title-sm">🎥 Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge">LIVE</span></h1>
+        <div class="header-actions">
+            <button type="button" class="home-toggle-btn" onclick="backToEntryChoice()" id="ui-home-btn">🏠 Home</button>
+            <button type="button" class="sound-toggle-btn" id="sound-btn-pre" onclick="toggleSound(); updateSoundButtons();">🔊 Son</button>
+            <button type="button" class="rules-toggle-btn" onclick="openRulesModal()" id="ui-rules-btn-pre">📜 Règles</button>
+        </div>
+    </div>
+</div>
+
+<!-- Header salon (lobby / configuration) : code de session + Partager sur la même ligne, menu
+     ☰ collé à droite. Pas de logo ici (demande explicite) — disparaît entièrement pendant une
+     manche active (voir .in-game-footer-menu, dans le footer). -->
+<div class="room-lobby-header" id="room-lobby-header">
+    <div class="room-code-badge" id="room-code-badge-header" onclick="shareRoomCode()" style="cursor:pointer;" title="Partager le code"><span class="room-code-label" id="ui-room-code-label">Code de session</span> <span id="room-code-display">—</span></div>
+    <button type="button" class="leave-btn action-btn-share" onclick="shareRoomCode()" id="ui-share-btn-header">📤 Partager</button>
+    <button type="button" class="hamburger-btn" onclick="toggleHamburgerMenu()" aria-label="Menu">☰</button>
 </div>
 
 <div class="hamburger-menu-overlay" id="hamburger-menu-overlay" onclick="closeHamburgerMenu()"></div>
@@ -1864,6 +2081,9 @@
         <div class="hamburger-menu-themes-list" id="hmenu-themes-list"></div>
     </div>
     <div class="hamburger-menu-divider"></div>
+    <button type="button" class="hamburger-menu-item" id="hmenu-item-home" onclick="goHomeFromMenu(); closeHamburgerMenu();">
+        <span id="hmenu-label-home">🏠 Home</span>
+    </button>
     <button type="button" class="hamburger-menu-item" id="hmenu-item-vibes" onclick="openVibeModal(); closeHamburgerMenu();">
         <span id="hmenu-label-vibes">🎨 Vibes</span>
     </button>
@@ -1970,6 +2190,9 @@
             <button class="btn btn-secondary undo-choice-btn" id="undo-btn-random" onclick="sendPlayerAction('undo-random')">🔀 Le réintégrer de façon aléatoire dans la suite du jeu et annuler ce mot trouvé</button>
         </div>
         <button class="btn btn-primary" id="pause-overlay-btn-resume" onclick="togglePause()">▶️ Reprendre</button>
+        <!-- Visible uniquement par les joueurs qui NE sont PAS à l'origine de la pause : ils sont
+             informés, mais seul le joueur actif (qui a mis pause) peut choisir de reprendre. -->
+        <div class="waiting-text" id="pause-overlay-wait-hint" style="display:none;">En attente que ce joueur reprenne la partie...</div>
     </div>
 </div>
 
@@ -2037,25 +2260,14 @@
         <button class="btn btn-secondary" onclick="backToEntryChoice()" id="ui-btn-back2">◀️ Retour</button>
         <div class="status-line" id="join-status"></div>
     </div>
-
-    <!-- Réglages personnels (langue déjà choisie, skin, VIP) + liens permanents (installer,
-         soutenir, mentions légales) : accessibles dès l'écran d'accueil, comme dans Rush'Up!,
-         pas seulement une fois dans un salon. -->
-    <div class="entry-footer-icons">
-        <button class="leave-btn vibe-toggle-btn" onclick="openVibeModal()" id="ui-btn-vibes-entry">🎨 Vibes</button>
-        <button class="leave-btn vip-toggle-btn" id="vip-entry-btn" onclick="openVipModal()">👑 Passer VIP</button>
-        <button class="leave-btn" id="pwa-install-btn-entry" onclick="triggerPwaInstall()" style="display:none;">📲 Installer l'application</button>
-        <a class="leave-btn" id="donate-btn-entry" href="https://www.paypal.com/donate?hosted_button_id=2NGJSLT76DX2G" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-flex; align-items:center;">❤️ Soutenir le développeur</a>
-        <button class="leave-btn" id="legal-btn-entry" onclick="openLegalModal()">⚖️ Mentions Légales & CGU</button>
-    </div>
 </div>
 </div>
 
 <!-- ÉCRAN 2 : Salon vidéo -->
 <div id="room-screen" class="screen">
-    <div class="room-header" id="room-header">
-        <div class="room-code-badge" id="room-code-badge-header" onclick="shareRoomCode()" style="cursor:pointer;" title="Partager le code"><span class="room-code-label" id="ui-room-code-label">Code de session</span> <span id="room-code-display">—</span></div>
-    </div>
+    <!-- L'en-tête du salon (code de session + Partager + menu ☰) vit désormais dans
+         #room-lobby-header, en dehors de cet écran (voir plus haut) : il reste visible pendant
+         la configuration et disparaît entièrement pendant une manche active. -->
 
     <div id="connection-banner" class="connection-banner" style="display:none;">
         🔄 Connexion perdue, tentative de reconnexion...
@@ -2092,11 +2304,10 @@
             <div id="non-host-waiting" class="waiting-text" style="display:none;">
                 En attente que l'hôte configure la partie (nombre de joueurs, équipes ou mode 1v1, thème...) et la lance...
             </div>
-            <div id="host-config-view" style="display:none; position:relative;">
-                <!-- Demande explicite : le bouton Partager vit en haut à droite de l'écran de
-                     configuration (plutôt qu'uniquement dans le footer), pour inviter des joueurs
-                     sans avoir à faire défiler pendant qu'on configure la partie. -->
-                <button type="button" class="leave-btn action-btn-share config-share-btn" onclick="shareRoomCode()" title="Partager le code" id="ui-config-share-btn">📤 Partager</button>
+            <div id="host-config-view" style="display:none;">
+                <!-- Le bouton Partager vit désormais dans #room-lobby-header, à droite du code de
+                     salon (même ligne), plus haut dans la page — visible pendant toute la
+                     configuration. -->
                 <div class="config-columns">
                 <div class="config-col">
                 <div class="config-group">
@@ -2243,7 +2454,7 @@
                     <button class="btn btn-primary" id="pass-btn" onclick="sendPlayerAction('pass')">↩️ Passer</button>
                     <button class="btn btn-success" id="found-btn" onclick="sendPlayerAction('found')">✅ Trouvé !</button>
                 </div>
-                <button class="btn pause-full-btn" id="pause-btn" onclick="togglePause()" style="display:none;">⏸️ Pause</button>
+                <button class="btn btn-secondary pause-full-btn" id="pause-btn" onclick="togglePause()" style="display:none;">⏸️ Pause</button>
                 <button class="btn disagree-btn" id="disagree-btn" onclick="togglePause()" style="display:none;">🤝 Désaccord</button>
             </div>
 
@@ -2285,24 +2496,43 @@
     </div>
 
     <footer class="room-footer">
-        <!-- Les actions du salon vivent en permanence ici (jamais en haut), sur PC comme sur mobile. -->
+        <!-- Uniquement les actions propres au salon vidéo : Quitter, avertissement larsen,
+             infos de compte. Vibes/VIP/Installer/Soutenir/Légal vivent dans le footer partagé
+             (#persistent-footer, hors de cet écran) et le menu ☰/code de session dans l'en-tête
+             du salon (ou dans le footer pendant une manche, voir .in-game-footer-menu). -->
         <div class="room-footer-controls" id="room-footer-controls">
-            <!-- Vibes / VIP / Règles / Son / Vibration / Installer / Soutenir / Légal / Recommencer
-                 vivent désormais dans le menu ☰ en haut (voir #hamburger-menu) pour ne pas
-                 surcharger le footer pendant la partie. Le code de session rejoint ce footer
-                 une fois la partie lancée (voir updateHeaderFooterPlacement). -->
-            <div class="room-code-badge" id="room-code-badge-footer" onclick="shareRoomCode()" style="cursor:pointer; display:none;" title="Partager le code"><span class="room-code-label">Session :</span> <span id="room-code-display-footer">—</span></div>
-            <button class="leave-btn action-btn-share" id="share-code-btn" onclick="shareRoomCode()" title="Partager le code">📤 Partager</button>
             <button class="leave-btn action-btn-leave" onclick="leaveRoom()" id="ui-btn-leave-room">🚪 Quitter le salon</button>
         </div>
-        <div class="sameroom-hint-text">💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.</div>
-        <div class="account-info-bar" id="account-info-bar" style="display:none;">
-            <span class="account-info-email" id="account-info-email">—</span>
-            <span class="account-info-password" id="account-info-password">••••••••</span>
-            <button type="button" class="account-info-eye" id="account-info-eye-btn" onclick="toggleAccountPasswordVisibility()" title="Afficher/masquer le mot de passe">👁️</button>
-            <button type="button" class="account-info-logout" onclick="signOutAccount()">Déconnexion</button>
+        <!-- Menu ☰ + rappel du code de session : ne s'affiche QUE pendant une manche active,
+             une fois que le header (avec le même menu) a disparu pour libérer l'écran de jeu. -->
+        <div class="in-game-footer-menu" id="in-game-footer-menu">
+            <div class="room-code-badge" id="room-code-badge-footer" onclick="shareRoomCode()" style="cursor:pointer;" title="Partager le code"><span class="room-code-label">Session :</span> <span id="room-code-display-footer">—</span></div>
+            <button type="button" class="hamburger-btn" onclick="toggleHamburgerMenu()" aria-label="Menu">☰</button>
         </div>
+        <div class="sameroom-hint-text" id="ui-sameroom-hint">💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.</div>
     </footer>
+</div>
+
+<!-- Footer persistant partagé (Vibes / VIP / compte / Installer / Soutenir / Mentions légales) :
+     identique à Rush'Up!, visible sur l'accueil et pendant la configuration du salon, masqué
+     seulement pendant une manche active (voir body.in-game). -->
+<div class="persistent-footer-outer" id="persistent-footer">
+    <div class="vibe-vip-row">
+        <button class="leave-btn vibe-toggle-btn" onclick="openVibeModal()" id="ui-btn-vibes-footer">🎨 Vibes</button>
+        <button class="leave-btn vip-toggle-btn" id="vip-footer-btn" onclick="openVipModal()">👑 Passer VIP</button>
+    </div>
+    <div class="account-info-bar" id="account-info-bar" style="display:none;">
+        <span class="account-info-email" id="account-info-email">—</span>
+        <span class="account-info-password" id="account-info-password">••••••••</span>
+        <button type="button" class="account-info-eye" id="account-info-eye-btn" onclick="toggleAccountPasswordVisibility()" title="Afficher/masquer le mot de passe">👁️</button>
+        <button type="button" class="account-info-logout" onclick="signOutAccount()">Déconnexion</button>
+    </div>
+    <button type="button" class="leave-btn" id="login-footer-btn" onclick="openAuthModal()" style="display:none;">🔐 Se connecter / Créer un compte</button>
+</div>
+<div class="version-footer">
+    <button type="button" class="btn-pwa-install" id="pwa-install-btn-footer" onclick="triggerPwaInstall()" style="display:none;">📲 Installer l'application</button>
+    <a class="donate-btn" id="donate-btn-footer" href="https://www.paypal.com/donate?hosted_button_id=2NGJSLT76DX2G" target="_blank" rel="noopener noreferrer"><span class="heart-icon">❤️</span> Soutenir le développeur</a>
+    <button type="button" class="legal-btn" id="legal-btn-footer" onclick="openLegalModal()">⚖️ Mentions Légales & CGU</button>
 </div>
 
 <!-- Confirmation (fond flouté) avant de recommencer une nouvelle partie sur un autre thème -->
@@ -2431,22 +2661,35 @@
      un salon ne peut être créé (donc être hôte) que par un compte enregistré. Rejoindre un
      salon existant, en revanche, ne nécessite aucun compte. -->
 <div id="auth-modal" class="modal-overlay">
-    <div class="modal-card vip-modal-card">
+    <div class="modal-card auth-modal-card">
         <button type="button" class="vibe-modal-close" onclick="closeAuthModal()" aria-label="Fermer">✕</button>
-        <div class="vip-modal-title" id="auth-modal-title">Crée ton compte</div>
-        <p class="vip-modal-sub" id="auth-modal-sub">Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils).</p>
+        <div class="auth-modal-title" id="auth-modal-title">Accéder à ton compte</div>
+        <p class="auth-modal-sub" id="auth-modal-sub">Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).</p>
 
-        <div class="config-group">
-            <label for="auth-email-input">Email</label>
+        <div class="auth-tabs">
+            <button type="button" class="auth-tab" id="auth-tab-login" onclick="setAuthMode('login')">Se connecter</button>
+            <button type="button" class="auth-tab" id="auth-tab-signup" onclick="setAuthMode('signup')">Créer un compte</button>
+        </div>
+
+        <div class="auth-field-group">
+            <label for="auth-email-input" id="auth-email-label">Email</label>
             <input type="email" id="auth-email-input" placeholder="ton@email.com">
         </div>
-        <div class="config-group">
-            <label for="auth-password-input">Mot de passe</label>
+        <div class="auth-field-group">
+            <label for="auth-password-input" id="auth-password-label">Mot de passe</label>
             <input type="password" id="auth-password-input" placeholder="8 caractères minimum" minlength="8">
+        </div>
+        <div class="auth-field-group" id="auth-birthdate-group" style="display:none;">
+            <label for="auth-birthdate-input" id="auth-birthdate-label">Date de naissance</label>
+            <input type="date" id="auth-birthdate-input">
+            <div class="auth-field-hint" id="auth-birthdate-hint">C'est cette date qui sera utilisée pour vérifier ton identité si tu dois réinitialiser ton mot de passe.</div>
         </div>
 
         <button type="button" class="btn btn-primary" id="auth-submit-btn" onclick="submitAuthForm()">Créer mon compte</button>
-        <button type="button" class="btn btn-secondary" onclick="toggleAuthMode()" id="auth-toggle-btn">J'ai déjà un compte</button>
+
+        <div class="auth-reset-row" id="auth-reset-row" style="display:none;">
+            <button type="button" onclick="resetPasswordRequest()" id="auth-reset-btn">Mot de passe oublié ?</button>
+        </div>
 
         <div class="vip-modal-status" id="auth-modal-status"></div>
     </div>
@@ -2573,7 +2816,7 @@
     // appareil en se reconnectant avec le même email/mot de passe. Rejoindre un salon ne
     // nécessite pas de compte.
     let authSession = null;
-    let authMode = 'signup'; // 'signup' | 'login', bascule via toggleAuthMode()
+    let authMode = 'login'; // 'login' | 'signup', bascule via setAuthMode()
     let pendingAfterAuth = null; // fonction à lancer une fois connecté (ex: proceedCreateRoom)
 
     async function refreshAuthSession() {
@@ -2589,7 +2832,8 @@
         document.getElementById('auth-modal-status').innerText = '';
         document.getElementById('auth-email-input').value = '';
         document.getElementById('auth-password-input').value = '';
-        authMode = 'signup';
+        document.getElementById('auth-birthdate-input').value = '';
+        authMode = 'login';
         applyAuthModeUI();
         document.getElementById('auth-modal').classList.add('active');
     }
@@ -2599,44 +2843,54 @@
         pendingAfterAuth = null;
     }
 
-    function toggleAuthMode() {
-        authMode = authMode === 'signup' ? 'login' : 'signup';
+    function setAuthMode(mode) {
+        authMode = mode;
         applyAuthModeUI();
     }
 
+    // Onglets Connexion / Création (comme Rush'Up!) : la date de naissance n'est demandée qu'à
+    // la création (elle sert uniquement à vérifier l'identité en cas de réinitialisation du mot
+    // de passe) ; le lien "mot de passe oublié" n'a de sens qu'en mode Connexion.
     function applyAuthModeUI() {
         const isSignup = authMode === 'signup';
-        document.getElementById('auth-modal-title').innerText = isSignup ? 'Crée ton compte' : 'Connecte-toi';
-        document.getElementById('auth-modal-sub').innerText = isSignup
-            ? "Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils)."
-            : 'Retrouve ton compte et ton statut VIP sur cet appareil.';
-        document.getElementById('auth-submit-btn').innerText = isSignup ? 'Créer mon compte' : 'Me connecter';
-        document.getElementById('auth-toggle-btn').innerText = isSignup ? "J'ai déjà un compte" : "Créer un compte";
+        const t = translations[currentLang] || translations['en'];
+        document.getElementById('auth-tab-login').classList.toggle('active', !isSignup);
+        document.getElementById('auth-tab-signup').classList.toggle('active', isSignup);
+        document.getElementById('auth-birthdate-group').style.display = isSignup ? 'block' : 'none';
+        document.getElementById('auth-reset-row').style.display = isSignup ? 'none' : 'block';
+        document.getElementById('auth-submit-btn').innerText = isSignup
+            ? (t.authSubmitSignup || 'Créer mon compte')
+            : (t.authSubmitLogin || 'Se connecter');
+        document.getElementById('auth-modal-status').innerText = '';
     }
 
     async function submitAuthForm() {
         const email = (document.getElementById('auth-email-input').value || '').trim();
         const password = document.getElementById('auth-password-input').value || '';
+        const birthdate = document.getElementById('auth-birthdate-input').value || '';
         const status = document.getElementById('auth-modal-status');
-        if (!email || !password) { status.innerText = 'Entre un email et un mot de passe.'; status.className = 'vip-modal-status error'; return; }
-        if (password.length < 8) { status.innerText = 'Mot de passe : 8 caractères minimum.'; status.className = 'vip-modal-status error'; return; }
+        const t = translations[currentLang] || translations['en'];
+        const isSignup = authMode === 'signup';
 
-        status.innerText = authMode === 'signup' ? 'Création du compte…' : 'Connexion…';
+        if (!email || !password) { status.innerText = t.authErrMissingFields || 'Entre un email et un mot de passe.'; status.className = 'vip-modal-status error'; return; }
+        if (password.length < 8) { status.innerText = t.authErrPasswordLength || 'Mot de passe : 8 caractères minimum.'; status.className = 'vip-modal-status error'; return; }
+        if (isSignup && !birthdate) { status.innerText = t.authErrMissingBirthdate || 'Indique ta date de naissance.'; status.className = 'vip-modal-status error'; return; }
+
+        status.innerText = isSignup ? (t.authPendingSignup || 'Création du compte…') : (t.authPendingLogin || 'Connexion…');
         status.className = 'vip-modal-status pending';
 
         try {
-            const { data, error } = authMode === 'signup'
-                ? await supabaseClient.auth.signUp({ email, password })
+            const { data, error } = isSignup
+                ? await supabaseClient.auth.signUp({ email, password, options: { data: { birthdate } } })
                 : await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) throw error;
 
             // Si la confirmation d'email est activée sur le projet, signUp renvoie un user
             // mais PAS de session tant que le lien reçu par mail n'est pas cliqué.
-            if (authMode === 'signup' && !data.session) {
-                status.innerText = '✅ Compte créé. Vérifie ta boîte mail pour confirmer, puis reconnecte-toi.';
+            if (isSignup && !data.session) {
+                status.innerText = t.authSignupCheckMail || '✅ Compte créé. Vérifie ta boîte mail pour confirmer, puis connecte-toi.';
                 status.className = 'vip-modal-status ok';
-                authMode = 'login';
-                applyAuthModeUI();
+                setAuthMode('login');
                 return;
             }
 
@@ -2649,9 +2903,31 @@
             if (pendingAfterAuth) { const fn = pendingAfterAuth; pendingAfterAuth = null; fn(); }
         } catch (e) {
             const msg = (e && e.message) || '';
-            if (/already registered/i.test(msg)) status.innerText = 'Ce compte existe déjà — connecte-toi plutôt.';
-            else if (/invalid login credentials/i.test(msg)) status.innerText = 'Email ou mot de passe incorrect.';
-            else status.innerText = "Erreur : " + msg;
+            if (/already registered/i.test(msg)) status.innerText = t.authErrAlreadyRegistered || 'Ce compte existe déjà — connecte-toi plutôt.';
+            else if (/invalid login credentials/i.test(msg)) status.innerText = t.authErrInvalidCredentials || 'Email ou mot de passe incorrect.';
+            else status.innerText = (t.authErrGeneric || 'Erreur : ') + msg;
+            status.className = 'vip-modal-status error';
+        }
+    }
+
+    // Réinitialisation du mot de passe : envoie un email avec un lien (flux standard Supabase
+    // Auth). La date de naissance saisie à la création sert de vérification d'identité côté
+    // support en cas de litige, mais le lien de réinitialisation lui-même passe par l'email.
+    async function resetPasswordRequest() {
+        const email = (document.getElementById('auth-email-input').value || '').trim();
+        const status = document.getElementById('auth-modal-status');
+        const t = translations[currentLang] || translations['en'];
+        if (!email) { status.innerText = t.authErrNeedEmailForReset || 'Indique ton email ci-dessus pour recevoir le lien de réinitialisation.'; status.className = 'vip-modal-status error'; return; }
+
+        status.innerText = t.authResetPending || 'Envoi du lien de réinitialisation…';
+        status.className = 'vip-modal-status pending';
+        try {
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+            if (error) throw error;
+            status.innerText = t.authResetSent || '✅ Email de réinitialisation envoyé si ce compte existe.';
+            status.className = 'vip-modal-status ok';
+        } catch (e) {
+            status.innerText = (t.authErrGeneric || 'Erreur : ') + ((e && e.message) || '');
             status.className = 'vip-modal-status error';
         }
     }
@@ -2666,8 +2942,13 @@
 
     function updateAccountInfoBar() {
         const bar = document.getElementById('account-info-bar');
+        if (typeof renderHamburgerMenu === 'function') renderHamburgerMenu();
+        const loginBtn = document.getElementById('login-footer-btn');
+        if (loginBtn) loginBtn.style.display = isLoggedIn() ? 'none' : 'block';
         if (!bar) return;
-        const show = isLoggedIn() && typeof isHost === 'function' && isHost();
+        // Visible dès qu'un compte est connecté (pas seulement l'hôte) : c'est une information
+        // de compte générale, comme dans Rush'Up!, pas une info propre au salon.
+        const show = isLoggedIn();
         bar.style.display = show ? 'flex' : 'none';
         if (!show) return;
         document.getElementById('account-info-email').innerText = authSession.user.email || '—';
@@ -2752,7 +3033,7 @@
     function refreshVipUI() {
         const vip = isVip();
         const t = translations[currentLang] || translations['en'];
-        ['vip-entry-btn'].forEach(id => {
+        ['vip-footer-btn'].forEach(id => {
             const btn = document.getElementById(id);
             if (btn) btn.innerText = vip ? (t.vipEntryBtnActive || '👑 VIP actif') : (t.vipEntryBtnInactive || '👑 Passer VIP');
         });
@@ -2776,6 +3057,8 @@
         localStorage.setItem('rushupLiveLang', lang);
         document.getElementById('lang-select-view').style.display = 'none';
         document.getElementById('entry-choice-view').style.display = 'block';
+        document.body.classList.remove('on-landing');
+        document.body.classList.add('pre-room');
         changeLanguage();
     }
 
@@ -2783,6 +3066,8 @@
     function openLanguagePicker() {
         document.getElementById('lang-select-view').style.display = 'block';
         document.getElementById('entry-choice-view').style.display = 'none';
+        document.body.classList.add('on-landing');
+        document.body.classList.remove('pre-room');
         closeHamburgerMenu();
     }
 
@@ -2820,13 +3105,13 @@
         setText('ui-join-code-label', t.roomCodeLabel || 'Code du salon');
         setText('ui-btn-join-confirm', t.btnJoinConfirm || 'Rejoindre');
         setText('ui-btn-back2', t.btnBack || '◀️ Retour');
-        setText('ui-btn-vibes-entry', '🎨 ' + (t.vibesLabel || 'Vibes'));
-        setText('legal-btn-entry', t.btnLegal || '⚖️ Mentions Légales & CGU');
-        setText('donate-btn-entry', t.btnDonate || '❤️ Soutenir le développeur');
-        setText('pwa-install-btn-entry', t.btnInstallPwa || "📲 Installer l'application");
+        setText('ui-btn-vibes-footer', '🎨 ' + (t.vibesLabel || 'Vibes'));
+        setText('legal-btn-footer', t.btnLegal || '⚖️ Mentions Légales & CGU');
+        setText('donate-btn-footer', t.btnDonate || '❤️ Soutenir le développeur');
+        setText('pwa-install-btn-footer', t.btnInstallPwa || "📲 Installer l'application");
         setText('ui-room-code-label', t.roomCodeLabel || 'Code de session');
         setText('ui-btn-leave-room', t.btnLeaveRoom || '🚪 Quitter le salon');
-        setText('ui-config-share-btn', t.btnShareCode || '📤 Partager');
+        setText('ui-share-btn-header', t.btnShareCode || '📤 Partager');
         applyRulesRecapTranslation(t);
 
         // Salon / partie
@@ -2865,8 +3150,28 @@
         setText('ui-word-recap-label', t.wordRecapToggleLabel || '📜 Voir tous les mots de la partie');
         setText('ui-btn-new-game', t.newGameBtn || '🔁 Nouvelle partie');
         setText('final-wait-text', t.waitHostGeneric);
+        setText('ui-sameroom-hint', t.sameroomHint);
+        // Modale connexion / création de compte
+        setText('auth-modal-title', t.authModalTitle);
+        setText('auth-modal-sub', t.authModalSubLive);
+        setText('auth-tab-login', t.authTabLogin || t.authSubmitLogin || 'Se connecter');
+        setText('auth-tab-signup', t.authTabSignup || t.authSubmitSignup || 'Créer un compte');
+        setText('auth-email-label', t.authEmailLabel);
+        setText('auth-password-label', t.authPasswordLabel);
+        const authPasswordInput = document.getElementById('auth-password-input');
+        if (authPasswordInput && t.authPasswordPlaceholder) authPasswordInput.placeholder = t.authPasswordPlaceholder;
+        setText('auth-birthdate-label', t.authBirthdateLabel);
+        setText('auth-birthdate-hint', t.authBirthdateHint);
+        setText('auth-reset-btn', t.authResetBtn || 'Mot de passe oublié ?');
+        if (document.getElementById('auth-modal')) applyAuthModeUI();
+        setText('login-footer-btn', '🔐 ' + (t.loginFooterBtn || 'Se connecter / Créer un compte'));
+        updateParticipantCount();
+        setText('ui-home-btn', '🏠 ' + (t.hmenuHome || 'Home'));
+        setText('ui-rules-btn-pre', '📜 ' + (t.hmenuRules || 'Règles'));
+        setText('hmenu-label-home', '🏠 ' + (t.hmenuHome || 'Home'));
+        updateSoundButtons();
 
-        const vipEntryBtn = document.getElementById('vip-entry-btn');
+        const vipEntryBtn = document.getElementById('vip-footer-btn');
         if (vipEntryBtn) vipEntryBtn.innerText = isVip() ? (t.vipEntryBtnActive || '👑 VIP actif') : (t.vipEntryBtnInactive || '👑 Passer VIP');
 
         // Menu hamburger
@@ -2890,6 +3195,7 @@
         setText('undo-choice-label', t.undoChoiceLabel || 'Annuler le dernier mot trouvé :');
         setText('undo-btn-same', t.undoChoiceSame || '↺ Recommencer avec ce mot');
         setText('undo-btn-random', t.undoChoiceRandom || '🔀 Le réintégrer aléatoirement');
+        setText('pause-overlay-wait-hint', t.pauseWaitHint || 'En attente que ce joueur reprenne la partie...');
 
         // Modale légale
         setText('legal-modal-header', t.legalModalTitle || 'Legal Notice & Terms of Use');
@@ -3123,7 +3429,7 @@
     }
     function checkPwaDisplay() {
         const show = pwaInstallAvailable();
-        ['pwa-install-btn-entry'].forEach(id => {
+        ['pwa-install-btn-footer'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.style.display = show ? 'inline-flex' : 'none';
         });
@@ -3366,6 +3672,20 @@
         document.getElementById('entry-choice-card').style.display = 'block';
     }
 
+    // "Home" depuis le menu ☰ (dans un salon) : revient à l'accueil, ce qui veut dire quitter
+    // le salon en cours — on réutilise donc la confirmation habituelle de leaveRoom().
+    function goHomeFromMenu() {
+        leaveRoom();
+    }
+
+    // Met à jour l'icône/texte du bouton Son affiché dans le header pré-salon (petit raccourci
+    // hors salon, en plus du menu ☰ qui a son propre indicateur ON/OFF).
+    function updateSoundButtons() {
+        const t = translations[currentLang] || translations['en'];
+        const btn = document.getElementById('sound-btn-pre');
+        if (btn) btn.innerText = (soundEnabled ? '🔊' : '🔇') + ' ' + (t.hmenuSound || 'Son');
+    }
+
     function generateRoomCode() {
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sans I/O/0/1 (ambigus à l'oral)
         let code = '';
@@ -3514,10 +3834,23 @@
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        // La barre du haut (logo + menu hamburger) ne sert qu'une fois en salon : sur l'écran
-        // d'accueil, le logo plein format et les boutons Vibes/VIP/Installer/CGU vivent déjà
-        // directement dans l'écran d'entrée.
-        document.body.classList.toggle('on-entry', id === 'entry-screen');
+
+        // Détermine quel jeu de header/footer afficher : logo plein écran (langue), header
+        // "pré-salon" (logo + Home/Son/Règles), ou header de salon (code + Partager + menu),
+        // ce dernier étant ensuite affiné par updateHeaderFooterPlacement() selon la phase
+        // de jeu (lobby vs manche active).
+        const isLangSelect = (id === 'entry-screen') && document.getElementById('lang-select-view').style.display !== 'none';
+        document.body.classList.toggle('on-landing', isLangSelect);
+        document.body.classList.toggle('pre-room', id === 'entry-screen' && !isLangSelect);
+        if (id === 'room-screen') {
+            // on-config / in-game sont affinés dans updateHeaderFooterPlacement() dès que l'état
+            // de la partie (gameState.phase) est connu ; on part du principe "lobby" par défaut.
+            document.body.classList.remove('on-config');
+            document.body.classList.remove('in-game');
+        } else {
+            document.body.classList.remove('on-config');
+            document.body.classList.remove('in-game');
+        }
 
         // Empêche l'écran de se verrouiller pendant qu'on est en salon (webcam + partie) :
         // un écran qui s'éteint casse le chrono et la vidéo en pleine partie sur mobile.
@@ -3525,20 +3858,20 @@
         else releaseWakeLock();
     }
 
-    // Le code de session vit en haut tant qu'on est au salon (lobby) : c'est ce qu'on partage
-    // pour inviter du monde. Dès que la partie démarre, il descend dans le footer (à côté de
-    // Partager) pour libérer l'écran de jeu — le rappel utile reste possible sans encombrer.
+    // Le code de session + Partager + menu ☰ vivent en haut (room-lobby-header) tant qu'on est
+    // au salon (lobby/config) : c'est ce qu'on partage pour inviter du monde. Dès que la partie
+    // démarre, le header disparaît ENTIÈREMENT et le menu ☰ (avec le code, en rappel) descend
+    // dans le footer pour libérer tout l'écran de jeu.
     function updateHeaderFooterPlacement(gameStarted) {
         // "X participants" masqué pendant la partie pour laisser plus de place au jeu.
         const participantCount = document.getElementById('participant-count');
         if (participantCount) participantCount.style.display = gameStarted ? 'none' : 'block';
 
-        const roomHeader = document.getElementById('room-header');
-        const headerCodeBadge = document.getElementById('room-code-badge-header');
+        document.body.classList.toggle('on-config', !gameStarted);
+        document.body.classList.toggle('in-game', gameStarted);
+
         const footerCodeBadge = document.getElementById('room-code-badge-footer');
-        if (headerCodeBadge) headerCodeBadge.style.display = gameStarted ? 'none' : 'flex';
         if (footerCodeBadge) footerCodeBadge.style.display = gameStarted ? 'flex' : 'none';
-        if (roomHeader) roomHeader.style.display = gameStarted ? 'none' : 'flex';
     }
 
     // Confirmation avant de fermer/recharger l'onglet par erreur (swipe, geste accidentel...) :
@@ -3648,6 +3981,7 @@
         });
         updateParticipantCount();
         refreshHostStatus();
+        updateVideoTileLabels(); // remplace tout placeholder générique par le vrai prénom dès qu'il est connu
         if (gameState.phase === 'lobby') setSpotlightPlayer(getHostId());
     }
 
@@ -3662,6 +3996,7 @@
         });
         updateParticipantCount();
         refreshHostStatus();
+        updateVideoTileLabels(); // remplace tout placeholder générique par le vrai prénom dès qu'il est connu
         if (gameState.phase === 'lobby') setSpotlightPlayer(getHostId());
     }
 
@@ -3694,7 +4029,10 @@
     function updateParticipantCount() {
         const n = document.querySelectorAll('.video-tile').length;
         const el = document.getElementById('participant-count');
-        el.innerText = n <= 1 ? '1 participant (toi seul pour le moment)' : `${n} participants`;
+        const t = translations[currentLang] || translations['en'];
+        el.innerText = n <= 1
+            ? (t.participantCountAlone || '1 participant (toi seul pour le moment)')
+            : (t.participantCountMany || '{n} participants').replace('{n}', n);
     }
 
     // --- WEBRTC ---
@@ -3743,7 +4081,7 @@
         };
 
         pc.ontrack = (event) => {
-            addVideoTile(peerId, remoteNames[peerId] || 'Joueur', event.streams[0], false);
+            addVideoTile(peerId, presentPlayers[peerId] || remoteNames[peerId] || 'Joueur', event.streams[0], false);
         };
 
         pc.onconnectionstatechange = () => {
@@ -4027,9 +4365,14 @@
             const nameTag = tile.querySelector('.name-tag');
             if (!nameTag) return;
             const isSelf = tile.classList.contains('self');
-            const baseName = tile.dataset.playerName || '?';
+            // Le nom réel (via la présence du salon) peut arriver après la création de la
+            // tuile vidéo (qui démarre parfois avec un simple "Joueur" le temps que WebRTC et
+            // la présence se synchronisent) : on rafraîchit toujours avec la meilleure source
+            // disponible plutôt que de garder le nom figé à la création.
+            const bestName = presentPlayers[id] || remoteNames[id] || tile.dataset.playerName || '?';
+            tile.dataset.playerName = bestName;
             const team = getPlayerTeamNumber(id);
-            const label = isSelf ? `${baseName} (toi)` : baseName;
+            const label = isSelf ? `${bestName} (toi)` : bestName;
             nameTag.innerText = team ? `${label} · Éq.${team}` : label;
             tile.classList.toggle('team-1', team === '1');
             tile.classList.toggle('team-2', team === '2');
@@ -4801,6 +5144,15 @@ const translations = {
         tooManyPlayersHint: "Trop de joueurs sont connectés : augmente le nombre de joueurs visé, ou fais partir les joueurs en trop.",
         noPlayersMsg: "Aucun joueur",
 
+        pauseWaitHint: "En attente que ce joueur reprenne la partie...",
+        participantCountAlone: "1 participant (toi seul pour le moment)",
+        participantCountMany: "{n} participants",
+        sameroomHint: "💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.",
+        authTabLogin: "Se connecter",
+        authTabSignup: "Créer un compte",
+        authResetBtn: "Mot de passe oublié ?",
+        authModalSubLive: "Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).",
+        loginFooterBtn: "Se connecter / Créer un compte",
         },
         en: {
             subtitle: "Choose your favorite edition",
@@ -5123,6 +5475,15 @@ const translations = {
         tooManyPlayersHint: "Too many players are connected: increase the target player count, or remove the extra players.",
         noPlayersMsg: "No players",
 
+        pauseWaitHint: "Waiting for this player to resume the game...",
+        participantCountAlone: "1 participant (just you for now)",
+        participantCountMany: "{n} participants",
+        sameroomHint: "💡 Feedback/echo is cut automatically between players who are physically in the same room (ultrasonic detection, nothing to do). The 🔊 on a webcam lets you force it manually if needed.",
+        authTabLogin: "Log in",
+        authTabSignup: "Create an account",
+        authResetBtn: "Forgot your password?",
+        authModalSubLive: "An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Rush'Up!).",
+        loginFooterBtn: "Log in / Create an account",
         },
         es: {
             subtitle: "Elige tu edición favorita",
@@ -5445,6 +5806,15 @@ const translations = {
         tooManyPlayersHint: "Hay demasiados jugadores conectados: aumenta el número de jugadores objetivo, o haz que salgan los jugadores de más.",
         noPlayersMsg: "Ningún jugador",
 
+        pauseWaitHint: "Esperando a que este jugador reanude la partida...",
+        participantCountAlone: "1 participante (solo tú por ahora)",
+        participantCountMany: "{n} participantes",
+        sameroomHint: "💡 El eco/acople se corta automáticamente entre jugadores que están físicamente en la misma sala (detección por ultrasonidos, no hay nada que hacer). El 🔊 en una cámara permite forzarlo manualmente si es necesario.",
+        authTabLogin: "Iniciar sesión",
+        authTabSignup: "Crear una cuenta",
+        authResetBtn: "¿Olvidaste tu contraseña?",
+        authModalSubLive: "Se necesita una cuenta para crear una sala (recupera automáticamente tu estado VIP en todos tus dispositivos, incluido Rush'Up!).",
+        loginFooterBtn: "Iniciar sesión / Crear una cuenta",
         },
         zh: {
             subtitle: "选择你喜欢的版本",
@@ -5765,7 +6135,17 @@ const translations = {
         allConnectedMsg: "所有玩家均已连接（{connected}/{total}）。",
         waitingRemainingPlayersMsg: "等待剩余玩家……",
         tooManyPlayersHint: "已连接的玩家过多：请增加目标玩家人数，或请多余的玩家退出。",
-        noPlayersMsg: "暂无玩家",}
+        noPlayersMsg: "暂无玩家",
+        pauseWaitHint: "等待该玩家继续游戏……",
+        participantCountAlone: "1 位参与者（目前只有你）",
+        participantCountMany: "{n} 位参与者",
+        sameroomHint: "💡 对于身处同一房间的玩家，系统会自动消除回声/啸叫（超声波检测，无需操作）。如有需要，可点击摄像头上的 🔊 手动强制开启。",
+        authTabLogin: "登录",
+        authTabSignup: "创建账户",
+        authResetBtn: "忘记密码？",
+        authModalSubLive: "创建房间需要账户（该账户会在你所有设备上自动恢复VIP状态，包括在 Rush'Up! 上）。",
+        loginFooterBtn: "登录 / 创建账户",
+        }
     };
 
     // NB : ROUND_INFO n'est plus utilisé directement pour l'affichage — les titres/indices de
@@ -6406,6 +6786,10 @@ const translations = {
     function broadcastGameState() {
         // On envoie l'état public à tout le monde (SANS les mots restants : ça reste secret côté hôte)
         // + notre horodatage pour que chaque appareil calcule son décalage d'horloge avec l'hôte.
+        // Le mot du dernier "trouvé" (pour l'affichage dans l'écran de pause/désaccord) est
+        // envoyé lui aussi : il n'est plus secret une fois trouvé, contrairement aux mots
+        // restants dans la pioche.
+        gameState.lastFoundActionWord = lastFoundAction ? lastFoundAction.word : null;
         sendGameMsg('all', 'state', { ...gameState, hostNow: Date.now() });
         applyGameState(gameState); // l'hôte s'applique aussi l'état à lui-même (décalage = 0, c'est la référence)
     }
@@ -6495,13 +6879,12 @@ const translations = {
     }
 
     function handlePlayerAction(fromId, action) {
-        // Sécurité : seul le joueur actif peut agir sur le mot en cours (trouvé/passe/prêt/annuler).
-        // Exception : "pause" et "resume" (déclenchés par le bouton Pause OU par le bouton
-        // Désaccord) sont ouverts à TOUT joueur présent dans le salon, puisqu'un litige sur un
-        // mot peut être signalé par n'importe qui, pas seulement par le joueur qui décrit.
-        const isPauseRelated = (action === 'pause' || action === 'resume');
-        if (!isPauseRelated && fromId !== gameState.activePlayerId) return;
-        if (isPauseRelated && !presentPlayers[fromId]) return; // doit être un joueur du salon
+        // Sécurité : seul le joueur actif (celui dont c'est le tour) peut agir — trouvé, passe,
+        // prêt, annuler, ET pause/désaccord/reprendre. Les autres joueurs voient l'état (pause,
+        // mot, score) via la diffusion normale de gameState, mais ne peuvent rien déclencher
+        // eux-mêmes : ils sont informés, pas décisionnaires (comme dans Rush'Up!, où pause et
+        // désaccord sont deux boutons du même joueur actif).
+        if (fromId !== gameState.activePlayerId) return;
         if (gameState.phase !== 'playing') return;
 
         if (action === 'ready') {
@@ -6892,18 +7275,28 @@ const translations = {
             const pauseBtn = document.getElementById('pause-btn');
             pauseBtn.style.display = (isMyTurn && !state.isPaused) ? 'block' : 'none';
             const disagreeBtn = document.getElementById('disagree-btn');
-            // Le bouton Désaccord est ouvert à TOUS les joueurs de la partie (pas seulement au
-            // joueur actif) : n'importe qui peut signaler un litige sur le mot en cours.
-            disagreeBtn.style.display = (!state.isPaused) ? 'block' : 'none';
+            // Réservé au joueur actif, comme le bouton Pause (même restriction que Rush'Up!) :
+            // les autres joueurs voient juste que la partie est en pause, sans pouvoir agir.
+            disagreeBtn.style.display = (isMyTurn && !state.isPaused) ? 'block' : 'none';
 
-            // Écran de pause partagé : affiché à tout le monde dès que gameState.isPaused, avec
-            // le choix d'annulation (même mot / réintégration aléatoire) réservé au joueur actif
-            // qui vient de valider le mot litigieux (seul lui peut légitimement l'annuler).
+            // Écran de pause partagé : affiché à tout le monde dès que gameState.isPaused. Le
+            // joueur actif (celui qui a mis pause) voit le bouton "Reprendre" et, le cas échéant,
+            // le choix d'annulation du dernier mot ; les autres voient juste l'état, en attente.
             const pauseOverlay = document.getElementById('pause-overlay');
             const undoBox = document.getElementById('undo-choice-box');
+            const pauseResumeBtn = document.getElementById('pause-overlay-btn-resume');
+            const pauseWaitHint = document.getElementById('pause-overlay-wait-hint');
             if (state.isPaused) {
                 pauseOverlay.classList.add('active');
                 undoBox.style.display = (isMyTurn && state.hasUndo) ? 'block' : 'none';
+                if (pauseResumeBtn) pauseResumeBtn.style.display = isMyTurn ? 'block' : 'none';
+                if (pauseWaitHint) pauseWaitHint.style.display = isMyTurn ? 'none' : 'block';
+                const undoLabel = document.getElementById('undo-choice-label');
+                if (undoLabel) {
+                    const t = translations[currentLang] || translations['en'];
+                    const tpl = t.undoChoiceLabel || 'Annuler le dernier mot trouvé : « {word} »';
+                    undoLabel.innerText = (state.hasUndo && state.lastFoundActionWord) ? tpl.replace('{word}', state.lastFoundActionWord) : '';
+                }
             } else {
                 pauseOverlay.classList.remove('active');
                 undoBox.style.display = 'none';
@@ -6958,10 +7351,15 @@ const translations = {
     // - 'undo'  : annulation du dernier mot trouvé → on retire son point du combo, sans le
     //             remettre à zéro (les mots trouvés avant lui restent acquis), et sans déclencher
     //             de nouveau toast puisque ce n'est pas une nouvelle réussite
+    let currentWordIsJoker = false; // mis à jour à chaque révélation ; sert à savoir si le mot qu'on valide est le joker (voir sendPlayerAction)
+
     function showSecretWord(word, isJoker, streakMode) {
         const wordCard = document.getElementById('word-card');
         wordCard.classList.remove('locked');
-        wordCard.innerText = isJoker ? `🃏 ${word}` : word;
+        // Le mot joker reste un secret TOTAL tant qu'il n'est pas trouvé (comme dans Rush'Up!,
+        // "personne ne sait lequel avant qu'il soit deviné") : pas d'icône 🃏 à la révélation.
+        wordCard.innerText = word;
+        currentWordIsJoker = isJoker;
         clearTimeout(actionLockFailsafe);
         lockActionButtons(false);
 
@@ -6973,9 +7371,9 @@ const translations = {
             currentStreak++;
         }
 
-        if (isJoker) {
-            showGameToast('🃏 MOT JOKER ! +2', 'joker');
-        } else if (streakMode === 'found' && currentStreak >= 3) {
+        // Le toast "+2 Mot Joker" ne s'affiche qu'au moment où le mot est effectivement validé
+        // (voir sendPlayerAction), jamais ici à la simple révélation du mot suivant.
+        if (!isJoker && streakMode === 'found' && currentStreak >= 3) {
             showGameToast(`🔥 Combo x${currentStreak}`, 'combo');
         }
     }
@@ -7243,9 +7641,10 @@ const translations = {
     }
 
     function togglePause() {
-        // Ouvert à tout joueur du salon (bouton Pause du joueur actif OU bouton Désaccord de
-        // n'importe quel autre joueur, OU bouton "Reprendre" de l'écran de pause) — la garde
-        // fine (qui a le droit de faire quoi) vit dans sendPlayerAction/handlePlayerAction.
+        // Réservé au joueur actif (celui dont c'est le tour) : c'est lui qui a mis pause qui
+        // peut la lever, exactement comme dans Rush'Up! où pause et désaccord sont deux boutons
+        // du même joueur. Les autres voient l'état "en pause" (diffusé via gameState) mais ne
+        // peuvent pas reprendre eux-mêmes.
         sendPlayerAction(gameState.isPaused ? 'resume' : 'pause');
     }
 
@@ -7273,10 +7672,9 @@ const translations = {
     }
 
     function sendPlayerAction(action) {
-        // "pause"/"resume" (Pause OU Désaccord) restent ouverts à tout joueur du salon, pas
-        // seulement au joueur actif — un litige peut être signalé par n'importe qui.
-        const isPauseRelated = (action === 'pause' || action === 'resume');
-        if (!isPauseRelated && gameState.activePlayerId !== myId) return;
+        // Toutes les actions (y compris pause/reprendre/désaccord) sont réservées au joueur
+        // actif : c'est lui qui décide, les autres joueurs ne font qu'observer l'état diffusé.
+        if (gameState.activePlayerId !== myId) return;
         if ((action === 'found' || action === 'pass') && actionLocked) return;
         if (action === 'undo' || action === 'undo-random') {
             document.getElementById('undo-choice-box').style.display = 'none';
@@ -7284,8 +7682,19 @@ const translations = {
         if (action === 'found') vibrate(35);
         else if (action === 'pass') vibrate([20, 40, 20]);
         else if (action === 'ready') vibrate(15);
-        if (action === 'found') { playSoundFound(); triggerVibration(35); }
-        else if (action === 'pass') { playSoundSkip(); triggerVibration([20, 40, 20]); }
+        if (action === 'found') {
+            // Le "+2 Mot Joker" ne s'affiche qu'à la validation réelle du mot, jamais à sa
+            // révélation (le joker reste un secret total tant qu'il n'est pas trouvé, comme
+            // dans Rush'Up!) — voir currentWordIsJoker, mis à jour dans showSecretWord().
+            if (currentWordIsJoker) {
+                const t = translations[currentLang] || translations['en'];
+                showGameToast(t.jokerFoundToast || '🃏 MOT JOKER ! +2', 'joker');
+                triggerVibration([30, 40, 30]);
+            } else {
+                playSoundFound();
+                triggerVibration(35);
+            }
+        } else if (action === 'pass') { playSoundSkip(); triggerVibration([20, 40, 20]); }
         if (action === 'found' || action === 'pass') {
             lockActionButtons(true);
             clearTimeout(actionLockFailsafe);
