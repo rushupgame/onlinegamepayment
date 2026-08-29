@@ -4039,10 +4039,10 @@
         document.body.classList.toggle('on-landing', isLangSelect);
         document.body.classList.toggle('pre-room', id === 'entry-screen' && !isLangSelect);
         if (id === 'room-screen') {
-            // on-config / in-game sont affinés dans updateHeaderFooterPlacement() dès que l'état
-            // de la partie (gameState.phase) est connu ; on part du principe "lobby" par défaut.
-            document.body.classList.remove('on-config');
-            document.body.classList.remove('in-game');
+            // Header/footer du salon dès l'entrée (code + Partager + menu visibles tout de
+            // suite), sans attendre un premier message gameState qui peut ne jamais arriver
+            // tant que l'hôte est seul en train de configurer la partie.
+            updateHeaderFooterPlacement(false);
         } else {
             document.body.classList.remove('on-config');
             document.body.classList.remove('in-game');
