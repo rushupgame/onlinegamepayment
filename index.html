@@ -275,9 +275,13 @@
         flex-direction: column;
         align-items: center;
     }
-    #create-form-card .config-group,
-    #join-form-card .config-group {
-        align-items: center;
+    #create-form-card .config-group label,
+    #join-form-card .config-group label {
+        text-align: center;
+    }
+    #entry-choice-card .rules-recap-step > div {
+        overflow-wrap: break-word;
+        min-width: 0;
     }
 
     .room-header {
@@ -1142,6 +1146,29 @@
         padding: 0 4px;
     }
     .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    /* --- Boutons Home / Son / Règles du header pré-salon : même forme/couleur que Rush'Up!,
+         mais icône seule (une émoji, sans texte), comme demandé explicitement. --- */
+    .sound-toggle-btn, .rules-toggle-btn, .home-toggle-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--card-border);
+        color: var(--text-main);
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .sound-toggle-btn:hover, .rules-toggle-btn:hover, .home-toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
     .app-title-sm {
         font-size: 1.3rem;
         font-weight: 900;
@@ -1180,14 +1207,27 @@
     .room-lobby-header .action-btn-share { width: auto; margin: 0; padding: 8px 14px; font-size: 0.8rem; flex: 0 0 auto; }
 
     /* --- Menu ☰ replié dans le footer pendant une manche active : le header disparaît
-         entièrement pour ne laisser que le mot à deviner et les actions de tour. --- */
+         entièrement pour ne laisser que le mot à deviner et les actions de tour. Le code de
+         session + Partager fusionnent alors en UN SEUL bloc plein format, avec la même forme
+         que "Soutenir le développeur" (.donate-btn), comme demandé explicitement. --- */
     .in-game-footer-menu {
         display: none;
         align-items: center;
         gap: 8px;
         width: 100%;
     }
-    .in-game-footer-menu .room-code-badge { flex: 1; margin: 0; }
+    .in-game-footer-menu .donate-btn {
+        flex: 1;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    .in-game-footer-menu .donate-btn .room-code-value {
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }
 
     body.on-landing .brand-header-outer,
     body.on-landing .room-lobby-header { visibility: hidden; }
@@ -1222,7 +1262,20 @@
         vertical-align: middle;
         margin-left: 6px;
     }
-    .slogan { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 22px; }
+    .slogan {
+        align-self: center;
+        background: rgba(112, 161, 255, 0.15);
+        color: #70a1ff;
+        border: 1px solid rgba(112, 161, 255, 0.3);
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        font-style: italic;
+        text-align: center;
+        margin: 0 auto 16px;
+        display: table;
+    }
     .lang-title { text-align: center; font-weight: 700; margin-bottom: 12px; color: var(--text-main); }
     .lang-btn-list { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 340px; margin: 0 auto 22px; }
     .btn-lang {
@@ -2054,9 +2107,9 @@
     <div class="brand-header">
         <h1 class="app-title-sm">🎥 Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge">LIVE</span></h1>
         <div class="header-actions">
-            <button type="button" class="home-toggle-btn" onclick="backToEntryChoice()" id="ui-home-btn">🏠 Home</button>
-            <button type="button" class="sound-toggle-btn" id="sound-btn-pre" onclick="toggleSound(); updateSoundButtons();">🔊 Son</button>
-            <button type="button" class="rules-toggle-btn" onclick="openRulesModal()" id="ui-rules-btn-pre">📜 Règles</button>
+            <button type="button" class="home-toggle-btn" onclick="backToEntryChoice()" id="ui-home-btn" title="Home" aria-label="Home">🏠</button>
+            <button type="button" class="sound-toggle-btn" id="sound-btn-pre" onclick="toggleSound(); updateSoundButtons();" title="Son" aria-label="Son">🔊</button>
+            <button type="button" class="rules-toggle-btn" onclick="openRulesModal()" id="ui-rules-btn-pre" title="Règles" aria-label="Règles">📜</button>
         </div>
     </div>
 </div>
@@ -2203,7 +2256,7 @@
          Rush'Up! (reste accessible via la même logique de première visite / localStorage). -->
     <div id="lang-select-view">
         <h1 class="landing-title">Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge-lg">LIVE</span></h1>
-        <p class="slogan" id="ui-slogan">Think fast, speak faster — ensemble, en direct !</p>
+        <p class="slogan" id="ui-slogan">Think fast, speak faster — together, live!</p>
         <p class="lang-title" id="ui-lang-title">Choose your language</p>
         <div class="lang-btn-list">
             <button class="btn-lang" onclick="selectInitialLanguage('fr')"><span>Français</span> 🇫🇷</button>
@@ -2503,10 +2556,11 @@
         <div class="room-footer-controls" id="room-footer-controls">
             <button class="leave-btn action-btn-leave" onclick="leaveRoom()" id="ui-btn-leave-room">🚪 Quitter le salon</button>
         </div>
-        <!-- Menu ☰ + rappel du code de session : ne s'affiche QUE pendant une manche active,
-             une fois que le header (avec le même menu) a disparu pour libérer l'écran de jeu. -->
+        <!-- Menu ☰ + code de session/Partager fusionnés en un seul bouton plein format (forme
+             "Soutenir le développeur") : ne s'affiche QUE pendant une manche active, une fois
+             que le header (avec le même menu) a disparu pour libérer l'écran de jeu. -->
         <div class="in-game-footer-menu" id="in-game-footer-menu">
-            <div class="room-code-badge" id="room-code-badge-footer" onclick="shareRoomCode()" style="cursor:pointer;" title="Partager le code"><span class="room-code-label">Session :</span> <span id="room-code-display-footer">—</span></div>
+            <button type="button" class="donate-btn" onclick="shareRoomCode()" id="ui-footer-share-code-btn">📤 <span id="ui-footer-share-label">Partager</span> — <span class="room-code-value" id="room-code-display-footer">—</span></button>
             <button type="button" class="hamburger-btn" onclick="toggleHamburgerMenu()" aria-label="Menu">☰</button>
         </div>
         <div class="sameroom-hint-text" id="ui-sameroom-hint">💡 Le larsen est coupé automatiquement entre les joueurs qui sont physiquement dans la même pièce (détection par ultrasons, aucune action à faire). Le 🔊 sur une webcam permet de forcer manuellement si besoin.</div>
@@ -2525,11 +2579,13 @@
         <span class="account-info-email" id="account-info-email">—</span>
         <span class="account-info-password" id="account-info-password">••••••••</span>
         <button type="button" class="account-info-eye" id="account-info-eye-btn" onclick="toggleAccountPasswordVisibility()" title="Afficher/masquer le mot de passe">👁️</button>
-        <button type="button" class="account-info-logout" onclick="signOutAccount()">Déconnexion</button>
+        <button type="button" class="account-info-logout" id="account-logout-btn" onclick="signOutAccount()">Déconnexion</button>
     </div>
-    <button type="button" class="leave-btn" id="login-footer-btn" onclick="openAuthModal()" style="display:none;">🔐 Se connecter / Créer un compte</button>
 </div>
 <div class="version-footer">
+    <!-- Même forme/couleur que "Soutenir le développeur" (demande explicite) ; en anglais par
+         défaut car visible dès le tout premier écran, avant même le choix de la langue. -->
+    <button type="button" class="donate-btn" id="login-footer-btn" onclick="openAuthModal()" style="display:none;">🔐 Log in / Create an account</button>
     <button type="button" class="btn-pwa-install" id="pwa-install-btn-footer" onclick="triggerPwaInstall()" style="display:none;">📲 Installer l'application</button>
     <a class="donate-btn" id="donate-btn-footer" href="https://www.paypal.com/donate?hosted_button_id=2NGJSLT76DX2G" target="_blank" rel="noopener noreferrer"><span class="heart-icon">❤️</span> Soutenir le développeur</a>
     <button type="button" class="legal-btn" id="legal-btn-footer" onclick="openLegalModal()">⚖️ Mentions Légales & CGU</button>
@@ -2579,10 +2635,10 @@
 <div id="vibe-modal" class="modal-overlay">
     <div class="modal-card vibe-modal-card">
         <button type="button" class="vibe-modal-close" onclick="closeVibeModal()" aria-label="Fermer">✕</button>
-        <p style="margin-bottom:10px;">🎨 Choisis ta Vibe</p>
+        <p style="margin-bottom:10px;" id="ui-vibe-modal-title">🎨 Choisis ta Vibe</p>
         <div class="vibe-grid" id="vibe-grid"></div>
         <div class="modal-btn-row">
-            <button type="button" class="btn btn-secondary" onclick="closeVibeModal()">Fermer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeVibeModal()" id="ui-vibe-modal-close">Fermer</button>
         </div>
     </div>
 </div>
@@ -2666,16 +2722,16 @@
         <div class="auth-modal-title" id="auth-modal-title">Accéder à ton compte</div>
         <p class="auth-modal-sub" id="auth-modal-sub">Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).</p>
 
-        <div class="auth-tabs">
+        <div class="auth-tabs" id="auth-tabs">
             <button type="button" class="auth-tab" id="auth-tab-login" onclick="setAuthMode('login')">Se connecter</button>
             <button type="button" class="auth-tab" id="auth-tab-signup" onclick="setAuthMode('signup')">Créer un compte</button>
         </div>
 
-        <div class="auth-field-group">
+        <div class="auth-field-group" id="auth-email-group">
             <label for="auth-email-input" id="auth-email-label">Email</label>
             <input type="email" id="auth-email-input" placeholder="ton@email.com">
         </div>
-        <div class="auth-field-group">
+        <div class="auth-field-group" id="auth-password-group">
             <label for="auth-password-input" id="auth-password-label">Mot de passe</label>
             <input type="password" id="auth-password-input" placeholder="8 caractères minimum" minlength="8">
         </div>
@@ -2684,11 +2740,21 @@
             <input type="date" id="auth-birthdate-input">
             <div class="auth-field-hint" id="auth-birthdate-hint">C'est cette date qui sera utilisée pour vérifier ton identité si tu dois réinitialiser ton mot de passe.</div>
         </div>
+        <!-- Mode "mot de passe oublié" : pas d'email envoyé — l'identité est vérifiée avec la
+             date de naissance fournie à la création du compte, puis un nouveau mot de passe est
+             défini directement ici. -->
+        <div class="auth-field-group" id="auth-reset-newpassword-group" style="display:none;">
+            <label for="auth-reset-newpassword-input" id="auth-reset-newpassword-label">Nouveau mot de passe</label>
+            <input type="password" id="auth-reset-newpassword-input" placeholder="8 caractères minimum" minlength="8">
+        </div>
 
         <button type="button" class="btn btn-primary" id="auth-submit-btn" onclick="submitAuthForm()">Créer mon compte</button>
 
         <div class="auth-reset-row" id="auth-reset-row" style="display:none;">
-            <button type="button" onclick="resetPasswordRequest()" id="auth-reset-btn">Mot de passe oublié ?</button>
+            <button type="button" onclick="setAuthMode('reset')" id="auth-reset-btn">Mot de passe oublié ?</button>
+        </div>
+        <div class="auth-reset-row" id="auth-back-to-login-row" style="display:none;">
+            <button type="button" onclick="setAuthMode('login')" id="auth-back-to-login-btn">◀️ Retour à la connexion</button>
         </div>
 
         <div class="vip-modal-status" id="auth-modal-status"></div>
@@ -2833,6 +2899,7 @@
         document.getElementById('auth-email-input').value = '';
         document.getElementById('auth-password-input').value = '';
         document.getElementById('auth-birthdate-input').value = '';
+        document.getElementById('auth-reset-newpassword-input').value = '';
         authMode = 'login';
         applyAuthModeUI();
         document.getElementById('auth-modal').classList.add('active');
@@ -2850,17 +2917,36 @@
 
     // Onglets Connexion / Création (comme Rush'Up!) : la date de naissance n'est demandée qu'à
     // la création (elle sert uniquement à vérifier l'identité en cas de réinitialisation du mot
-    // de passe) ; le lien "mot de passe oublié" n'a de sens qu'en mode Connexion.
+    // de passe). Le mode "reset" remplace le mot de passe habituel par un champ "nouveau mot de
+    // passe" + demande la date de naissance pour vérifier l'identité — PAS d'email envoyé.
     function applyAuthModeUI() {
         const isSignup = authMode === 'signup';
+        const isReset = authMode === 'reset';
         const t = translations[currentLang] || translations['en'];
-        document.getElementById('auth-tab-login').classList.toggle('active', !isSignup);
+
+        document.getElementById('auth-tabs').style.display = isReset ? 'none' : 'flex';
+        document.getElementById('auth-tab-login').classList.toggle('active', !isSignup && !isReset);
         document.getElementById('auth-tab-signup').classList.toggle('active', isSignup);
-        document.getElementById('auth-birthdate-group').style.display = isSignup ? 'block' : 'none';
-        document.getElementById('auth-reset-row').style.display = isSignup ? 'none' : 'block';
-        document.getElementById('auth-submit-btn').innerText = isSignup
-            ? (t.authSubmitSignup || 'Créer mon compte')
-            : (t.authSubmitLogin || 'Se connecter');
+
+        document.getElementById('auth-password-group').style.display = isReset ? 'none' : 'block';
+        document.getElementById('auth-birthdate-group').style.display = (isSignup || isReset) ? 'block' : 'none';
+        document.getElementById('auth-reset-newpassword-group').style.display = isReset ? 'block' : 'none';
+        document.getElementById('auth-reset-row').style.display = (!isSignup && !isReset) ? 'block' : 'none';
+        document.getElementById('auth-back-to-login-row').style.display = isReset ? 'block' : 'none';
+
+        document.getElementById('auth-modal-title').innerText = isReset
+            ? (t.authResetTitle || 'Réinitialiser le mot de passe')
+            : (t.authModalTitle || 'Accéder à ton compte');
+        document.getElementById('auth-modal-sub').innerText = isReset
+            ? (t.authResetSub || "Indique ton email et ta date de naissance (celle donnée à la création du compte) pour définir un nouveau mot de passe, sans email à recevoir.")
+            : (t.authModalSubLive || t.authModalSub || '');
+
+        document.getElementById('auth-submit-btn').innerText = isReset
+            ? (t.authResetSubmitBtn || 'Réinitialiser le mot de passe')
+            : isSignup
+                ? (t.authSubmitSignup || 'Créer mon compte')
+                : (t.authSubmitLogin || 'Se connecter');
+        document.getElementById('auth-submit-btn').onclick = isReset ? submitPasswordReset : submitAuthForm;
         document.getElementById('auth-modal-status').innerText = '';
     }
 
@@ -2910,22 +2996,38 @@
         }
     }
 
-    // Réinitialisation du mot de passe : envoie un email avec un lien (flux standard Supabase
-    // Auth). La date de naissance saisie à la création sert de vérification d'identité côté
-    // support en cas de litige, mais le lien de réinitialisation lui-même passe par l'email.
-    async function resetPasswordRequest() {
+    // Réinitialisation du mot de passe SANS email : l'identité est vérifiée en comparant la
+    // date de naissance fournie ici à celle enregistrée à la création du compte (stockée dans
+    // les métadonnées utilisateur). Ceci nécessite une Edge Function côté Supabase (clé de
+    // service, jamais exposée au navigateur) qui : 1) retrouve le compte par email, 2) compare
+    // sa date de naissance enregistrée à celle fournie, 3) si ça correspond, met à jour le mot
+    // de passe via l'API Admin Supabase. Cette fonction ('reset-password-by-birthdate') doit
+    // être déployée séparément sur le projet Supabase — voir la documentation fournie à part.
+    async function submitPasswordReset() {
         const email = (document.getElementById('auth-email-input').value || '').trim();
+        const birthdate = document.getElementById('auth-birthdate-input').value || '';
+        const newPassword = document.getElementById('auth-reset-newpassword-input').value || '';
         const status = document.getElementById('auth-modal-status');
         const t = translations[currentLang] || translations['en'];
-        if (!email) { status.innerText = t.authErrNeedEmailForReset || 'Indique ton email ci-dessus pour recevoir le lien de réinitialisation.'; status.className = 'vip-modal-status error'; return; }
 
-        status.innerText = t.authResetPending || 'Envoi du lien de réinitialisation…';
+        if (!email || !birthdate) { status.innerText = t.authErrResetMissingFields || 'Indique ton email et ta date de naissance.'; status.className = 'vip-modal-status error'; return; }
+        if (newPassword.length < 8) { status.innerText = t.authErrPasswordLength || 'Mot de passe : 8 caractères minimum.'; status.className = 'vip-modal-status error'; return; }
+
+        status.innerText = t.authResetPending || 'Vérification en cours…';
         status.className = 'vip-modal-status pending';
         try {
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+            const { data, error } = await supabaseClient.functions.invoke('reset-password-by-birthdate', {
+                body: { email, birthdate, newPassword }
+            });
             if (error) throw error;
-            status.innerText = t.authResetSent || '✅ Email de réinitialisation envoyé si ce compte existe.';
+            if (!data || data.success !== true) {
+                status.innerText = t.authErrResetMismatch || "Email ou date de naissance incorrecte.";
+                status.className = 'vip-modal-status error';
+                return;
+            }
+            status.innerText = t.authResetSuccess || '✅ Mot de passe mis à jour. Tu peux te connecter.';
             status.className = 'vip-modal-status ok';
+            setAuthMode('login');
         } catch (e) {
             status.innerText = (t.authErrGeneric || 'Erreur : ') + ((e && e.message) || '');
             status.className = 'vip-modal-status error';
@@ -2957,8 +3059,9 @@
 
     function renderAccountPassword() {
         const el = document.getElementById('account-info-password');
+        const t = translations[currentLang] || translations['en'];
         if (!currentAccountPassword) {
-            el.innerText = '•••• (reconnecte-toi pour l\'afficher)';
+            el.innerText = t.accountPasswordHidden || '•••• (reconnecte-toi pour l\'afficher)';
             return;
         }
         el.innerText = accountPasswordVisible ? currentAccountPassword : '•'.repeat(Math.max(8, currentAccountPassword.length));
@@ -3041,6 +3144,7 @@
         if (themeContainer) populateThemeSelect();
         renderVibeGrid();
         renderHamburgerMenu();
+        updateAccountInfoBar();
         // Le nombre de joueurs déjà configuré peut redevenir invalide si un abonnement a expiré
         // entre-temps : on ne le réduit jamais automatiquement (on ne veut pas surprendre l'hôte
         // en pleine configuration), le contrôle se fait au moment d'augmenter le nombre.
@@ -3112,6 +3216,7 @@
         setText('ui-room-code-label', t.roomCodeLabel || 'Code de session');
         setText('ui-btn-leave-room', t.btnLeaveRoom || '🚪 Quitter le salon');
         setText('ui-share-btn-header', t.btnShareCode || '📤 Partager');
+        setText('ui-footer-share-label', (t.btnShareCode || '📤 Partager').replace('📤 ', ''));
         applyRulesRecapTranslation(t);
 
         // Salon / partie
@@ -3148,6 +3253,7 @@
         setText('ui-btn-next-round', t.nextRoundBtn || '➡️ Manche suivante');
         setText('round-end-wait-text', t.waitHostGeneric);
         setText('ui-word-recap-label', t.wordRecapToggleLabel || '📜 Voir tous les mots de la partie');
+        setText('final-title', t.finalTitle || '🎉 Partie terminée !');
         setText('ui-btn-new-game', t.newGameBtn || '🔁 Nouvelle partie');
         setText('final-wait-text', t.waitHostGeneric);
         setText('ui-sameroom-hint', t.sameroomHint);
@@ -3163,11 +3269,19 @@
         setText('auth-birthdate-label', t.authBirthdateLabel);
         setText('auth-birthdate-hint', t.authBirthdateHint);
         setText('auth-reset-btn', t.authResetBtn || 'Mot de passe oublié ?');
+        setText('auth-back-to-login-btn', t.authBackToLogin || '◀️ Retour à la connexion');
+        setText('auth-reset-newpassword-label', t.authResetNewPasswordLabel || 'Nouveau mot de passe');
         if (document.getElementById('auth-modal')) applyAuthModeUI();
         setText('login-footer-btn', '🔐 ' + (t.loginFooterBtn || 'Se connecter / Créer un compte'));
+        setText('account-logout-btn', t.accountLogoutBtn || 'Déconnexion');
+        renderAccountPassword();
         updateParticipantCount();
-        setText('ui-home-btn', '🏠 ' + (t.hmenuHome || 'Home'));
-        setText('ui-rules-btn-pre', '📜 ' + (t.hmenuRules || 'Règles'));
+        // Home/Son/Règles du header pré-salon sont désormais icône seule (une émoji, sans
+        // texte) — pas de traduction de libellé nécessaire, seuls les title/aria-label varient.
+        const homeBtn = document.getElementById('ui-home-btn');
+        if (homeBtn) { homeBtn.title = t.hmenuHome || 'Home'; homeBtn.setAttribute('aria-label', t.hmenuHome || 'Home'); }
+        const rulesBtnPre = document.getElementById('ui-rules-btn-pre');
+        if (rulesBtnPre) { rulesBtnPre.title = t.hmenuRules || 'Règles'; rulesBtnPre.setAttribute('aria-label', t.hmenuRules || 'Règles'); }
         setText('hmenu-label-home', '🏠 ' + (t.hmenuHome || 'Home'));
         updateSoundButtons();
 
@@ -3200,6 +3314,10 @@
         // Modale légale
         setText('legal-modal-header', t.legalModalTitle || 'Legal Notice & Terms of Use');
         setText('legal-close-btn-top', t.legalCloseBtn || 'Close');
+        setText('ui-vibe-modal-title', '🎨 ' + (t.chooseVibeLabel || 'Choisis ta Vibe'));
+        setText('ui-vibe-modal-close', t.legalCloseBtn || 'Fermer');
+        setText('pass-btn', t.btnSkip || '↩️ Passer');
+        setText('found-btn', t.btnFound || '✅ Trouvé !');
         setText('legal-close-btn-bottom', t.legalCloseBtn || 'Close');
 
         // Modale règles complètes
@@ -3683,7 +3801,11 @@
     function updateSoundButtons() {
         const t = translations[currentLang] || translations['en'];
         const btn = document.getElementById('sound-btn-pre');
-        if (btn) btn.innerText = (soundEnabled ? '🔊' : '🔇') + ' ' + (t.hmenuSound || 'Son');
+        if (btn) {
+            btn.innerText = soundEnabled ? '🔊' : '🔇';
+            btn.title = t.hmenuSound || 'Son';
+            btn.setAttribute('aria-label', t.hmenuSound || 'Son');
+        }
     }
 
     function generateRoomCode() {
@@ -3712,7 +3834,7 @@
 
     async function proceedCreateRoom() {
         const nameInput = document.getElementById('create-name-input').value.trim();
-        if (!nameInput) { setStatus('create-status', 'Entre ton prénom.', 'error'); return; }
+        if (!nameInput) { setStatus('create-status', (translations[currentLang] || translations['en']).enterNameMsg || 'Entre ton prénom.', 'error'); return; }
         myName = nameInput;
         roomCode = generateRoomCode();
         await connectToRoom('create-status');
@@ -3721,15 +3843,15 @@
     async function joinExistingRoom() {
         const nameInput = document.getElementById('join-name-input').value.trim();
         const roomInput = document.getElementById('join-code-input').value.trim().toUpperCase();
-        if (!nameInput) { setStatus('join-status', 'Entre ton prénom.', 'error'); return; }
-        if (!roomInput) { setStatus('join-status', 'Entre le code du salon.', 'error'); return; }
+        if (!nameInput) { setStatus('join-status', (translations[currentLang] || translations['en']).enterNameMsg || 'Entre ton prénom.', 'error'); return; }
+        if (!roomInput) { setStatus('join-status', (translations[currentLang] || translations['en']).enterRoomCodeMsg || 'Entre le code du salon.', 'error'); return; }
         myName = nameInput;
         roomCode = roomInput;
         await connectToRoom('join-status');
     }
 
     async function connectToRoom(statusElId) {
-        setStatus(statusElId, 'Activation de la caméra...', null);
+        setStatus(statusElId, (translations[currentLang] || translations['en']).activatingCameraMsg || 'Activation de la caméra...', null);
 
         // Résolution volontairement réduite : avec 4 à 6 flux WebRTC simultanés en même
         // temps sur un téléphone, une caméra en 1080p par défaut plombe batterie/CPU/data
@@ -3747,11 +3869,11 @@
                 audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
             });
         } catch (err) {
-            setStatus(statusElId, "Impossible d'accéder à la caméra/micro. Vérifie les autorisations du navigateur.", 'error');
+            setStatus(statusElId, (translations[currentLang] || translations['en']).cameraAccessErrorMsg || "Impossible d'accéder à la caméra/micro. Vérifie les autorisations du navigateur.", 'error');
             return;
         }
 
-        setStatus(statusElId, 'Connexion au salon...', null);
+        setStatus(statusElId, (translations[currentLang] || translations['en']).connectingRoomMsg || 'Connexion au salon...', null);
 
         document.getElementById('room-code-display').innerText = roomCode;
         document.getElementById('room-code-display-footer').innerText = roomCode;
@@ -3795,7 +3917,7 @@
                 }
             } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
                 if (!hasConnectedOnce) {
-                    setStatus(statusElId, 'Connexion au salon impossible. Vérifie ta configuration Supabase.', 'error');
+                    setStatus(statusElId, (translations[currentLang] || translations['en']).connectRoomErrorMsg || 'Connexion au salon impossible. Vérifie ta configuration Supabase.', 'error');
                 } else {
                     // On était déjà en pleine partie : on prévient plutôt que de laisser
                     // l'écran figé sans explication (fréquent sur mobile en 4G/5G).
@@ -3869,9 +3991,9 @@
 
         document.body.classList.toggle('on-config', !gameStarted);
         document.body.classList.toggle('in-game', gameStarted);
-
-        const footerCodeBadge = document.getElementById('room-code-badge-footer');
-        if (footerCodeBadge) footerCodeBadge.style.display = gameStarted ? 'flex' : 'none';
+        // Le bloc "Partager + code" en footer (in-game-footer-menu) et le header du salon
+        // (room-lobby-header) sont pilotés uniquement par les classes body.on-config/in-game
+        // ci-dessus (voir CSS) — pas besoin de bascule JS supplémentaire ici.
     }
 
     // Confirmation avant de fermer/recharger l'onglet par erreur (swipe, geste accidentel...) :
@@ -4277,7 +4399,7 @@
 
             const nameTag = document.createElement('div');
             nameTag.className = 'name-tag';
-            nameTag.innerText = isSelf ? `${name} (toi)` : name;
+            nameTag.innerText = isSelf ? `${name} ${(translations[currentLang] || translations['en']).youTag || '(toi)'}` : name;
 
             tile.appendChild(video);
             tile.appendChild(nameTag);
@@ -4372,8 +4494,8 @@
             const bestName = presentPlayers[id] || remoteNames[id] || tile.dataset.playerName || '?';
             tile.dataset.playerName = bestName;
             const team = getPlayerTeamNumber(id);
-            const label = isSelf ? `${bestName} (toi)` : bestName;
-            nameTag.innerText = team ? `${label} · Éq.${team}` : label;
+            const label = isSelf ? `${bestName} ${(translations[currentLang] || translations['en']).youTag || '(toi)'}` : bestName;
+            nameTag.innerText = team ? `${label} · ${(translations[currentLang] || translations['en']).teamAbbr || 'Éq.'}${team}` : label;
             tile.classList.toggle('team-1', team === '1');
             tile.classList.toggle('team-2', team === '2');
             tile.classList.toggle('team-3', team === '3');
@@ -5153,6 +5275,48 @@ const translations = {
         authResetBtn: "Mot de passe oublié ?",
         authModalSubLive: "Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).",
         loginFooterBtn: "Se connecter / Créer un compte",
+        authResetTitle: "Réinitialiser le mot de passe",
+        authResetSub: "Indique ton email et ta date de naissance (celle donnée à la création du compte) pour définir un nouveau mot de passe, sans email à recevoir.",
+        authResetSubmitBtn: "Réinitialiser le mot de passe",
+        authResetNewPasswordLabel: "Nouveau mot de passe",
+        authBackToLogin: "◀️ Retour à la connexion",
+        authErrResetMissingFields: "Indique ton email et ta date de naissance.",
+        authErrResetMismatch: "Email ou date de naissance incorrecte.",
+        authResetSuccess: "✅ Mot de passe mis à jour. Tu peux te connecter.",
+        accountPasswordHidden: "•••• (reconnecte-toi pour l'afficher)",
+        accountLogoutBtn: "Déconnexion",
+        enterNameMsg: "Entre ton prénom.",
+        enterRoomCodeMsg: "Entre le code du salon.",
+        activatingCameraMsg: "Activation de la caméra...",
+        cameraAccessErrorMsg: "Impossible d'accéder à la caméra/micro. Vérifie les autorisations du navigateur.",
+        connectingRoomMsg: "Connexion au salon...",
+        connectRoomErrorMsg: "Connexion au salon impossible. Vérifie ta configuration Supabase.",
+        yesLabel: "Oui",
+        noLabel: "Non",
+        teamAbbr: "Éq.",
+        chooseVibeLabel: "Choisis ta Vibe",
+        youDescriberLabel: "Toi (Descripteur)",
+        youGuesserLabel: "Toi (Devineur)",
+        describingSuffix: "décrit",
+        observingThisTurnLabel: "Observe ce tour",
+        teamPlayersLabel: "Joueurs de l'équipe {n} : {names}",
+        yourTurnToGuessMsg: "C'est à toi de deviner ! En attente que {name} confirme...",
+        waitingPlayerConfirmMsg: "En attente que {name} confirme...",
+        secretWordLockedMsg: "🔒 {name} décrit un mot secret",
+        secretWordGenericLocked: "🔒 Mot secret",
+        roundBonusCardsLabel: "🎁 Cartes bonus de la manche {n} (révélées)",
+        bonusDescriberTag: "bonus Descripteur",
+        bonusGuesserTag: "bonus Devineur",
+        noWordsFoundThisRoundMsg: "Aucun mot trouvé cette manche.",
+        cardsFoundThisRoundLabel: "📜 Cartes trouvées cette manche",
+        trophyFishPassedCount: "passé {n} fois",
+        noRecordedWordsMsg: "Aucun mot enregistré.",
+        finalTitle: "🎉 Partie terminée !",
+        soloModeReminderTitle: "🕹️ Rappel du mode {mode}",
+        soloRole3PlayersMsg: "À chaque tour (chrono), un joueur décrit 🎤, un autre devine 👂 et le troisième observe 💤 — les rôles tournent à chaque chrono, tout le monde joue les trois rôles.",
+        soloRole2PlayersMsg: "À chaque tour (chrono), un joueur décrit 🎤 et l'autre devine 👂 — les rôles s'échangent à chaque chrono.",
+        soloCardFoundPointsMsg: "Une carte trouvée (bouton « Trouver ») rapporte <strong>+1 point</strong> au Descripteur ET au Devineur.",
+        soloBonusCardsExplainMsg: "5 cartes « Bonus Descripteur » et 5 « Bonus Devineur » ont été tirées en secret pour cette manche : si l'une d'elles est trouvée, elle rapporte <strong>+3 points de plus</strong> à celui qui en bénéficie — mais personne ne sait lesquelles avant de les trouver ou avant la révélation en fin de manche.",
         },
         en: {
             subtitle: "Choose your favorite edition",
@@ -5484,6 +5648,48 @@ const translations = {
         authResetBtn: "Forgot your password?",
         authModalSubLive: "An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Rush'Up!).",
         loginFooterBtn: "Log in / Create an account",
+        authResetTitle: "Reset your password",
+        authResetSub: "Enter your email and your date of birth (the one given when you created your account) to set a new password, with no email to receive.",
+        authResetSubmitBtn: "Reset password",
+        authResetNewPasswordLabel: "New password",
+        authBackToLogin: "◀️ Back to login",
+        authErrResetMissingFields: "Enter your email and date of birth.",
+        authErrResetMismatch: "Incorrect email or date of birth.",
+        authResetSuccess: "✅ Password updated. You can now log in.",
+        accountPasswordHidden: "•••• (log in again to show it)",
+        accountLogoutBtn: "Log out",
+        enterNameMsg: "Enter your first name.",
+        enterRoomCodeMsg: "Enter the room code.",
+        activatingCameraMsg: "Activating camera...",
+        cameraAccessErrorMsg: "Can't access camera/mic. Check your browser permissions.",
+        connectingRoomMsg: "Connecting to room...",
+        connectRoomErrorMsg: "Can't connect to the room. Check your Supabase configuration.",
+        yesLabel: "Yes",
+        noLabel: "No",
+        teamAbbr: "Tm.",
+        chooseVibeLabel: "Choose your Vibe",
+        youDescriberLabel: "You (Describer)",
+        youGuesserLabel: "You (Guesser)",
+        describingSuffix: "is describing",
+        observingThisTurnLabel: "Watching this turn",
+        teamPlayersLabel: "Team {n} players: {names}",
+        yourTurnToGuessMsg: "It's your turn to guess! Waiting for {name} to confirm...",
+        waitingPlayerConfirmMsg: "Waiting for {name} to confirm...",
+        secretWordLockedMsg: "🔒 {name} is describing a secret word",
+        secretWordGenericLocked: "🔒 Secret word",
+        roundBonusCardsLabel: "🎁 Round {n} bonus cards (revealed)",
+        bonusDescriberTag: "Describer bonus",
+        bonusGuesserTag: "Guesser bonus",
+        noWordsFoundThisRoundMsg: "No words found this round.",
+        cardsFoundThisRoundLabel: "📜 Cards found this round",
+        trophyFishPassedCount: "passed {n} times",
+        noRecordedWordsMsg: "No word recorded.",
+        finalTitle: "🎉 Game over!",
+        soloModeReminderTitle: "🕹️ {mode} mode reminder",
+        soloRole3PlayersMsg: "Each turn (timer), one player describes 🎤, another guesses 👂 and the third watches 💤 — roles rotate every turn, everyone plays all three roles.",
+        soloRole2PlayersMsg: "Each turn (timer), one player describes 🎤 and the other guesses 👂 — roles swap every turn.",
+        soloCardFoundPointsMsg: "A found card (the &quot;Found&quot; button) earns <strong>+1 point</strong> for BOTH the Describer and the Guesser.",
+        soloBonusCardsExplainMsg: "5 &quot;Describer Bonus&quot; cards and 5 &quot;Guesser Bonus&quot; cards were secretly drawn for this round: if one of them is found, it earns <strong>+3 extra points</strong> to whoever benefits from it — but nobody knows which ones until they're found or revealed at the end of the round.",
         },
         es: {
             subtitle: "Elige tu edición favorita",
@@ -5815,6 +6021,48 @@ const translations = {
         authResetBtn: "¿Olvidaste tu contraseña?",
         authModalSubLive: "Se necesita una cuenta para crear una sala (recupera automáticamente tu estado VIP en todos tus dispositivos, incluido Rush'Up!).",
         loginFooterBtn: "Iniciar sesión / Crear una cuenta",
+        authResetTitle: "Restablecer la contraseña",
+        authResetSub: "Indica tu email y tu fecha de nacimiento (la indicada al crear la cuenta) para definir una nueva contraseña, sin recibir ningún email.",
+        authResetSubmitBtn: "Restablecer contraseña",
+        authResetNewPasswordLabel: "Nueva contraseña",
+        authBackToLogin: "◀️ Volver a iniciar sesión",
+        authErrResetMissingFields: "Indica tu email y tu fecha de nacimiento.",
+        authErrResetMismatch: "Email o fecha de nacimiento incorrectos.",
+        authResetSuccess: "✅ Contraseña actualizada. Ya puedes iniciar sesión.",
+        accountPasswordHidden: "•••• (vuelve a iniciar sesión para mostrarla)",
+        accountLogoutBtn: "Cerrar sesión",
+        enterNameMsg: "Indica tu nombre.",
+        enterRoomCodeMsg: "Indica el código de la sala.",
+        activatingCameraMsg: "Activando la cámara...",
+        cameraAccessErrorMsg: "No se puede acceder a la cámara/micrófono. Comprueba los permisos del navegador.",
+        connectingRoomMsg: "Conectando a la sala...",
+        connectRoomErrorMsg: "No se puede conectar a la sala. Comprueba tu configuración de Supabase.",
+        yesLabel: "Sí",
+        noLabel: "No",
+        teamAbbr: "Eq.",
+        chooseVibeLabel: "Elige tu Vibe",
+        youDescriberLabel: "Tú (Descriptor)",
+        youGuesserLabel: "Tú (Adivinador)",
+        describingSuffix: "está describiendo",
+        observingThisTurnLabel: "Observando este turno",
+        teamPlayersLabel: "Jugadores del equipo {n}: {names}",
+        yourTurnToGuessMsg: "¡Es tu turno de adivinar! Esperando a que {name} confirme...",
+        waitingPlayerConfirmMsg: "Esperando a que {name} confirme...",
+        secretWordLockedMsg: "🔒 {name} está describiendo una palabra secreta",
+        secretWordGenericLocked: "🔒 Palabra secreta",
+        roundBonusCardsLabel: "🎁 Cartas bonus de la ronda {n} (reveladas)",
+        bonusDescriberTag: "bonus Descriptor",
+        bonusGuesserTag: "bonus Adivinador",
+        noWordsFoundThisRoundMsg: "Ninguna palabra encontrada esta ronda.",
+        cardsFoundThisRoundLabel: "📜 Cartas encontradas esta ronda",
+        trophyFishPassedCount: "pasada {n} veces",
+        noRecordedWordsMsg: "Ninguna palabra registrada.",
+        finalTitle: "🎉 ¡Partida terminada!",
+        soloModeReminderTitle: "🕹️ Recordatorio del modo {mode}",
+        soloRole3PlayersMsg: "En cada turno (cronómetro), un jugador describe 🎤, otro adivina 👂 y el tercero observa 💤 — los roles rotan en cada turno, todos juegan los tres roles.",
+        soloRole2PlayersMsg: "En cada turno (cronómetro), un jugador describe 🎤 y el otro adivina 👂 — los roles se intercambian en cada turno.",
+        soloCardFoundPointsMsg: "Una carta encontrada (botón «Encontrada») otorga <strong>+1 punto</strong> tanto al Descriptor como al Adivinador.",
+        soloBonusCardsExplainMsg: "Se han sorteado en secreto 5 cartas «Bonus Descriptor» y 5 «Bonus Adivinador» para esta ronda: si se encuentra alguna, otorga <strong>+3 puntos extra</strong> a quien se beneficie — pero nadie sabe cuáles son hasta que se encuentran o se revelan al final de la ronda.",
         },
         zh: {
             subtitle: "选择你喜欢的版本",
@@ -6145,6 +6393,48 @@ const translations = {
         authResetBtn: "忘记密码？",
         authModalSubLive: "创建房间需要账户（该账户会在你所有设备上自动恢复VIP状态，包括在 Rush'Up! 上）。",
         loginFooterBtn: "登录 / 创建账户",
+        authResetTitle: "重置密码",
+        authResetSub: "请输入你的邮箱和出生日期（创建账户时填写的那个），即可设置新密码，无需接收任何邮件。",
+        authResetSubmitBtn: "重置密码",
+        authResetNewPasswordLabel: "新密码",
+        authBackToLogin: "◀️ 返回登录",
+        authErrResetMissingFields: "请输入你的邮箱和出生日期。",
+        authErrResetMismatch: "邮箱或出生日期不正确。",
+        authResetSuccess: "✅ 密码已更新，你现在可以登录了。",
+        accountPasswordHidden: "••••（重新登录后可显示）",
+        accountLogoutBtn: "退出登录",
+        enterNameMsg: "请输入你的名字。",
+        enterRoomCodeMsg: "请输入房间代码。",
+        activatingCameraMsg: "正在启动摄像头……",
+        cameraAccessErrorMsg: "无法访问摄像头/麦克风，请检查浏览器权限。",
+        connectingRoomMsg: "正在连接房间……",
+        connectRoomErrorMsg: "无法连接房间，请检查你的 Supabase 配置。",
+        yesLabel: "是",
+        noLabel: "否",
+        teamAbbr: "队",
+        chooseVibeLabel: "选择你的 Vibe",
+        youDescriberLabel: "你（描述者）",
+        youGuesserLabel: "你（猜词者）",
+        describingSuffix: "正在描述",
+        observingThisTurnLabel: "本回合观战",
+        teamPlayersLabel: "{n}队玩家：{names}",
+        yourTurnToGuessMsg: "轮到你猜词了！等待{name}确认……",
+        waitingPlayerConfirmMsg: "等待{name}确认……",
+        secretWordLockedMsg: "🔒 {name}正在描述一个秘密词语",
+        secretWordGenericLocked: "🔒 秘密词语",
+        roundBonusCardsLabel: "🎁 第{n}回合的奖励卡（已揭晓）",
+        bonusDescriberTag: "描述者奖励",
+        bonusGuesserTag: "猜词者奖励",
+        noWordsFoundThisRoundMsg: "本回合没有猜中任何词语。",
+        cardsFoundThisRoundLabel: "📜 本回合猜中的卡片",
+        trophyFishPassedCount: "跳过了{n}次",
+        noRecordedWordsMsg: "没有记录任何词语。",
+        finalTitle: "🎉 游戏结束！",
+        soloModeReminderTitle: "🕹️ {mode} 模式提醒",
+        soloRole3PlayersMsg: "每个回合（计时）由一名玩家描述🎤，另一名猜词👂，第三名观战💤——角色每回合轮换，每个人都会体验这三种角色。",
+        soloRole2PlayersMsg: "每个回合（计时）由一名玩家描述🎤，另一名猜词👂——角色每回合互换。",
+        soloCardFoundPointsMsg: "猜中一张卡片（点击「猜中」按钮）会为描述者和猜词者各加<strong>1分</strong>。",
+        soloBonusCardsExplainMsg: "本回合已秘密抽取5张「描述者奖励」卡和5张「猜词者奖励」卡：若其中一张被猜中，受益者将额外获得<strong>3分</strong>——但在被猜中或回合结束揭晓之前，没有人知道具体是哪几张。",
         }
     };
 
@@ -6296,7 +6586,7 @@ const translations = {
                     <div class="theme-row-title">${meta.emoji} ${escapeHtml(title)}${!freeThemes.has(meta.key) ? ' <span class="vip-crown">👑</span>' : ''}</div>
                     <div class="theme-row-desc">${escapeHtml(desc)}</div>
                 </div>
-                <button type="button" class="theme-toggle-btn${selectedThemes.has(meta.key) ? ' on' : ''}${locked ? ' locked-btn' : ''}" id="theme-toggle-${meta.key}" onclick="toggleThemeSelection('${meta.key}')">${locked ? '👑' : (selectedThemes.has(meta.key) ? 'Oui' : 'Non')}</button>
+                <button type="button" class="theme-toggle-btn${selectedThemes.has(meta.key) ? ' on' : ''}${locked ? ' locked-btn' : ''}" id="theme-toggle-${meta.key}" onclick="toggleThemeSelection('${meta.key}')">${locked ? '👑' : (selectedThemes.has(meta.key) ? (t.yesLabel || 'Oui') : (t.noLabel || 'Non'))}</button>
             </div>`;
         }).join('');
         updateThemeMultiMsg();
@@ -6459,7 +6749,7 @@ const translations = {
             // Mode 1v1 / 1v1v1 : pas d'équipes, juste la liste des joueurs présents.
             document.getElementById('solo-mode-title').innerText = isConfigPlayerCount === 3 ? (t.soloMode1v1v1Title || 'Mode 1 contre 1 contre 1') : (t.soloMode1v1Title || 'Mode 1 contre 1');
             soloPreview.innerHTML = ids.map(id =>
-                `<div class="team-preview-row"><span>${escapeHtml(presentPlayers[id] || '—')}${id === myId ? ' (toi)' : ''}</span></div>`
+                `<div class="team-preview-row"><span>${escapeHtml(presentPlayers[id] || '—')}${id === myId ? ' ' + (t.youTag || '(toi)') : ''}</span></div>`
             ).join('') || `<div class="team-group-empty">${t.noPlayersMsg || 'Aucun joueur'}</div>`;
             updateVideoTileLabels();
 
@@ -6497,17 +6787,19 @@ const translations = {
         // Regroupe visuellement les joueurs par équipe ; un bouton par équipe pour une assignation directe
         let html = '';
         let hasEmptyTeam = false;
-        for (let t = 1; t <= isConfigTeamCount; t++) {
-            const members = ids.filter(id => configTeamAssignments[id] === t);
+        for (let tm = 1; tm <= isConfigTeamCount; tm++) {
+            const members = ids.filter(id => configTeamAssignments[id] === tm);
             if (members.length < 2) hasEmptyTeam = true;
-            html += `<div class="team-group"><div class="team-group-title">Équipe ${t}${members.length < 2 ? ' ⚠️ min. 2 joueurs' : ''}</div>`;
+            const teamLabel = `${t.team || 'Équipe'} ${tm}`;
+            const minWarning = members.length < 2 ? ` ${t.teamEmptyTag || '⚠️ vide'}` : '';
+            html += `<div class="team-group"><div class="team-group-title">${teamLabel}${minWarning}</div>`;
             html += members.map(id => {
                 const name = presentPlayers[id] || '—';
                 const teamButtons = Array.from({ length: isConfigTeamCount }, (_, i) => i + 1).map(n =>
-                    `<button type="button" class="team-pick-btn${n === t ? ' active' : ''}" onclick="assignPlayerTeam('${id}', ${n})">${n}</button>`
+                    `<button type="button" class="team-pick-btn${n === tm ? ' active' : ''}" onclick="assignPlayerTeam('${id}', ${n})">${n}</button>`
                 ).join('');
-                return `<div class="team-preview-row"><span>${escapeHtml(name)}${id === myId ? ' (toi)' : ''}</span><span class="team-pick-group">${teamButtons}</span></div>`;
-            }).join('') || '<div class="team-group-empty">Aucun joueur</div>';
+                return `<div class="team-preview-row"><span>${escapeHtml(name)}${id === myId ? ' ' + (t.youTag || '(toi)') : ''}</span><span class="team-pick-group">${teamButtons}</span></div>`;
+            }).join('') || `<div class="team-group-empty">${t.noPlayersMsg || 'Aucun joueur'}</div>`;
             html += `</div>`;
         }
         preview.innerHTML = html;
@@ -6515,11 +6807,11 @@ const translations = {
         if (ids.length !== isConfigPlayerCount) {
             startBtn.disabled = true;
             status.innerText = ids.length < isConfigPlayerCount
-                ? 'En attente des joueurs restants...'
-                : "Trop de joueurs sont connectés : augmente le nombre de joueurs visé, ou fais partir les joueurs en trop.";
+                ? (t.waitingRemainingPlayersMsg || 'En attente des joueurs restants...')
+                : (t.tooManyPlayersHint || "Trop de joueurs sont connectés : augmente le nombre de joueurs visé, ou fais partir les joueurs en trop.");
         } else if (hasEmptyTeam) {
             startBtn.disabled = true;
-            status.innerText = 'Chaque équipe doit avoir au moins 2 joueurs.';
+            status.innerText = t.startBlockedEmptyTeam || 'Chaque équipe doit avoir au moins 2 joueurs.';
         } else {
             status.innerText = '';
             updateStartButtonThemeState(); // grise le bouton + message si aucune thématique cochée
@@ -7174,15 +7466,16 @@ const translations = {
             document.getElementById('round-intro-host-btn-wrap').querySelector('button').innerText = t.btnStartRound || '🚀 Démarrer la manche';
             const soloRules = document.getElementById('round-intro-solo-rules');
             if (state.mode === 'solo') {
-                const roleLine = state.soloRoster && state.soloRoster.length >= 3
-                    ? 'À chaque tour (chrono), un joueur décrit 🎤, un autre devine 👂 et le troisième observe 💤 — les rôles tournent à chaque chrono, tout le monde joue les trois rôles.'
-                    : 'À chaque tour (chrono), un joueur décrit 🎤 et l\'autre devine 👂 — les rôles s\'échangent à chaque chrono.';
+                const is3p = state.soloRoster && state.soloRoster.length >= 3;
+                const roleLine = is3p
+                    ? (t.soloRole3PlayersMsg || 'À chaque tour (chrono), un joueur décrit 🎤, un autre devine 👂 et le troisième observe 💤 — les rôles tournent à chaque chrono, tout le monde joue les trois rôles.')
+                    : (t.soloRole2PlayersMsg || "À chaque tour (chrono), un joueur décrit 🎤 et l'autre devine 👂 — les rôles s'échangent à chaque chrono.");
                 soloRules.style.display = 'block';
                 soloRules.innerHTML = `
-                    <strong>🕹️ Rappel du mode ${state.soloRoster && state.soloRoster.length >= 3 ? '1v1v1' : '1v1'}</strong><br>
+                    <strong>${(t.soloModeReminderTitle || '🕹️ Rappel du mode {mode}').replace('{mode}', is3p ? '1v1v1' : '1v1')}</strong><br>
                     ${roleLine}<br>
-                    Une carte trouvée (bouton « Trouver ») rapporte <strong>+1 point</strong> au Descripteur ET au Devineur.<br>
-                    5 cartes « Bonus Descripteur » et 5 « Bonus Devineur » ont été tirées en secret pour cette manche : si l'une d'elles est trouvée, elle rapporte <strong>+3 points de plus</strong> à celui qui en bénéficie — mais personne ne sait lesquelles avant de les trouver ou avant la révélation en fin de manche.
+                    ${t.soloCardFoundPointsMsg || 'Une carte trouvée (bouton « Trouver ») rapporte <strong>+1 point</strong> au Descripteur ET au Devineur.'}<br>
+                    ${t.soloBonusCardsExplainMsg || "5 cartes « Bonus Descripteur » et 5 « Bonus Devineur » ont été tirées en secret pour cette manche : si l'une d'elles est trouvée, elle rapporte <strong>+3 points de plus</strong> à celui qui en bénéficie — mais personne ne sait lesquelles avant de les trouver ou avant la révélation en fin de manche."}
                 `;
             } else {
                 soloRules.style.display = 'none';
@@ -7195,6 +7488,7 @@ const translations = {
 
         if (state.phase === 'playing') {
             document.getElementById('game-active-view').style.display = 'block';
+            const tp = translations[currentLang] || translations['en'];
 
             document.getElementById('round-pill').innerText = (translations[currentLang] && translations[currentLang].rounds && translations[currentLang].rounds[state.round]) || ROUND_INFO[state.round].title;
 
@@ -7219,23 +7513,25 @@ const translations = {
                 document.getElementById('turn-active-view').style.display = 'none';
                 document.getElementById('turn-confirm-name').innerText = activeName;
                 if (isSolo) {
-                    document.getElementById('turn-confirm-team').innerText = '🎤 Descripteur';
-                    let teammatesText = `👂 Devineur : ${guesserName}`;
-                    if (idleName) teammatesText += ` · 💤 Observe ce tour : ${idleName}`;
+                    document.getElementById('turn-confirm-team').innerText = `🎤 ${tp.describerLabel || 'Descripteur'}`;
+                    let teammatesText = `👂 ${tp.guesserLabel || 'Devineur'} : ${guesserName}`;
+                    if (idleName) teammatesText += ` · 💤 ${tp.observingThisTurnLabel || 'Observe ce tour'} : ${idleName}`;
                     document.getElementById('turn-confirm-teammates').innerText = teammatesText;
                 } else {
-                    document.getElementById('turn-confirm-team').innerText = `Équipe ${activeTeamNum}`;
+                    document.getElementById('turn-confirm-team').innerText = `${tp.team || 'Équipe'} ${activeTeamNum}`;
                     const teammates = (state.teamRosters && state.teamRosters[activeTeamNum]) ? state.teamRosters[activeTeamNum]
                         .map(id => presentPlayers[id] || remoteNames[id] || (id === myId ? myName : '?'))
                         .join(', ') : '';
-                    document.getElementById('turn-confirm-teammates').innerText = teammates ? `Joueurs de l'équipe ${activeTeamNum} : ${teammates}` : '';
+                    document.getElementById('turn-confirm-teammates').innerText = teammates
+                        ? (tp.teamPlayersLabel || "Joueurs de l'équipe {n} : {names}").replace('{n}', activeTeamNum).replace('{names}', teammates)
+                        : '';
                 }
                 document.getElementById('turn-confirm-ready-btn').style.display = isMyTurn ? 'block' : 'none';
                 const waitText = document.getElementById('turn-confirm-wait-text');
                 waitText.style.display = isMyTurn ? 'none' : 'block';
                 waitText.innerText = isMyGuessTurn
-                    ? `C'est à toi de deviner ! En attente que ${activeName} confirme...`
-                    : `En attente que ${activeName} confirme...`;
+                    ? (tp.yourTurnToGuessMsg || "C'est à toi de deviner ! En attente que {name} confirme...").replace('{name}', activeName)
+                    : (tp.waitingPlayerConfirmMsg || 'En attente que {name} confirme...').replace('{name}', activeName);
                 if (gameTimerRAF) cancelAnimationFrame(gameTimerRAF);
                 currentStreak = 0;
                 clearTimeout(actionLockFailsafe);
@@ -7256,18 +7552,18 @@ const translations = {
 
             if (isSolo) {
                 if (isMyTurn) {
-                    document.getElementById('active-player-name').innerText = '🎤 Toi (Descripteur)';
-                    document.getElementById('active-team-name').innerText = `👂 Devineur : ${guesserName}`;
+                    document.getElementById('active-player-name').innerText = `🎤 ${tp.youDescriberLabel || 'Toi (Descripteur)'}`;
+                    document.getElementById('active-team-name').innerText = `👂 ${tp.guesserLabel || 'Devineur'} : ${guesserName}`;
                 } else if (isMyGuessTurn) {
-                    document.getElementById('active-player-name').innerText = `👂 Toi (Devineur)`;
-                    document.getElementById('active-team-name').innerText = `🎤 ${activeName} décrit`;
+                    document.getElementById('active-player-name').innerText = `👂 ${tp.youGuesserLabel || 'Toi (Devineur)'}`;
+                    document.getElementById('active-team-name').innerText = `🎤 ${activeName} ${tp.describingSuffix || 'décrit'}`;
                 } else {
                     document.getElementById('active-player-name').innerText = `🎤 ${activeName}`;
-                    document.getElementById('active-team-name').innerText = `👂 Devineur : ${guesserName}`;
+                    document.getElementById('active-team-name').innerText = `👂 ${tp.guesserLabel || 'Devineur'} : ${guesserName}`;
                 }
             } else {
                 document.getElementById('active-player-name').innerText = `🎤 ${activeName}`;
-                document.getElementById('active-team-name').innerText = `Équipe ${activeTeamNum}`;
+                document.getElementById('active-team-name').innerText = `${tp.team || 'Équipe'} ${activeTeamNum}`;
             }
 
             document.getElementById('game-action-btns').style.display = (isMyTurn && !state.isPaused) ? 'grid' : 'none';
@@ -7293,8 +7589,7 @@ const translations = {
                 if (pauseWaitHint) pauseWaitHint.style.display = isMyTurn ? 'none' : 'block';
                 const undoLabel = document.getElementById('undo-choice-label');
                 if (undoLabel) {
-                    const t = translations[currentLang] || translations['en'];
-                    const tpl = t.undoChoiceLabel || 'Annuler le dernier mot trouvé : « {word} »';
+                    const tpl = tp.undoChoiceLabel || 'Annuler le dernier mot trouvé : « {word} »';
                     undoLabel.innerText = (state.hasUndo && state.lastFoundActionWord) ? tpl.replace('{word}', state.lastFoundActionWord) : '';
                 }
             } else {
@@ -7305,7 +7600,9 @@ const translations = {
             const wordCard = document.getElementById('word-card');
             if (!isMyTurn) {
                 wordCard.classList.add('locked');
-                wordCard.innerText = isMyGuessTurn ? `🔒 ${activeName} décrit un mot secret` : '🔒 Mot secret';
+                wordCard.innerText = isMyGuessTurn
+                    ? (tp.secretWordLockedMsg || '🔒 {name} décrit un mot secret').replace('{name}', activeName)
+                    : (tp.secretWordGenericLocked || '🔒 Mot secret');
             }
 
             if (!isMyTurn) currentStreak = 0;
@@ -7394,6 +7691,7 @@ const translations = {
 
     function renderScoreboard(scores, numTeams, targetId) {
         const el = document.getElementById(targetId);
+        const tt = translations[currentLang] || translations['en'];
         const myTeam = gameState.teamRosters ? Object.keys(gameState.teamRosters).find(t => gameState.teamRosters[t].includes(myId)) : null;
         let html = '';
         for (let t = 1; t <= numTeams; t++) {
@@ -7401,7 +7699,7 @@ const translations = {
             const members = gameState.teamRosters && gameState.teamRosters[t]
                 ? gameState.teamRosters[t].map(id => escapeHtml(presentPlayers[id] || remoteNames[id] || (id === myId ? myName : '?'))).join(', ')
                 : '';
-            html += `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>Équipe ${t}${mine ? ' (toi)' : ''}${members ? ` — ${members}` : ''}</span><span class="pts">${scores[t] || 0}</span></div>`;
+            html += `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>${tt.team || 'Équipe'} ${t}${mine ? ' ' + (tt.youTag || '(toi)') : ''}${members ? ` — ${members}` : ''}</span><span class="pts">${scores[t] || 0}</span></div>`;
         }
         el.innerHTML = html;
     }
@@ -7410,11 +7708,12 @@ const translations = {
     // meilleur score au plus faible.
     function renderSoloScoreboard(scores, roster, targetId) {
         const el = document.getElementById(targetId);
+        const tt = translations[currentLang] || translations['en'];
         const sorted = [...(roster || [])].sort((a, b) => (scores[b] || 0) - (scores[a] || 0));
         el.innerHTML = sorted.map(id => {
             const mine = id === myId;
             const name = escapeHtml(presentPlayers[id] || remoteNames[id] || (mine ? myName : '?'));
-            return `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>${name}${mine ? ' (toi)' : ''}</span><span class="pts">${scores[id] || 0}</span></div>`;
+            return `<div class="scoreboard-row${mine ? ' mine' : ''}"><span>${name}${mine ? ' ' + (tt.youTag || '(toi)') : ''}</span><span class="pts">${scores[id] || 0}</span></div>`;
         }).join('');
     }
 
@@ -7429,6 +7728,7 @@ const translations = {
             el.innerHTML = '';
             return;
         }
+        const t = translations[currentLang] || translations['en'];
         el.style.display = 'block';
         const reveal = state.roundBonusReveal;
         // Diffusée par l'hôte à tout le monde dans reveal.foundWords (jamais lue depuis
@@ -7438,21 +7738,21 @@ const translations = {
 
         const bonusHtml = `
             <div class="config-group">
-                <label>🎁 Cartes bonus de la manche ${reveal.round} (révélées)</label>
+                <label>${(t.roundBonusCardsLabel || '🎁 Cartes bonus de la manche {n} (révélées)').replace('{n}', reveal.round)}</label>
                 <div class="checkbox-hint" style="margin-left:0;">
-                    <strong>Bonus Descripteur (+3 pts) :</strong> ${reveal.describerBonus.map(escapeHtml).join(', ') || '—'}<br>
-                    <strong>Bonus Devineur (+3 pts) :</strong> ${reveal.guesserBonus.map(escapeHtml).join(', ') || '—'}
+                    <strong>${t.soloBonusRevealDescriberLabel || 'Bonus Descripteur (+3 pts) :'}</strong> ${reveal.describerBonus.map(escapeHtml).join(', ') || '—'}<br>
+                    <strong>${t.soloBonusRevealGuesserLabel || 'Bonus Devineur (+3 pts) :'}</strong> ${reveal.guesserBonus.map(escapeHtml).join(', ') || '—'}
                 </div>
             </div>`;
 
         const recapHtml = roundWords.length ? roundWords.map(e => {
-            const bonusTag = e.bonus === 'describer' ? ' 🎁 (bonus Descripteur)' : (e.bonus === 'guesser' ? ' 🎁 (bonus Devineur)' : '');
+            const bonusTag = e.bonus === 'describer' ? ` 🎁 (${t.bonusDescriberTag || 'bonus Descripteur'})` : (e.bonus === 'guesser' ? ` 🎁 (${t.bonusGuesserTag || 'bonus Devineur'})` : '');
             return `<div class="recap-row"><span>${escapeHtml(e.word)}${bonusTag}</span><span>🎤 ${nameOf(e.describerId)} · 👂 ${nameOf(e.guesserId)}</span></div>`;
-        }).join('') : '<div class="recap-row"><span>Aucun mot trouvé cette manche.</span></div>';
+        }).join('') : `<div class="recap-row"><span>${t.noWordsFoundThisRoundMsg || 'Aucun mot trouvé cette manche.'}</span></div>`;
 
         el.innerHTML = bonusHtml + `
             <div class="config-group">
-                <label>📜 Cartes trouvées cette manche</label>
+                <label>${t.cardsFoundThisRoundLabel || '📜 Cartes trouvées cette manche'}</label>
                 <div class="word-recap-body open">${recapHtml}</div>
             </div>`;
     }
@@ -7556,38 +7856,42 @@ const translations = {
 
     function renderFinalSummary(summary) {
         renderAdvancedStats(summary);
+        const t = translations[currentLang] || translations['en'];
+        const tgvWordsUnit = t.kpiWordsFound || 'mots';
         document.getElementById('trophies-container').innerHTML = `
             <div class="trophy-card">
                 <div class="trophy-icon">🚄</div>
                 <div class="trophy-details">
-                    <span class="trophy-title">Le TGV</span>
-                    <span class="trophy-winner">${summary.tgv ? `${summary.tgv.name} (${summary.tgv.count} mots)` : '—'}</span>
-                    <span class="trophy-desc">Plus grand nombre de mots devinés en un seul tour !</span>
+                    <span class="trophy-title">${(t.trophyTgvTitle || 'Le TGV 🚄').replace(' 🚄', '')}</span>
+                    <span class="trophy-winner">${summary.tgv ? `${summary.tgv.name} (${summary.tgv.count} ${tgvWordsUnit})` : '—'}</span>
+                    <span class="trophy-desc">${t.trophyTgvDesc || 'Plus grand nombre de mots devinés en un seul tour !'}</span>
                 </div>
             </div>
             <div class="trophy-card">
                 <div class="trophy-icon">🧠</div>
                 <div class="trophy-details">
-                    <span class="trophy-title">Le Cerveau</span>
+                    <span class="trophy-title">${(t.trophyBrainTitle || 'Le Cerveau 🧠').replace(' 🧠', '')}</span>
                     <span class="trophy-winner">${summary.brain ? `${summary.brain.name}<br><small style="color:var(--text-muted);">${summary.brain.detail}</small>` : '—'}</span>
-                    <span class="trophy-desc">Meilleur ratio mots trouvés / mots passés !</span>
+                    <span class="trophy-desc">${t.trophyBrainDesc || 'Meilleur ratio mots trouvés / mots passés !'}</span>
                 </div>
             </div>
             <div class="trophy-card">
                 <div class="trophy-icon">🐟</div>
                 <div class="trophy-details">
-                    <span class="trophy-title">Le Poisson Rouge</span>
-                    <span class="trophy-winner">${summary.fish ? `${summary.fish.word} (passé ${summary.fish.count} fois)` : '—'}</span>
-                    <span class="trophy-desc">Le mot le plus souvent passé de la partie !</span>
+                    <span class="trophy-title">${(t.trophyFishTitle || 'Le Poisson Rouge 🐟').replace(' 🐟', '')}</span>
+                    <span class="trophy-winner">${summary.fish ? `${summary.fish.word} (${(t.trophyFishPassedCount || 'passé {n} fois').replace('{n}', summary.fish.count)})` : '—'}</span>
+                    <span class="trophy-desc">${t.trophyFishDesc || 'Le mot le plus souvent passé de la partie !'}</span>
                 </div>
             </div>
         `;
 
         const recapEl = document.getElementById('word-recap-body');
+        const roundWord = t.recapRoundTh || 'Manche';
+        const teamWord = t.recapTeamTh || 'Équipe';
         recapEl.innerHTML = summary.wordLog.map(e => summary.mode === 'solo'
-            ? `<div class="recap-row"><span>${e.bonus ? '🎁 ' : ''}${e.word}</span><span>Manche ${e.round} · 🎤 ${e.describerName} · 👂 ${e.guesserName}</span></div>`
-            : `<div class="recap-row"><span>${e.joker ? '🃏 ' : ''}${e.word}</span><span>Manche ${e.round} · Équipe ${e.team} · ${e.playerName}</span></div>`
-        ).join('') || '<div class="recap-row"><span>Aucun mot enregistré.</span></div>';
+            ? `<div class="recap-row"><span>${e.bonus ? '🎁 ' : ''}${e.word}</span><span>${roundWord} ${e.round} · 🎤 ${e.describerName} · 👂 ${e.guesserName}</span></div>`
+            : `<div class="recap-row"><span>${e.joker ? '🃏 ' : ''}${e.word}</span><span>${roundWord} ${e.round} · ${teamWord} ${e.team} · ${e.playerName}</span></div>`
+        ).join('') || `<div class="recap-row"><span>${t.noRecordedWordsMsg || 'Aucun mot enregistré.'}</span></div>`;
     }
 
     function toggleWordRecap() {
