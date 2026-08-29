@@ -165,6 +165,8 @@
         padding: 12px 14px;
         color: var(--text-main);
         font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .config-group input:focus {
@@ -262,9 +264,26 @@
     .screen.active { display: flex; flex-direction: column; align-items: center; }
 
     /* Écrans "Comment veux-tu jouer" / Créer / Rejoindre : contenu centré (titre, texte du
-       rappel de règles, boutons), comme demandé explicitement. */
+       rappel de règles, boutons), comme demandé explicitement. Les deux encarts "Créer" et
+       "Rejoindre" doivent faire exactement la même largeur : valeur fixe identique plutôt que
+       de dépendre implicitement du même héritage de .card, pour éviter tout écart de rendu. */
     #entry-choice-card, #create-form-card, #join-form-card {
         text-align: center;
+        width: 100%;
+        max-width: 420px;
+        box-sizing: border-box;
+    }
+    /* Cause racine du décalage de largeur Créer/Rejoindre : ce conteneur n'a pas de largeur
+       propre, donc en tant qu'enfant flex avec align-items:center (pas stretch), il se
+       redimensionne au contenu de la SEULE carte visible à un instant donné (les autres sont en
+       display:none) — d'où une largeur différente selon que le bouton "Créer le salon (tu seras
+       l'hôte)" (long) ou "Rejoindre" (court) est affiché. Lui donner une largeur explicite fixe
+       ce calcul une bonne fois pour toutes, indépendamment du contenu actuellement visible. */
+    #entry-choice-view {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     #entry-choice-card .rules-recap,
     #entry-choice-card .rules-recap-steps,
@@ -2594,10 +2613,10 @@
 <!-- Confirmation (fond flouté) avant de recommencer une nouvelle partie sur un autre thème -->
 <div id="restart-confirm-modal" class="modal-overlay">
     <div class="modal-card">
-        <p>Relancer une nouvelle partie sur un autre thème ? La partie en cours sera arrêtée pour tout le monde.</p>
+        <p id="restart-confirm-text">Relancer une nouvelle partie sur un autre thème ? La partie en cours sera arrêtée pour tout le monde.</p>
         <div class="modal-btn-row">
-            <button type="button" class="btn btn-secondary" onclick="closeRestartConfirmModal()">Annuler</button>
-            <button type="button" class="btn btn-primary" onclick="doRestartToConfig()">Relancer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeRestartConfirmModal()" id="restart-confirm-cancel-btn">Annuler</button>
+            <button type="button" class="btn btn-primary" onclick="doRestartToConfig()" id="restart-confirm-confirm-btn">Relancer</button>
         </div>
     </div>
 </div>
@@ -2607,8 +2626,8 @@
     <div class="modal-card">
         <p id="leave-confirm-text">Es-tu sûr de vouloir quitter le salon ?</p>
         <div class="modal-btn-row">
-            <button type="button" class="btn btn-secondary" onclick="closeLeaveConfirmModal()">Annuler</button>
-            <button type="button" class="btn btn-primary" onclick="doLeaveRoom()">Quitter</button>
+            <button type="button" class="btn btn-secondary" onclick="closeLeaveConfirmModal()" id="leave-confirm-cancel-btn">Annuler</button>
+            <button type="button" class="btn btn-primary" onclick="doLeaveRoom()" id="leave-confirm-confirm-btn">Quitter</button>
         </div>
     </div>
 </div>
@@ -2620,13 +2639,12 @@
         <span class="modal-close-cross" onclick="document.getElementById('ios-install-modal').classList.remove('active')">✖</span>
         <div class="modal-icon">📲</div>
         <div class="modal-title" id="ios-modal-title">Install on iPhone / iPad</div>
-        <div class="modal-body" style="text-align:left; font-size:0.88rem; line-height:1.6;">
+        <div class="modal-body" id="ios-modal-body" style="text-align:left; font-size:0.88rem; line-height:1.6;">
             <p>1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).</p>
-            <p>2. Appuie sur l'icône <strong>Partager</strong> (le carré avec une flèche vers le haut), en bas de l'écran.</p>
-            <p>3. Fais défiler et choisis <strong>« Sur l'écran d'accueil »</strong>.</p>
-            <p>4. Confirme avec <strong>Ajouter</strong>. L'icône Rush'Up! Live apparaît alors sur ton écran d'accueil.</p>
+            <p>2. Appuie sur le bouton <strong>Partager ⎋</strong> en bas de ton navigateur Safari.</p>
+            <p>3. Défile vers le bas et sélectionne <strong>Sur l'écran d'accueil ⊕</strong>.</p>
         </div>
-        <button class="btn btn-primary" onclick="document.getElementById('ios-install-modal').classList.remove('active')">OK</button>
+        <button class="btn btn-primary" id="ios-modal-ok-btn" onclick="document.getElementById('ios-install-modal').classList.remove('active')">OK</button>
     </div>
 </div>
 
@@ -2651,43 +2669,43 @@
         <button type="button" class="vibe-modal-close" onclick="closeVipModal()" aria-label="Fermer">✕</button>
 
         <div id="vip-modal-locked-body">
-            <div class="vip-modal-title">👑 Passe VIP</div>
+            <div class="vip-modal-title" id="vip-modal-title">👑 Passe VIP</div>
             <p class="vip-modal-sub" id="vip-modal-reason">Débloque les salons jusqu'à 24 joueurs et toutes les thématiques.</p>
 
             <div class="vip-offers">
                 <div class="vip-offer-card">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name">⏱️ Pass 24h</span>
+                        <span class="vip-offer-name" id="vip-offer-24h-name">⏱️ Pass 24h</span>
                         <span class="vip-offer-price">1,99 €</span>
                     </div>
-                    <p class="vip-offer-desc">Accès VIP complet pendant 24h. Idéal pour une soirée.</p>
-                    <button type="button" class="btn btn-secondary" onclick="startOneTimePurchase('pass_24h')">Payer avec PayPal</button>
+                    <p class="vip-offer-desc" id="vip-offer-24h-desc">Accès VIP complet pendant 24h. Idéal pour une soirée.</p>
+                    <button type="button" class="btn btn-secondary" id="vip-offer-24h-btn" onclick="startOneTimePurchase('pass_24h')">Payer avec PayPal</button>
                 </div>
 
                 <div class="vip-offer-card highlight">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name">🔁 Abonnement mensuel</span>
+                        <span class="vip-offer-name" id="vip-offer-monthly-name">🔁 Abonnement mensuel</span>
                         <span class="vip-offer-price">3,99 €/mois</span>
                     </div>
-                    <p class="vip-offer-desc">VIP tant que l'abonnement est actif. Résiliable à tout moment depuis PayPal.</p>
+                    <p class="vip-offer-desc" id="vip-offer-monthly-desc">VIP tant que l'abonnement est actif. Résiliable à tout moment depuis PayPal.</p>
                     <div id="paypal-monthly-btn-container"></div>
                 </div>
 
                 <div class="vip-offer-card">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name">♾️ Accès à vie</span>
+                        <span class="vip-offer-name" id="vip-offer-lifetime-name">♾️ Accès à vie</span>
                         <span class="vip-offer-price">14,99 €</span>
                     </div>
-                    <p class="vip-offer-desc">Paiement unique, VIP à vie sur cet appareil.</p>
-                    <button type="button" class="btn btn-secondary" onclick="startOneTimePurchase('lifetime')">Payer avec PayPal</button>
+                    <p class="vip-offer-desc" id="vip-offer-lifetime-desc">Paiement unique, VIP à vie sur cet appareil.</p>
+                    <button type="button" class="btn btn-secondary" id="vip-offer-lifetime-btn" onclick="startOneTimePurchase('lifetime')">Payer avec PayPal</button>
                 </div>
             </div>
 
             <div class="config-group">
-                <label>🎟️ Un code promo ?</label>
+                <label id="vip-promo-label">🎟️ Un code promo ?</label>
                 <div class="vip-promo-row">
                     <input type="text" id="vip-promo-input" placeholder="EX: VIP-RUSHUP-2026" maxlength="40">
-                    <button type="button" class="btn btn-primary" style="width:auto;" onclick="redeemPromoCode()">Valider</button>
+                    <button type="button" class="btn btn-primary" style="width:auto;" id="vip-promo-btn" onclick="redeemPromoCode()">Valider</button>
                 </div>
             </div>
 
@@ -2695,19 +2713,19 @@
         </div>
 
         <div id="vip-modal-already-body" style="display:none;">
-            <div class="vip-modal-title">👑 Tu es VIP !</div>
+            <div class="vip-modal-title" id="vip-already-title">👑 Tu es VIP !</div>
             <div class="vip-already">
                 <p id="vip-already-detail">Accès VIP actif sur cet appareil.</p>
             </div>
             <div class="config-group">
-                <div class="checkbox-hint" style="margin-left:0;">Ton VIP est lié à ton compte <strong id="vip-account-email">—</strong>. Connecte-toi avec ce même compte sur un autre appareil pour le retrouver automatiquement, aucune action supplémentaire nécessaire.</div>
-                <button type="button" class="btn btn-secondary" style="margin-top:8px;" onclick="signOutAccount()">Se déconnecter</button>
+                <div class="checkbox-hint" style="margin-left:0;" id="vip-already-hint">Ton VIP est lié à ton compte <strong id="vip-account-email">—</strong>. Connecte-toi avec ce même compte sur un autre appareil pour le retrouver automatiquement, aucune action supplémentaire nécessaire.</div>
+                <button type="button" class="btn btn-secondary" style="margin-top:8px;" id="vip-already-signout-btn" onclick="signOutAccount()">Se déconnecter</button>
             </div>
             <div class="vip-modal-status" id="vip-already-status"></div>
         </div>
 
         <div class="modal-btn-row" style="margin-top:14px;">
-            <button type="button" class="btn btn-secondary" onclick="closeVipModal()">Fermer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeVipModal()" id="vip-modal-close-btn">Fermer</button>
         </div>
     </div>
 </div>
@@ -3160,7 +3178,7 @@
         currentLang = lang;
         localStorage.setItem('rushupLiveLang', lang);
         document.getElementById('lang-select-view').style.display = 'none';
-        document.getElementById('entry-choice-view').style.display = 'block';
+        document.getElementById('entry-choice-view').style.display = 'flex';
         document.body.classList.remove('on-landing');
         document.body.classList.add('pre-room');
         changeLanguage();
@@ -3266,6 +3284,8 @@
         setText('auth-password-label', t.authPasswordLabel);
         const authPasswordInput = document.getElementById('auth-password-input');
         if (authPasswordInput && t.authPasswordPlaceholder) authPasswordInput.placeholder = t.authPasswordPlaceholder;
+        const authResetNewPasswordInput = document.getElementById('auth-reset-newpassword-input');
+        if (authResetNewPasswordInput && t.authPasswordPlaceholder) authResetNewPasswordInput.placeholder = t.authPasswordPlaceholder;
         setText('auth-birthdate-label', t.authBirthdateLabel);
         setText('auth-birthdate-hint', t.authBirthdateHint);
         setText('auth-reset-btn', t.authResetBtn || 'Mot de passe oublié ?');
@@ -3273,6 +3293,42 @@
         setText('auth-reset-newpassword-label', t.authResetNewPasswordLabel || 'Nouveau mot de passe');
         if (document.getElementById('auth-modal')) applyAuthModeUI();
         setText('login-footer-btn', '🔐 ' + (t.loginFooterBtn || 'Se connecter / Créer un compte'));
+        // Modale VIP
+        setText('vip-modal-title', t.vipModalTitle || '👑 Passe VIP');
+        setText('vip-offer-24h-name', t.vipOffer24hName || '⏱️ Pass 24h');
+        setText('vip-offer-24h-desc', t.vipOffer24hDesc);
+        setText('vip-offer-24h-btn', t.vipPayPalBtn || 'Payer avec PayPal');
+        setText('vip-offer-monthly-name', t.vipOfferMonthlyName || '🔁 Abonnement mensuel');
+        setText('vip-offer-monthly-desc', t.vipOfferMonthlyDesc);
+        setText('vip-offer-lifetime-name', t.vipOfferLifetimeName || '♾️ Accès à vie');
+        setText('vip-offer-lifetime-desc', t.vipOfferLifetimeDesc);
+        setText('vip-offer-lifetime-btn', t.vipPayPalBtn || 'Payer avec PayPal');
+        setText('vip-promo-label', '🎟️ ' + (t.vipPromoLabel || 'Un code promo ?'));
+        setText('vip-promo-btn', t.vipPromoBtn || 'Valider');
+        setText('vip-modal-close-btn', t.vipModalCloseBtn || 'Fermer');
+        setText('vip-already-title', t.vipAlreadyTitle || '👑 Tu es VIP !');
+        setText('vip-already-signout-btn', t.vipAlreadySignoutBtn || 'Se déconnecter');
+        applyVipAlreadyHint();
+        // Confirmations (redémarrer / quitter le salon)
+        setText('restart-confirm-text', t.restartConfirmBody || 'Relancer une nouvelle partie sur un autre thème ? La partie en cours sera arrêtée pour tout le monde.');
+        setText('restart-confirm-cancel-btn', t.restartConfirmCancel || 'Annuler');
+        setText('restart-confirm-confirm-btn', t.restartConfirmConfirm || 'Relancer');
+        setText('leave-confirm-cancel-btn', t.restartConfirmCancel || 'Annuler');
+        setText('leave-confirm-confirm-btn', t.leaveConfirmBtn || 'Quitter');
+        if (document.getElementById('leave-confirm-text')) {
+            const inGame = gameState && gameState.phase !== 'lobby';
+            document.getElementById('leave-confirm-text').innerText = inGame
+                ? (t.leaveConfirmTextInGame || "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours.")
+                : (t.leaveConfirmText || "Es-tu sûr de vouloir quitter le salon ?");
+        }
+        // Installation iOS
+        setText('ios-modal-title', t.iosTitle || 'Install on iPhone / iPad');
+        const iosBody = document.getElementById('ios-modal-body');
+        if (iosBody) {
+            iosBody.innerHTML = `<p>${t.iosSafariOnlyStep || '1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).'}</p><p>${(t.iosStep1 || '').replace(/^1\./, '2.') || "2. Appuie sur le bouton <strong>Partager ⎋</strong> en bas de ton navigateur Safari."}</p><p>${(t.iosStep2 || '').replace(/^2\./, '3.') || "3. Défile vers le bas et sélectionne <strong>Sur l'écran d'accueil ⊕</strong>."}</p>`;
+        }
+        setText('ios-modal-ok-btn', t.iosGotIt || 'OK');
+        document.title = t.pageTitleLive || "Rush'Up! Live - Salon vidéo";
         setText('account-logout-btn', t.accountLogoutBtn || 'Déconnexion');
         renderAccountPassword();
         updateParticipantCount();
@@ -3549,7 +3605,10 @@
         const show = pwaInstallAvailable();
         ['pwa-install-btn-footer'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.style.display = show ? 'inline-flex' : 'none';
+            // 'block' (et non 'inline-flex') pour que le text-align:center de .btn-pwa-install
+            // s'applique bien — un display flex ignore text-align et a besoin d'un
+            // justify-content dédié, ce qui collait le texte à gauche.
+            if (el) el.style.display = show ? 'block' : 'none';
         });
         const hmenuBtn = document.getElementById('hmenu-item-install');
         if (hmenuBtn) hmenuBtn.style.display = show ? 'flex' : 'none';
@@ -3583,25 +3642,40 @@
             openAuthModal(() => openVipModal(reason));
             return;
         }
+        const t = translations[currentLang] || translations['en'];
         document.getElementById('vip-modal-status').innerText = '';
         document.getElementById('vip-modal-status').className = 'vip-modal-status';
-        document.getElementById('vip-modal-reason').innerText = reason ||
-            'Débloque les salons jusqu\'à 24 joueurs et toutes les thématiques.';
+        document.getElementById('vip-modal-reason').innerText = reason || (t.vipModalDefaultReason || "Débloque les salons jusqu'à 24 joueurs et toutes les thématiques.");
         const isVipNow = isVip();
         document.getElementById('vip-modal-locked-body').style.display = isVipNow ? 'none' : 'block';
         document.getElementById('vip-modal-already-body').style.display = isVipNow ? 'block' : 'none';
         if (isVipNow) {
             const detail = document.getElementById('vip-already-detail');
-            const planLabel = { pass_24h: 'Pass 24h', monthly: 'Abonnement mensuel', lifetime: 'Accès à vie' }[vipStatus.planType] || 'VIP';
+            const planNames = t.vipPlanNames || { pass_24h: 'Pass 24h', monthly: 'Abonnement mensuel', lifetime: 'Accès à vie' };
+            const planLabel = planNames[vipStatus.planType] || 'VIP';
+            const localeMap = { fr: 'fr-FR', en: 'en-US', es: 'es-ES', zh: 'zh-CN' };
             detail.innerText = vipStatus.expiresAt
-                ? `Formule : ${planLabel} — actif jusqu'au ${new Date(vipStatus.expiresAt).toLocaleString('fr-FR')}.`
-                : `Formule : ${planLabel} — accès illimité.`;
+                ? (t.vipAlreadyDetailExpiring || 'Formule : {plan} — actif jusqu\'au {date}.').replace('{plan}', planLabel).replace('{date}', new Date(vipStatus.expiresAt).toLocaleString(localeMap[currentLang] || 'en-US'))
+                : (t.vipAlreadyDetailUnlimited || 'Formule : {plan} — accès illimité.').replace('{plan}', planLabel);
             document.getElementById('vip-already-status').innerText = '';
-            document.getElementById('vip-account-email').innerText = authSession.user.email || '—';
+            applyVipAlreadyHint();
         } else {
             renderPaypalMonthlyButton();
         }
         document.getElementById('vip-modal').classList.add('active');
+    }
+
+    // Le texte "Ton VIP est lié à ton compte {email}..." mélange texte traduit + email en
+    // <strong> : on reconstruit l'innerHTML autour du séparateur {email} à chaque changement
+    // de langue ou d'ouverture de modale, plutôt que d'écraser bêtement le <strong> imbriqué.
+    function applyVipAlreadyHint() {
+        const hintEl = document.getElementById('vip-already-hint');
+        if (!hintEl) return;
+        const t = translations[currentLang] || translations['en'];
+        const tpl = t.vipAlreadyHint || "Ton VIP est lié à ton compte {email}. Connecte-toi avec ce même compte sur un autre appareil pour le retrouver automatiquement.";
+        const parts = tpl.split('{email}');
+        const email = (isLoggedIn() && authSession.user.email) || '—';
+        hintEl.innerHTML = `${escapeHtml(parts[0] || '')}<strong id="vip-account-email">${escapeHtml(email)}</strong>${escapeHtml(parts[1] || '')}`;
     }
 
     function closeVipModal() {
@@ -4755,9 +4829,10 @@
     // une nouvelle partie") : on mémorise juste le bon texte selon qu'une partie est en cours.
     function leaveRoom() {
         const inGame = gameState && gameState.phase !== 'lobby';
+        const t = translations[currentLang] || translations['en'];
         document.getElementById('leave-confirm-text').innerText = inGame
-            ? "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours."
-            : "Es-tu sûr de vouloir quitter le salon ?";
+            ? (t.leaveConfirmTextInGame || "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours.")
+            : (t.leaveConfirmText || "Es-tu sûr de vouloir quitter le salon ?");
         document.getElementById('leave-confirm-modal').classList.add('active');
     }
 
@@ -5317,6 +5392,11 @@ const translations = {
         soloRole2PlayersMsg: "À chaque tour (chrono), un joueur décrit 🎤 et l'autre devine 👂 — les rôles s'échangent à chaque chrono.",
         soloCardFoundPointsMsg: "Une carte trouvée (bouton « Trouver ») rapporte <strong>+1 point</strong> au Descripteur ET au Devineur.",
         soloBonusCardsExplainMsg: "5 cartes « Bonus Descripteur » et 5 « Bonus Devineur » ont été tirées en secret pour cette manche : si l'une d'elles est trouvée, elle rapporte <strong>+3 points de plus</strong> à celui qui en bénéficie — mais personne ne sait lesquelles avant de les trouver ou avant la révélation en fin de manche.",
+        leaveConfirmText: "Es-tu sûr de vouloir quitter le salon ?",
+        leaveConfirmTextInGame: "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours.",
+        leaveConfirmBtn: "Quitter",
+        iosSafariOnlyStep: "1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).",
+        pageTitleLive: "Rush'Up! Live - Salon vidéo",
         },
         en: {
             subtitle: "Choose your favorite edition",
@@ -5690,6 +5770,11 @@ const translations = {
         soloRole2PlayersMsg: "Each turn (timer), one player describes 🎤 and the other guesses 👂 — roles swap every turn.",
         soloCardFoundPointsMsg: "A found card (the &quot;Found&quot; button) earns <strong>+1 point</strong> for BOTH the Describer and the Guesser.",
         soloBonusCardsExplainMsg: "5 &quot;Describer Bonus&quot; cards and 5 &quot;Guesser Bonus&quot; cards were secretly drawn for this round: if one of them is found, it earns <strong>+3 extra points</strong> to whoever benefits from it — but nobody knows which ones until they're found or revealed at the end of the round.",
+        leaveConfirmText: "Are you sure you want to leave the room?",
+        leaveConfirmTextInGame: "Are you sure you want to leave the room? You'll lose the game in progress.",
+        leaveConfirmBtn: "Leave",
+        iosSafariOnlyStep: "1. Open this site in <strong>Safari</strong> (not Chrome).",
+        pageTitleLive: "Rush'Up! Live - Video Room",
         },
         es: {
             subtitle: "Elige tu edición favorita",
@@ -6063,6 +6148,11 @@ const translations = {
         soloRole2PlayersMsg: "En cada turno (cronómetro), un jugador describe 🎤 y el otro adivina 👂 — los roles se intercambian en cada turno.",
         soloCardFoundPointsMsg: "Una carta encontrada (botón «Encontrada») otorga <strong>+1 punto</strong> tanto al Descriptor como al Adivinador.",
         soloBonusCardsExplainMsg: "Se han sorteado en secreto 5 cartas «Bonus Descriptor» y 5 «Bonus Adivinador» para esta ronda: si se encuentra alguna, otorga <strong>+3 puntos extra</strong> a quien se beneficie — pero nadie sabe cuáles son hasta que se encuentran o se revelan al final de la ronda.",
+        leaveConfirmText: "¿Seguro que quieres salir de la sala?",
+        leaveConfirmTextInGame: "¿Seguro que quieres salir de la sala? Perderás la partida en curso.",
+        leaveConfirmBtn: "Salir",
+        iosSafariOnlyStep: "1. Abre este sitio en <strong>Safari</strong> (no Chrome).",
+        pageTitleLive: "Rush'Up! Live - Sala de vídeo",
         },
         zh: {
             subtitle: "选择你喜欢的版本",
@@ -6435,6 +6525,11 @@ const translations = {
         soloRole2PlayersMsg: "每个回合（计时）由一名玩家描述🎤，另一名猜词👂——角色每回合互换。",
         soloCardFoundPointsMsg: "猜中一张卡片（点击「猜中」按钮）会为描述者和猜词者各加<strong>1分</strong>。",
         soloBonusCardsExplainMsg: "本回合已秘密抽取5张「描述者奖励」卡和5张「猜词者奖励」卡：若其中一张被猜中，受益者将额外获得<strong>3分</strong>——但在被猜中或回合结束揭晓之前，没有人知道具体是哪几张。",
+        leaveConfirmText: "确定要离开房间吗？",
+        leaveConfirmTextInGame: "确定要离开房间吗？你将失去当前进行中的游戏。",
+        leaveConfirmBtn: "离开",
+        iosSafariOnlyStep: "1. 请在 <strong>Safari</strong> 浏览器中打开此网站（而非 Chrome）。",
+        pageTitleLive: "Rush'Up! Live - 视频房间",
         }
     };
 
