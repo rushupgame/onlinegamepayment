@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
 <title>Rush'Up! Live - Salon vidéo</title>
 <style>
     :root {
@@ -3595,7 +3596,12 @@
         return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     }
     function isIosDevice() {
-        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+        // Détection classique iPhone/iPod, + repli pour iPadOS 13+ qui se fait passer pour un
+        // Mac dans le user-agent (Safari desktop "spoofé") : on le distingue d'un vrai Mac via
+        // le support tactile, qu'aucun Mac ne possède.
+        const ua = navigator.userAgent;
+        if (/iphone|ipad|ipod/i.test(ua)) return true;
+        return /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
     }
     function pwaInstallAvailable() {
         if (isStandaloneDisplay()) return false;
@@ -3697,18 +3703,19 @@
     let oneTimePollTimer = null;
 
     async function startOneTimePurchase(planType) {
+        const t = translations[currentLang] || translations['en'];
         // La fenêtre PayPal DOIT s'ouvrir de façon synchrone, dans le même tick que le clic —
         // sinon la plupart des navigateurs (Chrome, Safari, Firefox) la bloquent comme popup
         // indésirable après un `await`, et rien ne se passe visiblement (c'était le bug : les
         // boutons semblaient ne "rien faire"). On ouvre donc tout de suite une fenêtre vide,
         // puis on la redirige vers l'URL PayPal une fois l'Edge Function répondue.
         const popup = window.open('', 'rushup_paypal', 'width=460,height=680');
-        setVipModalStatus('Création du paiement PayPal…', 'pending');
+        setVipModalStatus(t.vipCreatingPaymentMsg || 'Création du paiement PayPal…', 'pending');
         try {
             const { data, error } = await supabaseClient.functions.invoke('verify-access', {
                 body: { action: 'create-order', plan_type: planType }
             });
-            if (error || !data || !data.approveUrl || !data.orderId) throw error || new Error('Réponse invalide');
+            if (error || !data || !data.approveUrl || !data.orderId) throw error || new Error('Invalid response');
 
             if (popup && !popup.closed) {
                 popup.location.href = data.approveUrl;
@@ -3716,42 +3723,42 @@
             } else {
                 // La fenêtre a quand même été bloquée (bloqueur de popup agressif) : on
                 // propose un lien cliquable en secours plutôt que de rester silencieux.
-                setVipModalStatus('Ta fenêtre popup a été bloquée. ', 'error');
+                setVipModalStatus(t.vipPopupBlockedMsg || 'Ta fenêtre popup a été bloquée. ', 'error');
                 const status = document.getElementById('vip-modal-status');
                 const link = document.createElement('a');
                 link.href = data.approveUrl;
                 link.target = '_blank';
                 link.rel = 'noopener';
-                link.innerText = 'Clique ici pour payer avec PayPal';
+                link.innerText = t.vipClickToPayLink || 'Clique ici pour payer avec PayPal';
                 link.style.color = '#ffd54f';
                 status.appendChild(link);
                 oneTimePopup = null;
             }
-            setVipModalStatus('Finalise le paiement dans la fenêtre PayPal…', 'pending');
+            setVipModalStatus(t.vipFinalizePaymentMsg || 'Finalise le paiement dans la fenêtre PayPal…', 'pending');
 
             clearInterval(oneTimePollTimer);
             oneTimePollTimer = setInterval(async () => {
                 if (oneTimePopup && oneTimePopup.closed) {
                     clearInterval(oneTimePollTimer);
-                    setVipModalStatus('Vérification du paiement…', 'pending');
+                    setVipModalStatus(t.vipVerifyingPaymentMsg || 'Vérification du paiement…', 'pending');
                     try {
                         const capture = await supabaseClient.functions.invoke('verify-access', {
                             body: { action: 'capture-order', order_id: data.orderId, plan_type: planType }
                         });
-                        if (capture.error || !capture.data || !capture.data.success) throw capture.error || new Error('Paiement non confirmé');
+                        if (capture.error || !capture.data || !capture.data.success) throw capture.error || new Error('Payment not confirmed');
                         await checkVipStatus();
-                        setVipModalStatus('✅ Paiement confirmé, VIP activé !', 'ok');
+                        setVipModalStatus(t.vipPaymentConfirmedMsg || '✅ Paiement confirmé, VIP activé !', 'ok');
                         setTimeout(() => openVipModal(), 900);
                     } catch (e) {
                         console.error('Capture PayPal échouée :', e);
-                        setVipModalStatus("Le paiement n'a pas pu être confirmé. Réessaie ou contacte le support.", 'error');
+                        setVipModalStatus(t.vipPaymentFailedMsg || "Le paiement n'a pas pu être confirmé. Réessaie ou contacte le support.", 'error');
                     }
                 }
             }, 1000);
         } catch (e) {
             console.error('Création de commande PayPal échouée :', e);
             if (popup && !popup.closed) popup.close();
-            setVipModalStatus("Impossible de démarrer le paiement pour l'instant.", 'error');
+            setVipModalStatus(t.vipPaymentStartFailedMsg || "Impossible de démarrer le paiement pour l'instant.", 'error');
         }
     }
 
@@ -3767,21 +3774,23 @@
                 return actions.subscription.create({ plan_id: 'P-0R229672VL7042320NKDQ7LQ' });
             },
             onApprove: async function (data) {
-                setVipModalStatus('Activation de l\'abonnement…', 'pending');
+                const t = translations[currentLang] || translations['en'];
+                setVipModalStatus(t.vipActivatingSubscriptionMsg || "Activation de l'abonnement…", 'pending');
                 try {
                     const { data: res, error } = await supabaseClient.functions.invoke('verify-access', {
                         body: { action: 'verify-subscription', subscription_id: data.subscriptionID }
                     });
-                    if (error || !res || !res.success) throw error || new Error('Abonnement non confirmé');
+                    if (error || !res || !res.success) throw error || new Error('Subscription not confirmed');
                     await checkVipStatus();
-                    setVipModalStatus('✅ Abonnement actif, VIP activé !', 'ok');
+                    setVipModalStatus(t.vipSubscriptionActiveMsg || '✅ Abonnement actif, VIP activé !', 'ok');
                     setTimeout(() => openVipModal(), 900);
                 } catch (e) {
-                    setVipModalStatus("L'abonnement n'a pas pu être confirmé. Contacte le support si le prélèvement a eu lieu.", 'error');
+                    setVipModalStatus(t.vipSubscriptionFailedMsg || "L'abonnement n'a pas pu être confirmé. Contacte le support si le prélèvement a eu lieu.", 'error');
                 }
             },
             onError: function () {
-                setVipModalStatus('Erreur PayPal, réessaie plus tard.', 'error');
+                const t = translations[currentLang] || translations['en'];
+                setVipModalStatus(t.vipPaypalErrorMsg || 'Erreur PayPal, réessaie plus tard.', 'error');
             }
         }).render('#paypal-monthly-btn-container');
         paypalMonthlyRendered = true;
@@ -3789,26 +3798,27 @@
 
     // --- Code promo ------------------------------------------------------------------
     async function redeemPromoCode() {
+        const t = translations[currentLang] || translations['en'];
         const input = document.getElementById('vip-promo-input');
         const code = (input.value || '').trim().toUpperCase();
-        if (!code) { setVipModalStatus('Entre un code promo.', 'error'); return; }
-        setVipModalStatus('Vérification du code…', 'pending');
+        if (!code) { setVipModalStatus(t.vipEnterPromoCodeMsg || 'Entre un code promo.', 'error'); return; }
+        setVipModalStatus(t.vipVerifyingCodeMsg || 'Vérification du code…', 'pending');
         try {
             const { data, error } = await supabaseClient.functions.invoke('verify-access', {
                 body: { action: 'redeem-promo', code }
             });
             if (error || !data || !data.success) {
                 console.error('Code promo refusé :', error, data);
-                setVipModalStatus((data && data.message) || 'Code promo invalide ou déjà utilisé.', 'error');
+                setVipModalStatus((data && data.message) || t.vipPromoInvalidMsg || 'Code promo invalide ou déjà utilisé.', 'error');
                 return;
             }
             await checkVipStatus();
-            setVipModalStatus('✅ Code accepté, VIP activé !', 'ok');
+            setVipModalStatus(t.vipPromoAcceptedMsg || '✅ Code accepté, VIP activé !', 'ok');
             input.value = '';
             setTimeout(() => openVipModal(), 900);
         } catch (e) {
             console.error('Erreur redeemPromoCode :', e);
-            setVipModalStatus('Erreur lors de la vérification du code.', 'error');
+            setVipModalStatus(t.vipPromoErrorMsg || 'Erreur lors de la vérification du code.', 'error');
         }
     }
 
@@ -4483,7 +4493,7 @@
                 sameRoomBtn.className = 'tile-sameroom-btn';
                 sameRoomBtn.type = 'button';
                 sameRoomBtn.innerText = '🔊';
-                sameRoomBtn.title = "Détection auto : le son se coupera tout seul si vous êtes dans la même pièce (tape pour forcer)";
+                sameRoomBtn.title = (translations[currentLang] || translations['en']).sameRoomAutoTitle || "Détection auto : le son se coupera tout seul si vous êtes dans la même pièce (tape pour forcer)";
                 sameRoomBtn.onclick = (e) => { e.stopPropagation(); toggleSameRoomPeer(id); };
                 tile.appendChild(sameRoomBtn);
             } else {
@@ -4501,7 +4511,7 @@
                 camBtn.type = 'button';
                 camBtn.id = 'toggle-cam-btn';
                 camBtn.innerText = '📹';
-                camBtn.setAttribute('aria-label', 'Caméra');
+                camBtn.setAttribute('aria-label', (translations[currentLang] || translations['en']).cameraAriaLabel || 'Caméra');
                 camBtn.onclick = (e) => { e.stopPropagation(); toggleCam(); };
 
                 selfControls.appendChild(micBtn);
@@ -4678,8 +4688,8 @@
                 btn.classList.toggle('muted', isMuted);
                 btn.innerText = isMuted ? '🔇' : '🔊';
                 btn.title = isMuted
-                    ? 'Son coupé automatiquement (même pièce détectée) — retape pour forcer la réactivation'
-                    : 'Détection auto : le son se coupera tout seul si vous êtes dans la même pièce (tape pour forcer)';
+                    ? ((translations[currentLang] || translations['en']).sameRoomMutedTitle || 'Son coupé automatiquement (même pièce détectée) — retape pour forcer la réactivation')
+                    : ((translations[currentLang] || translations['en']).sameRoomAutoTitle || 'Détection auto : le son se coupera tout seul si vous êtes dans la même pièce (tape pour forcer)');
             }
         }
 
@@ -5397,6 +5407,31 @@ const translations = {
         leaveConfirmBtn: "Quitter",
         iosSafariOnlyStep: "1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).",
         pageTitleLive: "Rush'Up! Live - Salon vidéo",
+        vipCreatingPaymentMsg: "Création du paiement PayPal…",
+        vipPopupBlockedMsg: "Ta fenêtre popup a été bloquée. ",
+        vipClickToPayLink: "Clique ici pour payer avec PayPal",
+        vipFinalizePaymentMsg: "Finalise le paiement dans la fenêtre PayPal…",
+        vipVerifyingPaymentMsg: "Vérification du paiement…",
+        vipPaymentConfirmedMsg: "✅ Paiement confirmé, VIP activé !",
+        vipPaymentFailedMsg: "Le paiement n'a pas pu être confirmé. Réessaie ou contacte le support.",
+        vipPaymentStartFailedMsg: "Impossible de démarrer le paiement pour l'instant.",
+        vipActivatingSubscriptionMsg: "Activation de l'abonnement…",
+        vipSubscriptionActiveMsg: "✅ Abonnement actif, VIP activé !",
+        vipSubscriptionFailedMsg: "L'abonnement n'a pas pu être confirmé. Contacte le support si le prélèvement a eu lieu.",
+        vipPaypalErrorMsg: "Erreur PayPal, réessaie plus tard.",
+        vipEnterPromoCodeMsg: "Entre un code promo.",
+        vipVerifyingCodeMsg: "Vérification du code…",
+        vipPromoInvalidMsg: "Code promo invalide ou déjà utilisé.",
+        vipPromoAcceptedMsg: "✅ Code accepté, VIP activé !",
+        vipPromoErrorMsg: "Erreur lors de la vérification du code.",
+        sameRoomAutoTitle: "Détection auto : le son se coupera tout seul si vous êtes dans la même pièce (tape pour forcer)",
+        sameRoomMutedTitle: "Son coupé automatiquement (même pièce détectée) — retape pour forcer la réactivation",
+        codeCopiedToast: "📋 Code copié dans le presse-papier !",
+        vipReasonOpenBigRoom: "👑 Passe VIP pour ouvrir ton salon jusqu'à 24 joueurs (au lieu de 4 en gratuit).",
+        vipReasonExpired: "👑 Ton accès VIP a expiré : passe VIP pour lancer un salon de plus de 4 joueurs.",
+        brainDetailNoPasses: "{val} {unit} (Aucun mot passé !)",
+        brainDetailWithPasses: "{val} {unit} / {pas} passés (Ratio : {ratio})",
+        cameraAriaLabel: "Caméra",
         },
         en: {
             subtitle: "Choose your favorite edition",
@@ -5775,6 +5810,31 @@ const translations = {
         leaveConfirmBtn: "Leave",
         iosSafariOnlyStep: "1. Open this site in <strong>Safari</strong> (not Chrome).",
         pageTitleLive: "Rush'Up! Live - Video Room",
+        vipCreatingPaymentMsg: "Creating PayPal payment…",
+        vipPopupBlockedMsg: "Your popup window was blocked. ",
+        vipClickToPayLink: "Click here to pay with PayPal",
+        vipFinalizePaymentMsg: "Finish the payment in the PayPal window…",
+        vipVerifyingPaymentMsg: "Verifying payment…",
+        vipPaymentConfirmedMsg: "✅ Payment confirmed, VIP activated!",
+        vipPaymentFailedMsg: "The payment could not be confirmed. Try again or contact support.",
+        vipPaymentStartFailedMsg: "Can't start the payment right now.",
+        vipActivatingSubscriptionMsg: "Activating subscription…",
+        vipSubscriptionActiveMsg: "✅ Subscription active, VIP activated!",
+        vipSubscriptionFailedMsg: "The subscription could not be confirmed. Contact support if you were charged.",
+        vipPaypalErrorMsg: "PayPal error, try again later.",
+        vipEnterPromoCodeMsg: "Enter a promo code.",
+        vipVerifyingCodeMsg: "Verifying code…",
+        vipPromoInvalidMsg: "Invalid or already used promo code.",
+        vipPromoAcceptedMsg: "✅ Code accepted, VIP activated!",
+        vipPromoErrorMsg: "Error while verifying the code.",
+        sameRoomAutoTitle: "Auto-detection: sound will mute itself if you're in the same room (tap to force)",
+        sameRoomMutedTitle: "Sound muted automatically (same room detected) — tap again to force it back on",
+        codeCopiedToast: "📋 Code copied to clipboard!",
+        vipReasonOpenBigRoom: "👑 Go VIP to open a room with up to 24 players (instead of 4 for free).",
+        vipReasonExpired: "👑 Your VIP access has expired: go VIP to start a room of more than 4 players.",
+        brainDetailNoPasses: "{val} {unit} (No word skipped!)",
+        brainDetailWithPasses: "{val} {unit} / {pas} skipped (Ratio: {ratio})",
+        cameraAriaLabel: "Camera",
         },
         es: {
             subtitle: "Elige tu edición favorita",
@@ -6153,6 +6213,31 @@ const translations = {
         leaveConfirmBtn: "Salir",
         iosSafariOnlyStep: "1. Abre este sitio en <strong>Safari</strong> (no Chrome).",
         pageTitleLive: "Rush'Up! Live - Sala de vídeo",
+        vipCreatingPaymentMsg: "Creando el pago de PayPal…",
+        vipPopupBlockedMsg: "Tu ventana emergente ha sido bloqueada. ",
+        vipClickToPayLink: "Haz clic aquí para pagar con PayPal",
+        vipFinalizePaymentMsg: "Finaliza el pago en la ventana de PayPal…",
+        vipVerifyingPaymentMsg: "Verificando el pago…",
+        vipPaymentConfirmedMsg: "✅ Pago confirmado, ¡VIP activado!",
+        vipPaymentFailedMsg: "No se pudo confirmar el pago. Inténtalo de nuevo o contacta con soporte.",
+        vipPaymentStartFailedMsg: "No se puede iniciar el pago en este momento.",
+        vipActivatingSubscriptionMsg: "Activando la suscripción…",
+        vipSubscriptionActiveMsg: "✅ Suscripción activa, ¡VIP activado!",
+        vipSubscriptionFailedMsg: "No se pudo confirmar la suscripción. Contacta con soporte si se realizó el cargo.",
+        vipPaypalErrorMsg: "Error de PayPal, inténtalo más tarde.",
+        vipEnterPromoCodeMsg: "Introduce un código promocional.",
+        vipVerifyingCodeMsg: "Verificando el código…",
+        vipPromoInvalidMsg: "Código promocional inválido o ya usado.",
+        vipPromoAcceptedMsg: "✅ Código aceptado, ¡VIP activado!",
+        vipPromoErrorMsg: "Error al verificar el código.",
+        sameRoomAutoTitle: "Detección automática: el sonido se silenciará solo si estáis en la misma sala (toca para forzar)",
+        sameRoomMutedTitle: "Sonido silenciado automáticamente (misma sala detectada) — toca de nuevo para forzar la reactivación",
+        codeCopiedToast: "📋 ¡Código copiado al portapapeles!",
+        vipReasonOpenBigRoom: "👑 Hazte VIP para abrir una sala de hasta 24 jugadores (en lugar de 4 en la versión gratuita).",
+        vipReasonExpired: "👑 Tu acceso VIP ha expirado: hazte VIP para iniciar una sala de más de 4 jugadores.",
+        brainDetailNoPasses: "{val} {unit} (¡Ninguna palabra pasada!)",
+        brainDetailWithPasses: "{val} {unit} / {pas} pasadas (Ratio: {ratio})",
+        cameraAriaLabel: "Cámara",
         },
         zh: {
             subtitle: "选择你喜欢的版本",
@@ -6530,6 +6615,31 @@ const translations = {
         leaveConfirmBtn: "离开",
         iosSafariOnlyStep: "1. 请在 <strong>Safari</strong> 浏览器中打开此网站（而非 Chrome）。",
         pageTitleLive: "Rush'Up! Live - 视频房间",
+        vipCreatingPaymentMsg: "正在创建 PayPal 付款……",
+        vipPopupBlockedMsg: "你的弹出窗口被拦截了。",
+        vipClickToPayLink: "点击此处使用 PayPal 付款",
+        vipFinalizePaymentMsg: "请在 PayPal 窗口中完成付款……",
+        vipVerifyingPaymentMsg: "正在验证付款……",
+        vipPaymentConfirmedMsg: "✅ 付款已确认，VIP 已激活！",
+        vipPaymentFailedMsg: "付款未能确认。请重试或联系客服。",
+        vipPaymentStartFailedMsg: "目前无法开始付款。",
+        vipActivatingSubscriptionMsg: "正在激活订阅……",
+        vipSubscriptionActiveMsg: "✅ 订阅已生效，VIP 已激活！",
+        vipSubscriptionFailedMsg: "订阅未能确认。如已扣款，请联系客服。",
+        vipPaypalErrorMsg: "PayPal 出错，请稍后重试。",
+        vipEnterPromoCodeMsg: "请输入优惠码。",
+        vipVerifyingCodeMsg: "正在验证代码……",
+        vipPromoInvalidMsg: "优惠码无效或已被使用。",
+        vipPromoAcceptedMsg: "✅ 代码已接受，VIP 已激活！",
+        vipPromoErrorMsg: "验证代码时出错。",
+        sameRoomAutoTitle: "自动检测：如果你们在同一房间，声音会自动静音（点击可强制切换）",
+        sameRoomMutedTitle: "已自动静音（检测到同一房间）——再次点击可强制恢复",
+        codeCopiedToast: "📋 代码已复制到剪贴板！",
+        vipReasonOpenBigRoom: "👑 开通VIP即可开设最多24人的房间（免费版最多4人）。",
+        vipReasonExpired: "👑 你的VIP已过期：开通VIP才能创建4人以上的房间。",
+        brainDetailNoPasses: "{val} {unit}（没有跳过任何词！）",
+        brainDetailWithPasses: "{val} {unit} / 跳过{pas}个（比率：{ratio}）",
+        cameraAriaLabel: "摄像头",
         }
     };
 
@@ -6738,7 +6848,7 @@ const translations = {
         // Formule gratuite : salon limité à 4 joueurs max. Au-delà, on ouvre la modale VIP
         // au lieu d'augmenter le nombre configuré.
         if (delta > 0 && isConfigPlayerCount >= 4 && !isVip()) {
-            openVipModal('👑 Passe VIP pour ouvrir ton salon jusqu\'à 24 joueurs (au lieu de 4 en gratuit).');
+            openVipModal((translations[currentLang] || translations['en']).vipReasonOpenBigRoom || "👑 Passe VIP pour ouvrir ton salon jusqu'à 24 joueurs (au lieu de 4 en gratuit).");
             return;
         }
         const prevCount = isConfigPlayerCount;
@@ -6939,7 +7049,7 @@ const translations = {
         // "Démarrer" (ex. abonnement résilié entre-temps), on rouvre la modale VIP au lieu de
         // lancer une partie à 5+ joueurs en gratuit.
         if (isConfigPlayerCount > 4 && !isVip()) {
-            openVipModal('👑 Ton accès VIP a expiré : passe VIP pour lancer un salon de plus de 4 joueurs.');
+            openVipModal((translations[currentLang] || translations['en']).vipReasonExpired || '👑 Ton accès VIP a expiré : passe VIP pour lancer un salon de plus de 4 joueurs.');
             return;
         }
         // Garde-fou : impossible de démarrer sans aucune thématique cochée (plus de mots à
@@ -7132,7 +7242,7 @@ const translations = {
         } else if (navigator.clipboard) {
             try {
                 await navigator.clipboard.writeText(text);
-                showGameToast('📋 Code copié dans le presse-papier !', 'joker');
+                showGameToast((translations[currentLang] || translations['en']).codeCopiedToast || '📋 Code copié dans le presse-papier !', 'joker');
             } catch (err) {
                 // Pas bloquant
             }
@@ -7491,7 +7601,7 @@ const translations = {
             if (val > 0 && ratio > bestRatio) {
                 bestRatio = ratio;
                 brainWinnerId = playerId;
-                brainDetail = pas === 0 ? `${val} mots (Aucun mot passé !)` : `${val} mots / ${pas} passés (Ratio: ${ratio.toFixed(2)})`;
+                brainDetail = { val, pas, ratio: ratio.toFixed(2) };
             }
         });
 
@@ -7949,6 +8059,21 @@ const translations = {
         container.style.display = 'block';
     }
 
+    // Le détail du trophée "Cerveau" est calculé côté hôte sous forme de nombres bruts
+    // (val/pas/ratio), jamais pré-formaté en texte : chaque joueur le met en mots dans SA
+    // propre langue au moment de l'affichage, plutôt que de recevoir le texte déjà rédigé
+    // dans la langue de l'hôte.
+    function formatBrainDetail(detail, t) {
+        if (!detail) return '';
+        if (typeof detail === 'string') return detail; // rétrocompatibilité (ancien format)
+        const wordsUnit = t.kpiWordsFound || 'mots';
+        if (detail.pas === 0) {
+            return (t.brainDetailNoPasses || '{val} {unit} (Aucun mot passé !)').replace('{val}', detail.val).replace('{unit}', wordsUnit);
+        }
+        return (t.brainDetailWithPasses || '{val} {unit} / {pas} passés (Ratio : {ratio})')
+            .replace('{val}', detail.val).replace('{unit}', wordsUnit).replace('{pas}', detail.pas).replace('{ratio}', detail.ratio);
+    }
+
     function renderFinalSummary(summary) {
         renderAdvancedStats(summary);
         const t = translations[currentLang] || translations['en'];
@@ -7966,7 +8091,7 @@ const translations = {
                 <div class="trophy-icon">🧠</div>
                 <div class="trophy-details">
                     <span class="trophy-title">${(t.trophyBrainTitle || 'Le Cerveau 🧠').replace(' 🧠', '')}</span>
-                    <span class="trophy-winner">${summary.brain ? `${summary.brain.name}<br><small style="color:var(--text-muted);">${summary.brain.detail}</small>` : '—'}</span>
+                    <span class="trophy-winner">${summary.brain ? `${summary.brain.name}<br><small style="color:var(--text-muted);">${formatBrainDetail(summary.brain.detail, t)}</small>` : '—'}</span>
                     <span class="trophy-desc">${t.trophyBrainDesc || 'Meilleur ratio mots trouvés / mots passés !'}</span>
                 </div>
             </div>
