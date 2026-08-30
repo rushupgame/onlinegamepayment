@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="./manifest.json">
-<title>Rush'Up! Live - Salon vidéo</title>
+<title>Whoops! Live - Salon vidéo</title>
 <style>
     :root {
         --bg: #0f172a;
@@ -771,7 +771,7 @@
     }
 
     /* Les boutons − / + s'étirent chacun de leur côté (flex: 1) pour occuper tout l'espace
-       disponible sur leur ligne, comme dans Rush'Up! (au lieu de petits ronds isolés). */
+       disponible sur leur ligne, comme dans Whoops! (au lieu de petits ronds isolés). */
     .stepper-btn {
         flex: 1 1 auto;
         min-width: 56px;
@@ -1000,7 +1000,7 @@
     }
     #legal-modal .modal-body, #rules-modal .modal-body { text-align: left; }
 
-    /* --- Modale de connexion / création de compte (onglets, comme Rush'Up!) --- */
+    /* --- Modale de connexion / création de compte (onglets, comme Whoops!) --- */
     .auth-modal-card { position: relative; max-width: 440px; text-align: left; }
     .auth-modal-title { font-size: 1.5rem; font-weight: 900; color: var(--text-main); margin: 4px 0 6px; text-align: left; }
     .auth-modal-sub { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; text-align: left; margin: 0 0 18px; }
@@ -1150,7 +1150,7 @@
     .hamburger-menu-item-danger:hover { background: rgba(255, 71, 87, 0.12); }
 
     /* --- Header pré-salon (écran "Comment veux-tu jouer", Créer/Rejoindre) : logo + Home/Son/
-         Règles directement accessibles, comme le header par défaut de Rush'Up!. --- */
+         Règles directement accessibles, comme le header par défaut de Whoops!. --- */
     .brand-header-outer {
         width: 100%;
         max-width: 480px;
@@ -1167,7 +1167,7 @@
     }
     .header-actions { display: flex; align-items: center; gap: 8px; }
 
-    /* --- Boutons Home / Son / Règles du header pré-salon : même forme/couleur que Rush'Up!,
+    /* --- Boutons Home / Son / Règles du header pré-salon : même forme/couleur que Whoops!,
          mais icône seule (une émoji, sans texte), comme demandé explicitement. --- */
     .sound-toggle-btn, .rules-toggle-btn, .home-toggle-btn {
         background: rgba(255, 255, 255, 0.08);
@@ -1259,7 +1259,7 @@
     body.in-game .persistent-footer-outer,
     body.in-game .version-footer { display: none !important; }
 
-    /* --- Écran d'accueil : sélection de langue (premier écran, façon Rush'Up!) --- */
+    /* --- Écran d'accueil : sélection de langue (premier écran, façon Whoops!) --- */
     .landing-title {
         font-size: 2.2rem;
         font-weight: 900;
@@ -1308,7 +1308,7 @@
     .entry-footer-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
 
     /* --- Footer persistant (Vibes / VIP / Installer / Soutenir / Légal) : identique à
-         Rush'Up!, collé en bas, visible sur l'accueil et les écrans de salon/config, masqué
+         Whoops!, collé en bas, visible sur l'accueil et les écrans de salon/config, masqué
          seulement pendant une manche active (voir body.in-game ci-dessus). --- */
     .persistent-footer-outer {
         width: 100%;
@@ -2121,11 +2121,11 @@
 <body class="on-landing">
 
 <!-- Header pré-salon ("Comment veux-tu jouer", Créer/Rejoindre un salon) : logo + Home/Son/
-     Règles directement accessibles, comme le header par défaut de Rush'Up!. Masqué sur l'écran
+     Règles directement accessibles, comme le header par défaut de Whoops!. Masqué sur l'écran
      de langue (le grand logo y vit déjà en plein format) et une fois dans un salon. -->
 <div class="brand-header-outer" id="pre-room-header">
     <div class="brand-header">
-        <h1 class="app-title-sm">🎥 Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge">LIVE</span></h1>
+        <h1 class="app-title-sm">🎥 Whoops<span class="oscillate-exclamation">!</span> <span class="live-badge">LIVE</span></h1>
         <div class="header-actions">
             <button type="button" class="home-toggle-btn" onclick="backToEntryChoice()" id="ui-home-btn" title="Home" aria-label="Home">🏠</button>
             <button type="button" class="sound-toggle-btn" id="sound-btn-pre" onclick="toggleSound(); updateSoundButtons();" title="Son" aria-label="Son">🔊</button>
@@ -2195,7 +2195,7 @@
     <div class="modal-card">
         <span class="modal-close-cross" onclick="closeRulesModal()">✖</span>
         <div class="modal-icon">📜</div>
-        <div class="modal-title" id="rules-modal-header">Rush'Up! rules</div>
+        <div class="modal-title" id="rules-modal-header">Whoops! rules</div>
         <div class="modal-body" id="rules-modal-content" style="font-size:0.85rem; line-height:1.5;"></div>
         <button class="btn btn-primary" onclick="closeRulesModal()" id="rules-modal-close-btn">Close</button>
     </div>
@@ -2212,7 +2212,7 @@
     </div>
 </div>
 
-<!-- Modale : mentions légales & CGU (contenu identique à Rush'Up!, app renommée) -->
+<!-- Modale : mentions légales & CGU (contenu identique à Whoops!, app renommée) -->
 <div id="legal-modal" class="modal-overlay">
     <div class="modal-card">
         <span class="modal-close-cross" onclick="closeLegalModal()">✖</span>
@@ -2222,14 +2222,14 @@
         <div class="modal-body" style="font-size: 0.8rem; line-height: 1.4;">
             <div class="rules-modal-section">
                 <h4>1. Publisher & Host</h4>
-                <p><strong>Application:</strong> Rush'Up! Live</p>
-                <p><strong>Publisher:</strong> Individual developer (gamesreviewspro). This web application is a personal, non-commercial open-source project provided free of charge for entertainment purposes.</p>
-                <p><strong>Contact:</strong> You can reach the publisher via GitHub issue tracker at <a href="https://github.com/gamesreviewspro/timesup" target="_blank" style="color: #70a1ff;">https://github.com/gamesreviewspro/timesup</a>.</p>
-                <p><strong>Hosting Provider:</strong> Hosted on GitHub Pages by GitHub Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, USA. Real-time video/audio and game-state relay uses Supabase (Realtime & Auth).</p>
+                <p><strong>Application:</strong> Whoops! Live</p>
+                <p><strong>Publisher:</strong> Individual developer. This web application is a personal, non-commercial project provided free of charge for entertainment purposes.</p>
+                <p><strong>Contact:</strong> You can reach the publisher via the contact details provided on this website.</p>
+                <p><strong>Hosting Provider:</strong> Hosted on a static web hosting provider. Real-time video/audio and game-state relay uses Supabase (Realtime & Auth).</p>
             </div>
             <div class="rules-modal-section">
                 <h4>2. Intellectual Property & Disclaimer</h4>
-                <p>Rush'Up! Live is an independent, fan-made web utility inspired by classic party guessing games. All themes, pop culture references, and trademarked names (such as Marvel, Disney, Pokémon, DC Comics, etc.) belong to their respective copyright owners and are used strictly under fair use for trivia and educational/entertainment purposes.</p>
+                <p>Whoops! Live is an independent, fan-made web utility inspired by classic party guessing games. All themes, pop culture references, and trademarked names (such as Marvel, Disney, Pokémon, DC Comics, etc.) belong to their respective copyright owners and are used strictly under fair use for trivia and educational/entertainment purposes.</p>
                 <p>The application is provided "as is" without any warranty of any kind. The developer shall not be held liable for any technical bugs, connectivity issues, or temporary unavailability.</p>
             </div>
             <div class="rules-modal-section">
@@ -2240,7 +2240,7 @@
             </div>
             <div class="rules-modal-section">
                 <h4>4. Voluntary Donations & VIP Pass</h4>
-                <p>Rush'Up! Live's free formula lets you play with up to 4 players. The optional VIP pass unlocks more players, more themes, and more vibes, and works across both Rush'Up! and Rush'Up! Live with the same account.</p>
+                <p>Whoops! Live's free formula lets you play with up to 4 players. The optional VIP pass unlocks more players, more themes, and more vibes, and works across both Whoops! and Whoops! Live with the same account.</p>
                 <p><strong>Donation/Purchase Terms:</strong> Donations and VIP purchases are non-refundable except where required by law, and do not transfer any intellectual property right.</p>
                 <p>All financial transactions are processed securely on PayPal's external platform. The publisher never accesses or stores your banking or payment credentials.</p>
             </div>
@@ -2273,9 +2273,9 @@
 <div id="entry-screen" class="screen active">
 
     <!-- Sélection de langue : premier écran vu à la toute première visite, comme dans
-         Rush'Up! (reste accessible via la même logique de première visite / localStorage). -->
+         Whoops! (reste accessible via la même logique de première visite / localStorage). -->
     <div id="lang-select-view">
-        <h1 class="landing-title">Rush'Up<span class="oscillate-exclamation">!</span> <span class="live-badge-lg">LIVE</span></h1>
+        <h1 class="landing-title">Whoops<span class="oscillate-exclamation">!</span> <span class="live-badge-lg">LIVE</span></h1>
         <p class="slogan" id="ui-slogan">Think fast, speak faster — together, live!</p>
         <p class="lang-title" id="ui-lang-title">Choose your language</p>
         <div class="lang-btn-list">
@@ -2588,7 +2588,7 @@
 </div>
 
 <!-- Footer persistant partagé (Vibes / VIP / compte / Installer / Soutenir / Mentions légales) :
-     identique à Rush'Up!, visible sur l'accueil et pendant la configuration du salon, masqué
+     identique à Whoops!, visible sur l'accueil et pendant la configuration du salon, masqué
      seulement pendant une manche active (voir body.in-game). -->
 <div class="persistent-footer-outer" id="persistent-footer">
     <div class="vibe-vip-row">
@@ -2739,7 +2739,7 @@
     <div class="modal-card auth-modal-card">
         <button type="button" class="vibe-modal-close" onclick="closeAuthModal()" aria-label="Fermer">✕</button>
         <div class="auth-modal-title" id="auth-modal-title">Access your account</div>
-        <p class="auth-modal-sub" id="auth-modal-sub">An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Rush'Up!).</p>
+        <p class="auth-modal-sub" id="auth-modal-sub">An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Whoops!).</p>
 
         <div class="auth-tabs" id="auth-tabs">
             <button type="button" class="auth-tab" id="auth-tab-login" onclick="setAuthMode('login')">Log in</button>
@@ -2810,7 +2810,7 @@
     // Préférence 100% locale à l'appareil (localStorage), jamais synchronisée avec les
     // autres joueurs de la partie : chacun choisit son skin indépendamment.
     const VIBES = [
-        { key: 'basic', emoji: '🎮', name: "Rush'Up", desc: 'Le thème de base' },
+        { key: 'basic', emoji: '🎮', name: "Whoops", desc: 'Le thème de base' },
         { key: 'blackpepper', emoji: '🖤', name: 'Black Pepper', desc: 'Noir profond, légèrement piquant' },
         { key: 'coconut', emoji: '🥥', name: 'Coconut Shake', desc: 'Blanc laiteux et douillet' },
         { key: 'strawberry', emoji: '🍓', name: 'Strawberry Spicy', desc: 'Rouge vif pimenté' },
@@ -2934,7 +2934,7 @@
         applyAuthModeUI();
     }
 
-    // Onglets Connexion / Création (comme Rush'Up!) : la date de naissance n'est demandée qu'à
+    // Onglets Connexion / Création (comme Whoops!) : la date de naissance n'est demandée qu'à
     // la création (elle sert uniquement à vérifier l'identité en cas de réinitialisation du mot
     // de passe). Le mode "reset" remplace le mot de passe habituel par un champ "nouveau mot de
     // passe" + demande la date de naissance pour vérifier l'identité — PAS d'email envoyé.
@@ -3068,7 +3068,7 @@
         if (loginBtn) loginBtn.style.display = isLoggedIn() ? 'none' : 'block';
         if (!bar) return;
         // Visible dès qu'un compte est connecté (pas seulement l'hôte) : c'est une information
-        // de compte générale, comme dans Rush'Up!, pas une info propre au salon.
+        // de compte générale, comme dans Whoops!, pas une info propre au salon.
         const show = isLoggedIn();
         bar.style.display = show ? 'flex' : 'none';
         if (!show) return;
@@ -3330,7 +3330,7 @@
             iosBody.innerHTML = `<p>${t.iosSafariOnlyStep || '1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).'}</p><p>${(t.iosStep1 || '').replace(/^1\./, '2.') || "2. Appuie sur le bouton <strong>Partager ⎋</strong> en bas de ton navigateur Safari."}</p><p>${(t.iosStep2 || '').replace(/^2\./, '3.') || "3. Défile vers le bas et sélectionne <strong>Sur l'écran d'accueil ⊕</strong>."}</p>`;
         }
         setText('ios-modal-ok-btn', t.iosGotIt || 'OK');
-        document.title = t.pageTitleLive || "Rush'Up! Live - Salon vidéo";
+        document.title = t.pageTitleLive || "Whoops! Live - Salon vidéo";
         setText('account-logout-btn', t.accountLogoutBtn || 'Déconnexion');
         renderAccountPassword();
         updateParticipantCount();
@@ -3379,7 +3379,7 @@
         setText('legal-close-btn-bottom', t.legalCloseBtn || 'Close');
 
         // Modale règles complètes
-        setText('rules-modal-header', t.rulesModalTitle || "Rush'Up! Live rules");
+        setText('rules-modal-header', t.rulesModalTitle || "Whoops! Live rules");
         setText('rules-modal-close-btn', t.legalCloseBtn || 'Close');
         renderRulesModalContent();
 
@@ -3395,7 +3395,7 @@
     }
 
     // Construit le contenu de la modale "Règles complètes" à partir de translations[lang].fullRules
-    // (mêmes textes que Rush'Up!), avec un rappel des 3 manches.
+    // (mêmes textes que Whoops!), avec un rappel des 3 manches.
     function renderRulesModalContent() {
         const el = document.getElementById('rules-modal-content');
         if (!el) return;
@@ -3517,7 +3517,7 @@
 
     // ============================================================================================
     // SON — sonneries légères jouées à des instants clés (mot trouvé, passe, fin de manche,
-    // compte à rebours), avec bascule ON/OFF mémorisée localement. Repris de Rush'Up!.
+    // compte à rebours), avec bascule ON/OFF mémorisée localement. Repris de Whoops!.
     // ============================================================================================
 
     let soundEnabled = localStorage.getItem('rushupLiveSound') !== 'off';
@@ -4889,10 +4889,10 @@
     // PARTIE — synchronisation de l'état de jeu via le même canal Supabase
     // ================================================================
 
-    // Base de mots complète du jeu Rush'Up! original (25 thèmes, ~2450 mots).
+    // Base de mots complète du jeu Whoops! original (25 thèmes, ~2450 mots).
     // BANQUE DE MOTS MULTILINGUE : le français reprend la banque riche et spécifique
-    // de Rush'Up! Live (2000+ mots par thème) ; anglais/espagnol/chinois reprennent la
-    // banque générique multilingue du jeu Rush'Up! original (25 thèmes, ~100 mots/thème).
+    // de Whoops! Live (2000+ mots par thème) ; anglais/espagnol/chinois reprennent la
+    // banque générique multilingue du jeu Whoops! original (25 thèmes, ~100 mots/thème).
     const database = {
         fr: {
         gen_easy: ["Bouteille", "Soleil", "Voiture", "Maison", "Fleur", "Chien", "Chat", "Livre", "Arbre", "Chaise", "Table", "Téléphone", "Pomme", "Pain", "Vélo", "Crayon", "Gâteau", "Télévision", "Lit", "Porte", "Fenêtre", "Poisson", "Oiseau", "Plage", "Neige", "Pluie", "Chapeau", "Chaussure", "Lait", "Chocolat", "Pizza", "Glace", "Horloge", "Miroir", "Brosse à dents", "Savon", "Manteau", "Balançoire", "Balle", "Sable", "Mer", "Lune", "Étoile", "Nuage", "Avion", "Bateau", "Train", "Sifflet", "Lampe", "Sac à dos", "Casquette", "Lunettes", "Guitare", "Piano", "Baignoire", "Tasse", "Cuillère", "Fourchette", "Assiette", "Serviette", "Verre", "Pyjama", "Chaussette", "Ciseaux", "Papier", "Cadeau", "Sac", "Trottinette", "Arrosoir", "Canard", "Lapin", "Vache", "Cochon", "Cheval", "Mouton", "Poule", "Coq", "Pigeon", "Grenouille", "Tortue", "Singe", "Lion", "Éléphant", "Girafe", "Ours", "Panda", "Dauphin", "Baleine", "Requin", "Fraise", "Banane", "Orange", "Citron", "Tomate", "Carotte", "Fromage", "Beurre", "Sucre", "Parapluie", "Escalier"],
@@ -5104,7 +5104,7 @@ const translations = {
             btnInstallPwa: "📲 Installer l'application",
             btnDonate: "❤️ Soutenir le développeur",
             btnLegal: "⚖️ Mentions Légales & CGU",
-            endSupportText: "Vous avez passé un bon moment ? 🥳<br>Rush'Up! est 100 % gratuit, sans aucune publicité et sans aucune revente de vos données personnelles. Le jeu ne vit que grâce à votre générosité : même 1 € aide à payer les serveurs et garantit qu'il reste accessible à tous. Merci pour votre soutien ! ❤️",
+            endSupportText: "Vous avez passé un bon moment ? 🥳<br>Whoops! est 100 % gratuit, sans aucune publicité et sans aucune revente de vos données personnelles. Le jeu ne vit que grâce à votre générosité : même 1 € aide à payer les serveurs et garantit qu'il reste accessible à tous. Merci pour votre soutien ! ❤️",
             btnEndDonate: "❤️ Soutenir le projet",
             iosTitle: "Installer sur iPhone / iPad",
             iosStep1: "1. Appuyez sur le bouton <strong>Partager ⎋</strong> en bas de votre navigateur Safari.",
@@ -5145,7 +5145,7 @@ const translations = {
             resumeModalHint: "Reprendre là où vous en étiez ?",
             resumeBtnLabel: "▶️ Reprendre la partie",
             newGameBtnLabel: "🆕 Nouvelle partie",
-            shareTitle: "Rush'Up! - Résultats",
+            shareTitle: "Whoops! - Résultats",
             turnOfText: "C'est au tour de :",
             btnReady: "🚀 Prêt !",
             btnRulesHeader: "📜 Règles",
@@ -5295,7 +5295,7 @@ const translations = {
                 starwars: "La Force, les Jedi, les Sith et les personnages légendaires d'une galaxie lointaine."
             },
             fullRules: {
-                header: "📜 Règles de Rush'Up! (Version Digital)",
+                header: "📜 Règles de Whoops! (Version Digital)",
                 digitalIntro: "En version digitale, un seul smartphone suffit pour toute la table. L'application gère la rotation des joueurs, le chrono, la pioche des mots et le calcul des scores.",
                 objTitle: "🎯 Objectif",
                 objDesc: "Faire deviner le plus de cartes possible à son équipe au cours de 3 manches. Les 3 manches se jouent avec exactement le même paquet de mots pioché au début de la partie.",
@@ -5336,7 +5336,7 @@ const translations = {
         disagreeRuleExplain: "Si les joueurs ne sont pas d'accord sur la validité d'un mot trouvé, n'importe qui peut appuyer sur ce bouton pour mettre le chrono en pause et en discuter à voix haute.",
         legalModalTitle: "Mentions légales & CGU",
         legalCloseBtn: "Fermer",
-        rulesModalTitle: "📜 Règles de Rush'Up! Live",
+        rulesModalTitle: "📜 Règles de Whoops! Live",
 
         gameTitleLive: "🎮 Partie",
         nonHostWaitingMsg: "En attente que l'hôte configure la partie (nombre de joueurs, équipes ou mode 1v1, thème...) et la lance...",
@@ -5359,7 +5359,7 @@ const translations = {
         authTabLogin: "Se connecter",
         authTabSignup: "Créer un compte",
         authResetBtn: "Mot de passe oublié ?",
-        authModalSubLive: "Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).",
+        authModalSubLive: "Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Whoops!).",
         loginFooterBtn: "Se connecter / Créer un compte",
         authResetTitle: "Réinitialiser le mot de passe",
         authResetSub: "Indique ton email et ta date de naissance (celle donnée à la création du compte) pour définir un nouveau mot de passe, sans email à recevoir.",
@@ -5407,7 +5407,7 @@ const translations = {
         leaveConfirmTextInGame: "Es-tu sûr de vouloir quitter le salon ? Tu vas perdre la partie en cours.",
         leaveConfirmBtn: "Quitter",
         iosSafariOnlyStep: "1. Ouvre ce site dans <strong>Safari</strong> (pas Chrome).",
-        pageTitleLive: "Rush'Up! Live - Salon vidéo",
+        pageTitleLive: "Whoops! Live - Salon vidéo",
         vipCreatingPaymentMsg: "Création du paiement PayPal…",
         vipPopupBlockedMsg: "Ta fenêtre popup a été bloquée. ",
         vipClickToPayLink: "Clique ici pour payer avec PayPal",
@@ -5507,7 +5507,7 @@ const translations = {
             btnInstallPwa: "📲 Install Application",
             btnDonate: "❤️ Support the developer",
             btnLegal: "⚖️ Legal Notice & Terms of Use",
-            endSupportText: "Did you have a great time? 🥳<br>Rush'Up! is 100% free, completely ad-free, and never sells your personal data. The game relies entirely on your generosity: even $1 helps pay for server costs and ensures it stays open to everyone. Thank you for your support! ❤️",
+            endSupportText: "Did you have a great time? 🥳<br>Whoops! is 100% free, completely ad-free, and never sells your personal data. The game relies entirely on your generosity: even $1 helps pay for server costs and ensures it stays open to everyone. Thank you for your support! ❤️",
             btnEndDonate: "❤️ Support the project",
             iosTitle: "Install on iPhone / iPad",
             iosStep1: "1. Tap the <strong>Share ⎋</strong> button at the bottom of Safari.",
@@ -5548,7 +5548,7 @@ const translations = {
             resumeModalHint: "Resume where you left off?",
             resumeBtnLabel: "▶️ Resume game",
             newGameBtnLabel: "🆕 New game",
-            shareTitle: "Rush'Up! - Results",
+            shareTitle: "Whoops! - Results",
             turnOfText: "It's turn of:",
             btnReady: "🚀 Ready!",
             btnRulesHeader: "📜 Rules",
@@ -5698,7 +5698,7 @@ const translations = {
                 starwars: "The Force, Jedi, Sith and legendary characters from a galaxy far, far away."
             },
             fullRules: {
-                header: "📜 Rush'Up! Rules (Digital Version)",
+                header: "📜 Whoops! Rules (Digital Version)",
                 digitalIntro: "In digital version, a single smartphone is enough. The app manages player rotation, timer, card draw, and score calculation.",
                 objTitle: "🎯 Objective",
                 objDesc: "Make your team guess as many cards as possible over 3 rounds. All 3 rounds use the exact same deck drawn at start.",
@@ -5739,7 +5739,7 @@ const translations = {
         disagreeRuleExplain: "If players disagree on whether a found word should count, anyone can tap this button to pause the timer and discuss it out loud.",
         legalModalTitle: "Legal Notice & Terms of Use",
         legalCloseBtn: "Close",
-        rulesModalTitle: "📜 Rush'Up! Live rules",
+        rulesModalTitle: "📜 Whoops! Live rules",
 
         gameTitleLive: "🎮 Game",
         nonHostWaitingMsg: "Waiting for the host to configure the game (players, teams or 1v1 mode, theme...) and start it...",
@@ -5762,7 +5762,7 @@ const translations = {
         authTabLogin: "Log in",
         authTabSignup: "Create an account",
         authResetBtn: "Forgot your password?",
-        authModalSubLive: "An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Rush'Up!).",
+        authModalSubLive: "An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Whoops!).",
         loginFooterBtn: "Log in / Create an account",
         authResetTitle: "Reset your password",
         authResetSub: "Enter your email and your date of birth (the one given when you created your account) to set a new password, with no email to receive.",
@@ -5810,7 +5810,7 @@ const translations = {
         leaveConfirmTextInGame: "Are you sure you want to leave the room? You'll lose the game in progress.",
         leaveConfirmBtn: "Leave",
         iosSafariOnlyStep: "1. Open this site in <strong>Safari</strong> (not Chrome).",
-        pageTitleLive: "Rush'Up! Live - Video Room",
+        pageTitleLive: "Whoops! Live - Video Room",
         vipCreatingPaymentMsg: "Creating PayPal payment…",
         vipPopupBlockedMsg: "Your popup window was blocked. ",
         vipClickToPayLink: "Click here to pay with PayPal",
@@ -5910,7 +5910,7 @@ const translations = {
             btnInstallPwa: "📲 Descargar la aplicación",
             btnDonate: "❤️ Apoyar al desarrollador",
             btnLegal: "⚖️ Aviso Legal y Términos",
-            endSupportText: "¿Os lo habéis pasado bien? 🥳<br>Rush'Up! es 100 % gratuito, sin anuncios y sin ninguna venta de tus datos personales. El juego se mantiene solo gracias a vuestra generosidad: incluso 1 € ayuda a pagar los servidores y garantiza que siga siendo accesible para todos. ¡Gracias por vuestro apoyo! ❤️",
+            endSupportText: "¿Os lo habéis pasado bien? 🥳<br>Whoops! es 100 % gratuito, sin anuncios y sin ninguna venta de tus datos personales. El juego se mantiene solo gracias a vuestra generosidad: incluso 1 € ayuda a pagar los servidores y garantiza que siga siendo accesible para todos. ¡Gracias por vuestro apoyo! ❤️",
             btnEndDonate: "❤️ Apoyar el proyecto",
             iosTitle: "Instalar en iPhone / iPad",
             iosStep1: "1. Toca el botón <strong>Compartir ⎋</strong> en la parte inferior de Safari.",
@@ -5951,7 +5951,7 @@ const translations = {
             resumeModalHint: "¿Reanudar donde lo dejaste?",
             resumeBtnLabel: "▶️ Reanudar partida",
             newGameBtnLabel: "🆕 Nueva partida",
-            shareTitle: "Rush'Up! - Resultados",
+            shareTitle: "Whoops! - Resultados",
             turnOfText: "Es el turno de:",
             btnReady: "🚀 ¡Listo!",
             btnRulesHeader: "📜 Reglas",
@@ -6101,7 +6101,7 @@ const translations = {
                 starwars: "La Fuerza, los Jedi, los Sith y los personajes legendarios de una galaxia muy, muy lejana."
             },
             fullRules: {
-                header: "📜 Reglas de Rush'Up! (Versión Digital)",
+                header: "📜 Reglas de Whoops! (Versión Digital)",
                 digitalIntro: "En versión digital, solo se necesita un smartphone. La app gestiona la rotación, el temporizador, las cartas y las puntuaciones.",
                 objTitle: "🎯 Objetivo",
                 objDesc: "Consigue que tu equipo adivine el mayor número de cartas a lo largo de 3 rondas jugando con el mismo mazo de palabras.",
@@ -6142,7 +6142,7 @@ const translations = {
         disagreeRuleExplain: "Si los jugadores no están de acuerdo sobre la validez de una palabra encontrada, cualquiera puede pulsar este botón para pausar el cronómetro y hablarlo en voz alta.",
         legalModalTitle: "Aviso legal y condiciones de uso",
         legalCloseBtn: "Cerrar",
-        rulesModalTitle: "📜 Reglas de Rush'Up! Live",
+        rulesModalTitle: "📜 Reglas de Whoops! Live",
 
         gameTitleLive: "🎮 Partida",
         nonHostWaitingMsg: "Esperando a que el anfitrión configure la partida (jugadores, equipos o modo 1v1, temática...) y la inicie...",
@@ -6165,7 +6165,7 @@ const translations = {
         authTabLogin: "Iniciar sesión",
         authTabSignup: "Crear una cuenta",
         authResetBtn: "¿Olvidaste tu contraseña?",
-        authModalSubLive: "Se necesita una cuenta para crear una sala (recupera automáticamente tu estado VIP en todos tus dispositivos, incluido Rush'Up!).",
+        authModalSubLive: "Se necesita una cuenta para crear una sala (recupera automáticamente tu estado VIP en todos tus dispositivos, incluido Whoops!).",
         loginFooterBtn: "Iniciar sesión / Crear una cuenta",
         authResetTitle: "Restablecer la contraseña",
         authResetSub: "Indica tu email y tu fecha de nacimiento (la indicada al crear la cuenta) para definir una nueva contraseña, sin recibir ningún email.",
@@ -6213,7 +6213,7 @@ const translations = {
         leaveConfirmTextInGame: "¿Seguro que quieres salir de la sala? Perderás la partida en curso.",
         leaveConfirmBtn: "Salir",
         iosSafariOnlyStep: "1. Abre este sitio en <strong>Safari</strong> (no Chrome).",
-        pageTitleLive: "Rush'Up! Live - Sala de vídeo",
+        pageTitleLive: "Whoops! Live - Sala de vídeo",
         vipCreatingPaymentMsg: "Creando el pago de PayPal…",
         vipPopupBlockedMsg: "Tu ventana emergente ha sido bloqueada. ",
         vipClickToPayLink: "Haz clic aquí para pagar con PayPal",
@@ -6313,7 +6313,7 @@ const translations = {
             btnInstallPwa: "📲 安装应用",
             btnDonate: "❤️ 支持开发者",
             btnLegal: "⚖️ 法律声明与使用条款",
-            endSupportText: "玩得开心吗？🥳<br>Rush'Up! 完全免费、无广告，也绝不出售你的个人数据。这款游戏完全依靠大家的支持：哪怕1美元也能帮助支付服务器费用，让它对所有人保持开放。感谢你的支持！❤️",
+            endSupportText: "玩得开心吗？🥳<br>Whoops! 完全免费、无广告，也绝不出售你的个人数据。这款游戏完全依靠大家的支持：哪怕1美元也能帮助支付服务器费用，让它对所有人保持开放。感谢你的支持！❤️",
             btnEndDonate: "❤️ 支持这个项目",
             iosTitle: "在 iPhone / iPad 上安装",
             iosStep1: "1. 点击 Safari 底部的<strong>分享 ⎋</strong>按钮。",
@@ -6354,7 +6354,7 @@ const translations = {
             resumeModalHint: "要从上次的地方继续吗？",
             resumeBtnLabel: "▶️ 继续游戏",
             newGameBtnLabel: "🆕 新游戏",
-            shareTitle: "Rush'Up! - 结果",
+            shareTitle: "Whoops! - 结果",
             turnOfText: "轮到：",
             btnReady: "🚀 准备好了！",
             btnRulesHeader: "📜 规则",
@@ -6504,7 +6504,7 @@ const translations = {
                 starwars: "原力、绝地武士、西斯，以及来自遥远星系的传奇角色。"
             },
             fullRules: {
-                header: "📜 Rush'Up! 规则（数字版）",
+                header: "📜 Whoops! 规则（数字版）",
                 digitalIntro: "在数字版中，一部智能手机就足够了。应用会自动管理玩家轮换、计时、抽卡和计分。",
                 objTitle: "🎯 目标",
                 objDesc: "在3个回合中让你的队伍尽可能多地猜中卡片。所有3个回合使用开局时抽取的同一副牌。",
@@ -6546,7 +6546,7 @@ const translations = {
         disagreeRuleExplain: "如果玩家对某个已猜中的词是否有效存在异议，任何人都可以点击此按钮暂停计时器并当面讨论。",
         legalModalTitle: "法律声明与使用条款",
         legalCloseBtn: "关闭",
-        rulesModalTitle: "📜 Rush'Up! Live 规则",
+        rulesModalTitle: "📜 Whoops! Live 规则",
         gameTitleLive: "🎮 游戏",
         nonHostWaitingMsg: "等待房主配置游戏（玩家人数、队伍或1v1模式、主题……）并开始……",
         hostConfigStatusDefault: "至少需要2名已连接的玩家。",
@@ -6567,7 +6567,7 @@ const translations = {
         authTabLogin: "登录",
         authTabSignup: "创建账户",
         authResetBtn: "忘记密码？",
-        authModalSubLive: "创建房间需要账户（该账户会在你所有设备上自动恢复VIP状态，包括在 Rush'Up! 上）。",
+        authModalSubLive: "创建房间需要账户（该账户会在你所有设备上自动恢复VIP状态，包括在 Whoops! 上）。",
         loginFooterBtn: "登录 / 创建账户",
         authResetTitle: "重置密码",
         authResetSub: "请输入你的邮箱和出生日期（创建账户时填写的那个），即可设置新密码，无需接收任何邮件。",
@@ -6615,7 +6615,7 @@ const translations = {
         leaveConfirmTextInGame: "确定要离开房间吗？你将失去当前进行中的游戏。",
         leaveConfirmBtn: "离开",
         iosSafariOnlyStep: "1. 请在 <strong>Safari</strong> 浏览器中打开此网站（而非 Chrome）。",
-        pageTitleLive: "Rush'Up! Live - 视频房间",
+        pageTitleLive: "Whoops! Live - 视频房间",
         vipCreatingPaymentMsg: "正在创建 PayPal 付款……",
         vipPopupBlockedMsg: "你的弹出窗口被拦截了。",
         vipClickToPayLink: "点击此处使用 PayPal 付款",
@@ -6654,7 +6654,7 @@ const translations = {
     };
 
     // --- INTERNATIONALISATION (i18n) ---
-    // Langue active : persistée en local (comme dans Rush'Up!), 'fr' par défaut.
+    // Langue active : persistée en local (comme dans Whoops!), 'fr' par défaut.
     let currentLang = localStorage.getItem('rushupLiveLang') || 'fr';
 
 
@@ -6799,7 +6799,7 @@ const translations = {
         updateStartButtonThemeState();
     }
 
-    // Coche/décoche une thématique. Comme dans Rush'Up!, la dernière thématique cochée PEUT
+    // Coche/décoche une thématique. Comme dans Whoops!, la dernière thématique cochée PEUT
     // désormais être décochée (y compris "Généraliste Moyen" cochée par défaut) : si plus
     // aucune thématique n'est sélectionnée, on ne bloque pas le clic mais le bouton "Lancer
     // la partie" se grise avec un message, à la place de démarrer la partie sans mots.
@@ -7233,10 +7233,10 @@ const translations = {
     // (WhatsApp, SMS, réseaux sociaux...) grâce à la Web Share API. Si le navigateur ne la
     // supporte pas (essentiellement desktop), on copie simplement le message dans le presse-papier.
     async function shareRoomCode() {
-        const text = `🎥 Rejoins ma partie de Rush'Up! Live avec le code : ${roomCode}\nhttps://rushupgame.github.io/onlinegame/`;
+        const text = `🎥 Rejoins ma partie de Whoops! Live avec le code : ${roomCode}\nhttps://rushupgame.github.io/onlinegame/`;
         if (navigator.share) {
             try {
-                await navigator.share({ title: "Rush'Up! Live", text });
+                await navigator.share({ title: "Whoops! Live", text });
             } catch (err) {
                 // L'utilisateur a annulé le partage : rien à faire
             }
@@ -7380,7 +7380,7 @@ const translations = {
         // Sécurité : seul le joueur actif (celui dont c'est le tour) peut agir — trouvé, passe,
         // prêt, annuler, ET pause/désaccord/reprendre. Les autres joueurs voient l'état (pause,
         // mot, score) via la diffusion normale de gameState, mais ne peuvent rien déclencher
-        // eux-mêmes : ils sont informés, pas décisionnaires (comme dans Rush'Up!, où pause et
+        // eux-mêmes : ils sont informés, pas décisionnaires (comme dans Whoops!, où pause et
         // désaccord sont deux boutons du même joueur actif).
         if (fromId !== gameState.activePlayerId) return;
         if (gameState.phase !== 'playing') return;
@@ -7777,7 +7777,7 @@ const translations = {
             const pauseBtn = document.getElementById('pause-btn');
             pauseBtn.style.display = (isMyTurn && !state.isPaused) ? 'block' : 'none';
             const disagreeBtn = document.getElementById('disagree-btn');
-            // Réservé au joueur actif, comme le bouton Pause (même restriction que Rush'Up!) :
+            // Réservé au joueur actif, comme le bouton Pause (même restriction que Whoops!) :
             // les autres joueurs voient juste que la partie est en pause, sans pouvoir agir.
             disagreeBtn.style.display = (isMyTurn && !state.isPaused) ? 'block' : 'none';
 
@@ -7859,7 +7859,7 @@ const translations = {
     function showSecretWord(word, isJoker, streakMode) {
         const wordCard = document.getElementById('word-card');
         wordCard.classList.remove('locked');
-        // Le mot joker reste un secret TOTAL tant qu'il n'est pas trouvé (comme dans Rush'Up!,
+        // Le mot joker reste un secret TOTAL tant qu'il n'est pas trouvé (comme dans Whoops!,
         // "personne ne sait lequel avant qu'il soit deviné") : pas d'icône 🃏 à la révélation.
         wordCard.innerText = word;
         currentWordIsJoker = isJoker;
@@ -7965,7 +7965,7 @@ const translations = {
 
     // ============================================================================================
     // STATISTIQUES AVANCÉES (écran de fin) : mots trouvés, temps moyen, mot le plus rapide et
-    // répartition par manche, par joueur — repris de Rush'Up!, adapté au wordLog réseau (avec
+    // répartition par manche, par joueur — repris de Whoops!, adapté au wordLog réseau (avec
     // playerName / describerName+guesserName déjà résolus côté hôte dans buildFinalSummary()).
     // ============================================================================================
 
@@ -8167,7 +8167,7 @@ const translations = {
 
     function togglePause() {
         // Réservé au joueur actif (celui dont c'est le tour) : c'est lui qui a mis pause qui
-        // peut la lever, exactement comme dans Rush'Up! où pause et désaccord sont deux boutons
+        // peut la lever, exactement comme dans Whoops! où pause et désaccord sont deux boutons
         // du même joueur. Les autres voient l'état "en pause" (diffusé via gameState) mais ne
         // peuvent pas reprendre eux-mêmes.
         sendPlayerAction(gameState.isPaused ? 'resume' : 'pause');
@@ -8210,7 +8210,7 @@ const translations = {
         if (action === 'found') {
             // Le "+2 Mot Joker" ne s'affiche qu'à la validation réelle du mot, jamais à sa
             // révélation (le joker reste un secret total tant qu'il n'est pas trouvé, comme
-            // dans Rush'Up!) — voir currentWordIsJoker, mis à jour dans showSecretWord().
+            // dans Whoops!) — voir currentWordIsJoker, mis à jour dans showSecretWord().
             if (currentWordIsJoker) {
                 const t = translations[currentLang] || translations['en'];
                 showGameToast(t.jokerFoundToast || '🃏 MOT JOKER ! +2', 'joker');
