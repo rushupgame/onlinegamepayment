@@ -2593,7 +2593,7 @@
 <div class="persistent-footer-outer" id="persistent-footer">
     <div class="vibe-vip-row">
         <button class="leave-btn vibe-toggle-btn" onclick="openVibeModal()" id="ui-btn-vibes-footer">🎨 Vibes</button>
-        <button class="leave-btn vip-toggle-btn" id="vip-footer-btn" onclick="openVipModal()">👑 Passer VIP</button>
+        <button class="leave-btn vip-toggle-btn" id="vip-footer-btn" onclick="openVipModal()">👑 Go VIP</button>
     </div>
     <div class="account-info-bar" id="account-info-bar" style="display:none;">
         <span class="account-info-email" id="account-info-email">—</span>
@@ -2606,9 +2606,9 @@
     <!-- Même forme/couleur que "Soutenir le développeur" (demande explicite) ; en anglais par
          défaut car visible dès le tout premier écran, avant même le choix de la langue. -->
     <button type="button" class="donate-btn" id="login-footer-btn" onclick="openAuthModal()" style="display:none;">🔐 Log in / Create an account</button>
-    <button type="button" class="btn-pwa-install" id="pwa-install-btn-footer" onclick="triggerPwaInstall()" style="display:none;">📲 Installer l'application</button>
-    <a class="donate-btn" id="donate-btn-footer" href="https://www.paypal.com/donate?hosted_button_id=2NGJSLT76DX2G" target="_blank" rel="noopener noreferrer"><span class="heart-icon">❤️</span> Soutenir le développeur</a>
-    <button type="button" class="legal-btn" id="legal-btn-footer" onclick="openLegalModal()">⚖️ Mentions Légales & CGU</button>
+    <button type="button" class="btn-pwa-install" id="pwa-install-btn-footer" onclick="triggerPwaInstall()" style="display:none;">📲 Install the app</button>
+    <a class="donate-btn" id="donate-btn-footer" href="https://www.paypal.com/donate?hosted_button_id=2NGJSLT76DX2G" target="_blank" rel="noopener noreferrer"><span class="heart-icon">❤️</span> Support the developer</a>
+    <button type="button" class="legal-btn" id="legal-btn-footer" onclick="openLegalModal()">⚖️ Legal Notice & Terms of Use</button>
 </div>
 
 <!-- Confirmation (fond flouté) avant de recommencer une nouvelle partie sur un autre thème -->
@@ -2654,10 +2654,10 @@
 <div id="vibe-modal" class="modal-overlay">
     <div class="modal-card vibe-modal-card">
         <button type="button" class="vibe-modal-close" onclick="closeVibeModal()" aria-label="Fermer">✕</button>
-        <p style="margin-bottom:10px;" id="ui-vibe-modal-title">🎨 Choisis ta Vibe</p>
+        <p style="margin-bottom:10px;" id="ui-vibe-modal-title">🎨 Choose your Vibe</p>
         <div class="vibe-grid" id="vibe-grid"></div>
         <div class="modal-btn-row">
-            <button type="button" class="btn btn-secondary" onclick="closeVibeModal()" id="ui-vibe-modal-close">Fermer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeVibeModal()" id="ui-vibe-modal-close">Close</button>
         </div>
     </div>
 </div>
@@ -2670,43 +2670,43 @@
         <button type="button" class="vibe-modal-close" onclick="closeVipModal()" aria-label="Fermer">✕</button>
 
         <div id="vip-modal-locked-body">
-            <div class="vip-modal-title" id="vip-modal-title">👑 Passe VIP</div>
-            <p class="vip-modal-sub" id="vip-modal-reason">Débloque les salons jusqu'à 24 joueurs et toutes les thématiques.</p>
+            <div class="vip-modal-title" id="vip-modal-title">👑 VIP Pass</div>
+            <p class="vip-modal-sub" id="vip-modal-reason">Unlock rooms up to 24 players and all themes.</p>
 
             <div class="vip-offers">
                 <div class="vip-offer-card">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name" id="vip-offer-24h-name">⏱️ Pass 24h</span>
+                        <span class="vip-offer-name" id="vip-offer-24h-name">⏱️ 24h Pass</span>
                         <span class="vip-offer-price">1,99 €</span>
                     </div>
-                    <p class="vip-offer-desc" id="vip-offer-24h-desc">Accès VIP complet pendant 24h. Idéal pour une soirée.</p>
-                    <button type="button" class="btn btn-secondary" id="vip-offer-24h-btn" onclick="startOneTimePurchase('pass_24h')">Payer avec PayPal</button>
+                    <p class="vip-offer-desc" id="vip-offer-24h-desc">Full VIP access for 24h. Ideal for one evening.</p>
+                    <button type="button" class="btn btn-secondary" id="vip-offer-24h-btn" onclick="startOneTimePurchase('pass_24h')">Pay with PayPal</button>
                 </div>
 
                 <div class="vip-offer-card highlight">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name" id="vip-offer-monthly-name">🔁 Abonnement mensuel</span>
+                        <span class="vip-offer-name" id="vip-offer-monthly-name">🔁 Monthly subscription</span>
                         <span class="vip-offer-price">3,99 €/mois</span>
                     </div>
-                    <p class="vip-offer-desc" id="vip-offer-monthly-desc">VIP tant que l'abonnement est actif. Résiliable à tout moment depuis PayPal.</p>
+                    <p class="vip-offer-desc" id="vip-offer-monthly-desc">VIP as long as the subscription is active. Cancel anytime from PayPal.</p>
                     <div id="paypal-monthly-btn-container"></div>
                 </div>
 
                 <div class="vip-offer-card">
                     <div class="vip-offer-head">
-                        <span class="vip-offer-name" id="vip-offer-lifetime-name">♾️ Accès à vie</span>
+                        <span class="vip-offer-name" id="vip-offer-lifetime-name">♾️ Lifetime access</span>
                         <span class="vip-offer-price">14,99 €</span>
                     </div>
-                    <p class="vip-offer-desc" id="vip-offer-lifetime-desc">Paiement unique, VIP à vie sur cet appareil.</p>
-                    <button type="button" class="btn btn-secondary" id="vip-offer-lifetime-btn" onclick="startOneTimePurchase('lifetime')">Payer avec PayPal</button>
+                    <p class="vip-offer-desc" id="vip-offer-lifetime-desc">One-time payment, lifetime VIP on this account.</p>
+                    <button type="button" class="btn btn-secondary" id="vip-offer-lifetime-btn" onclick="startOneTimePurchase('lifetime')">Pay with PayPal</button>
                 </div>
             </div>
 
             <div class="config-group">
-                <label id="vip-promo-label">🎟️ Un code promo ?</label>
+                <label id="vip-promo-label">🎟️ Got a promo code?</label>
                 <div class="vip-promo-row">
                     <input type="text" id="vip-promo-input" placeholder="EX: VIP-RUSHUP-2026" maxlength="40">
-                    <button type="button" class="btn btn-primary" style="width:auto;" id="vip-promo-btn" onclick="redeemPromoCode()">Valider</button>
+                    <button type="button" class="btn btn-primary" style="width:auto;" id="vip-promo-btn" onclick="redeemPromoCode()">Apply</button>
                 </div>
             </div>
 
@@ -2714,19 +2714,19 @@
         </div>
 
         <div id="vip-modal-already-body" style="display:none;">
-            <div class="vip-modal-title" id="vip-already-title">👑 Tu es VIP !</div>
+            <div class="vip-modal-title" id="vip-already-title">👑 You're VIP!</div>
             <div class="vip-already">
-                <p id="vip-already-detail">Accès VIP actif sur cet appareil.</p>
+                <p id="vip-already-detail">VIP access active on this account.</p>
             </div>
             <div class="config-group">
-                <div class="checkbox-hint" style="margin-left:0;" id="vip-already-hint">Ton VIP est lié à ton compte <strong id="vip-account-email">—</strong>. Connecte-toi avec ce même compte sur un autre appareil pour le retrouver automatiquement, aucune action supplémentaire nécessaire.</div>
-                <button type="button" class="btn btn-secondary" style="margin-top:8px;" id="vip-already-signout-btn" onclick="signOutAccount()">Se déconnecter</button>
+                <div class="checkbox-hint" style="margin-left:0;" id="vip-already-hint">Your VIP is linked to your account <strong id="vip-account-email">—</strong>. Log in with that same account on another device to get it back automatically, no extra action needed.</div>
+                <button type="button" class="btn btn-secondary" style="margin-top:8px;" id="vip-already-signout-btn" onclick="signOutAccount()">Log out</button>
             </div>
             <div class="vip-modal-status" id="vip-already-status"></div>
         </div>
 
         <div class="modal-btn-row" style="margin-top:14px;">
-            <button type="button" class="btn btn-secondary" onclick="closeVipModal()" id="vip-modal-close-btn">Fermer</button>
+            <button type="button" class="btn btn-secondary" onclick="closeVipModal()" id="vip-modal-close-btn">Close</button>
         </div>
     </div>
 </div>
@@ -2738,42 +2738,42 @@
 <div id="auth-modal" class="modal-overlay">
     <div class="modal-card auth-modal-card">
         <button type="button" class="vibe-modal-close" onclick="closeAuthModal()" aria-label="Fermer">✕</button>
-        <div class="auth-modal-title" id="auth-modal-title">Accéder à ton compte</div>
-        <p class="auth-modal-sub" id="auth-modal-sub">Un compte est nécessaire pour créer un salon (il retrouve ton statut VIP automatiquement sur tous tes appareils, y compris sur Rush'Up!).</p>
+        <div class="auth-modal-title" id="auth-modal-title">Access your account</div>
+        <p class="auth-modal-sub" id="auth-modal-sub">An account is needed to create a room (it automatically restores your VIP status on all your devices, including on Rush'Up!).</p>
 
         <div class="auth-tabs" id="auth-tabs">
-            <button type="button" class="auth-tab" id="auth-tab-login" onclick="setAuthMode('login')">Se connecter</button>
-            <button type="button" class="auth-tab" id="auth-tab-signup" onclick="setAuthMode('signup')">Créer un compte</button>
+            <button type="button" class="auth-tab" id="auth-tab-login" onclick="setAuthMode('login')">Log in</button>
+            <button type="button" class="auth-tab" id="auth-tab-signup" onclick="setAuthMode('signup')">Create an account</button>
         </div>
 
         <div class="auth-field-group" id="auth-email-group">
             <label for="auth-email-input" id="auth-email-label">Email</label>
-            <input type="email" id="auth-email-input" placeholder="ton@email.com">
+            <input type="email" id="auth-email-input" placeholder="your@email.com">
         </div>
         <div class="auth-field-group" id="auth-password-group">
-            <label for="auth-password-input" id="auth-password-label">Mot de passe</label>
-            <input type="password" id="auth-password-input" placeholder="8 caractères minimum" minlength="8">
+            <label for="auth-password-input" id="auth-password-label">Password</label>
+            <input type="password" id="auth-password-input" placeholder="8 characters minimum" minlength="8">
         </div>
         <div class="auth-field-group" id="auth-birthdate-group" style="display:none;">
-            <label for="auth-birthdate-input" id="auth-birthdate-label">Date de naissance</label>
+            <label for="auth-birthdate-input" id="auth-birthdate-label">Date of birth</label>
             <input type="date" id="auth-birthdate-input">
-            <div class="auth-field-hint" id="auth-birthdate-hint">C'est cette date qui sera utilisée pour vérifier ton identité si tu dois réinitialiser ton mot de passe.</div>
+            <div class="auth-field-hint" id="auth-birthdate-hint">This date will be used to verify your identity if you need to reset your password.</div>
         </div>
         <!-- Mode "mot de passe oublié" : pas d'email envoyé — l'identité est vérifiée avec la
              date de naissance fournie à la création du compte, puis un nouveau mot de passe est
              défini directement ici. -->
         <div class="auth-field-group" id="auth-reset-newpassword-group" style="display:none;">
-            <label for="auth-reset-newpassword-input" id="auth-reset-newpassword-label">Nouveau mot de passe</label>
-            <input type="password" id="auth-reset-newpassword-input" placeholder="8 caractères minimum" minlength="8">
+            <label for="auth-reset-newpassword-input" id="auth-reset-newpassword-label">New password</label>
+            <input type="password" id="auth-reset-newpassword-input" placeholder="8 characters minimum" minlength="8">
         </div>
 
-        <button type="button" class="btn btn-primary" id="auth-submit-btn" onclick="submitAuthForm()">Créer mon compte</button>
+        <button type="button" class="btn btn-primary" id="auth-submit-btn" onclick="submitAuthForm()">Create my account</button>
 
         <div class="auth-reset-row" id="auth-reset-row" style="display:none;">
-            <button type="button" onclick="setAuthMode('reset')" id="auth-reset-btn">Mot de passe oublié ?</button>
+            <button type="button" onclick="setAuthMode('reset')" id="auth-reset-btn">Forgot your password?</button>
         </div>
         <div class="auth-reset-row" id="auth-back-to-login-row" style="display:none;">
-            <button type="button" onclick="setAuthMode('login')" id="auth-back-to-login-btn">◀️ Retour à la connexion</button>
+            <button type="button" onclick="setAuthMode('login')" id="auth-back-to-login-btn">◀️ Back to login</button>
         </div>
 
         <div class="vip-modal-status" id="auth-modal-status"></div>
@@ -3268,6 +3268,7 @@
         if (startRoundBtn) startRoundBtn.innerText = t.btnStartRound || '🚀 Démarrer la manche';
         setText('round-intro-wait-text', t.waitHostRound || t.waitHostGeneric);
         setText('ui-turn-confirm-title', t.turnConfirmTitle);
+        setText('turn-confirm-ready-btn', t.btnReady || "🚀 C'est parti !");
         setText('ui-round-end-title', '🏁 ' + (t.roundEndTitle || 'Fin de la manche !'));
         setText('ui-btn-next-round', t.nextRoundBtn || '➡️ Manche suivante');
         setText('round-end-wait-text', t.waitHostGeneric);
@@ -3339,7 +3340,7 @@
         if (homeBtn) { homeBtn.title = t.hmenuHome || 'Home'; homeBtn.setAttribute('aria-label', t.hmenuHome || 'Home'); }
         const rulesBtnPre = document.getElementById('ui-rules-btn-pre');
         if (rulesBtnPre) { rulesBtnPre.title = t.hmenuRules || 'Règles'; rulesBtnPre.setAttribute('aria-label', t.hmenuRules || 'Règles'); }
-        setText('hmenu-label-home', '🏠 ' + (t.hmenuHome || 'Home'));
+        setText('hmenu-label-home', t.hmenuHome || '🏠 Home');
         updateSoundButtons();
 
         const vipEntryBtn = document.getElementById('vip-footer-btn');
@@ -3348,13 +3349,13 @@
         // Menu hamburger
         setText('hmenu-label-vibes', '🎨 ' + (t.vibesLabel || 'Vibes'));
         setText('hmenu-label-vip', isVip() ? (t.vipEntryBtnActive || '👑 VIP actif') : (t.vipEntryBtnInactive || '👑 Passer VIP'));
-        setText('hmenu-label-rules', '📜 ' + (t.hmenuRules || 'Règles'));
-        setText('hmenu-label-sound', '🔊 ' + (t.hmenuSound || 'Son'));
-        setText('hmenu-label-vibration', '📳 ' + (t.hmenuVibration || 'Vibration'));
+        setText('hmenu-label-rules', t.hmenuRules || '📜 Règles');
+        setText('hmenu-label-sound', t.hmenuSound || '🔊 Son');
+        setText('hmenu-label-vibration', t.hmenuVibration || '📳 Vibration');
         setText('hmenu-label-install', t.btnInstallPwa || "📲 Installer l'application");
         setText('hmenu-label-donate', t.btnDonate || '❤️ Soutenir le développeur');
         setText('hmenu-label-legal', t.btnLegal || '⚖️ Mentions Légales & CGU');
-        setText('hmenu-label-restart', '🔄 ' + (t.hmenuRestart || 'Recommencer la partie'));
+        setText('hmenu-label-restart', t.hmenuRestart || '🔄 Recommencer la partie');
         setText('hmenu-themes-label', (t.hmenuThemesLabel || 'Thématique(s) de la partie') + ' :');
 
         // Pause / désaccord
